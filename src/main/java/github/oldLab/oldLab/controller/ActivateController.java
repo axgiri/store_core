@@ -13,6 +13,7 @@ import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.serviceImpl.ActivateServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
 
 @Slf4j
 @RestController
@@ -20,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/activate")
 public class ActivateController {
     
-    public final ActivateServiceImpl service;
+    private final ActivateServiceImpl service;
 
     @PostMapping("/activate")
-    public ResponseEntity<Void> activate(@RequestBody ActivateRequest request){
+    public ResponseEntity<Void> activate(@Valid @RequestBody ActivateRequest request){
         log.debug("activating account with phone number: {}", request.getPhoneNumber());
         service.setActive(request);
         return ResponseEntity.ok().build();
@@ -44,14 +45,14 @@ public class ActivateController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody ActivateRequest request){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody ActivateRequest request){
         log.debug("logging in user with phone number: {}", request.getPhoneNumber());
         AuthResponse response = service.login(request.getPhoneNumber(), request.getOtp());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/send/login/{phoneNumber}")
-    public ResponseEntity<Void> sendLoginOtp(@PathVariable String phoneNumber) {
+    public ResponseEntity<Void> sendLoginOtp( @PathVariable String phoneNumber) {
         log.debug("sending login OTP to phone number: {}", phoneNumber);
         service.sendLoginOtp(phoneNumber);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

@@ -46,7 +46,7 @@ public class PersonController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         AuthResponse authResponse = service.authenticate(loginRequest);
         return ResponseEntity.ok(authResponse);
     }
@@ -64,7 +64,7 @@ public class PersonController {
     }
 
     @PostMapping("/async/update/{id}")
-    public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id, @Valid @RequestBody PersonRequest personRequest) {
+    public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest) {
         log.debug("updating person with id: {}", id);
         return ResponseEntity.ok(service.update(id, personRequest));
     }
@@ -90,15 +90,20 @@ public class PersonController {
         return ResponseEntity.ok(role);
     }
 
+    //TODO:
+    //make another endpoint for getting colleaguesPaginated
+    //because this method is too complicated due to the fact that it takes all the records from the database and then paginates them
+    //it is better to immediately find out the indexes of which records to take.
     @GetMapping("/getMyColleagues")
     public ResponseEntity<List<PersonResponse>> getColleagues(@RequestHeader("Authorization") String token) {
         log.debug("getting colleagues for token: {}", token);
         service.validateToken(token);
-        return ResponseEntity.ok(service.getColleaguesAsync(token));
+        List<PersonResponse> colleagues = service.getColleaguesAsync(token);
+        return ResponseEntity.ok(colleagues);
     }
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest, @RequestParam String oldPassword) {
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword) {
         log.debug("updating password for phone number: {}", loginRequest.getPhoneNumber());
         service.updatePasswordAsync(loginRequest, oldPassword);
         return ResponseEntity.ok().build();
