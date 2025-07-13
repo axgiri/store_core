@@ -19,7 +19,7 @@ import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
-import github.oldLab.oldLab.service.PersonService;
+import github.oldLab.oldLab.serviceImpl.PersonServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/persons")
 public class PersonController {
 
-    private final PersonService service;
+    private final PersonServiceImpl service;
     
     @PostMapping("/signup")
     public ResponseEntity<PersonResponse> create(@Valid @RequestBody PersonRequest personRequest) {

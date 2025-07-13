@@ -18,5 +18,5 @@ public class ActivateRequest {
 
     @NotNull(message = "otp cannot be null")
     @Size(min = 4, max = 4, message = "otp must be 4 digits")
-    private String otp;
+    private int otp;
 }
