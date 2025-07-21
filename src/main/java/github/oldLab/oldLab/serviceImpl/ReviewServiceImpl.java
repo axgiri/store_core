@@ -26,7 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse createReview(ReviewRequest reviewRequest) {
-        log.info("creating review for shopId: {}", reviewRequest.getShopId());
+        log.info("creating review for shopId: {}", reviewRequest.getShop().getId());
         Review review = repository.save(reviewRequest.toEntity());
         return ReviewResponse.fromEntityToDto(review);
     }

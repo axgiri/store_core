@@ -1,6 +1,8 @@
 package github.oldLab.oldLab.dto.response;
 
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Review;
+import github.oldLab.oldLab.entity.Shop;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,13 +14,13 @@ public class ReviewResponse {
 
     private Long version;
 
-    private Long authorId;
+    private Person author;
 
     private Long rating;
 
-    private Long personId;
+    private Person person;
 
-    private Long shopId;
+    private Shop shop;
 
     private String comment;
 
@@ -26,10 +28,10 @@ public class ReviewResponse {
         return new ReviewResponse()
             .setId(review.getId())
             .setVersion(review.getVersion())
-            .setAuthorId(review.getAuthorId())
+            .setAuthor(review.getAuthor())
             .setRating(review.getRating())
-            .setPersonId(review.getPersonId())
-            .setShopId(review.getShopId())
+            .setPerson(review.getPerson())
+            .setShop(review.getShop())
             .setComment(review.getComment());
     }
 }

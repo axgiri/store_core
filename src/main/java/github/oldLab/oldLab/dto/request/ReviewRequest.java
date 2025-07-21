@@ -3,7 +3,9 @@ package github.oldLab.oldLab.dto.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Review;
+import github.oldLab.oldLab.entity.Shop;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -12,23 +14,23 @@ import lombok.Data;
 public class ReviewRequest {
 
     @NotNull(message = "authorId cannot be null")
-    private Long authorId;
+    private Person author;
 
     @NotNull(message = "rating cannot be null")
     private Long rating;
 
-    private Long personId;
+    private Person person;
 
-    private Long shopId;
+    private Shop shop;
 
     private String comment;
 
     public Review toEntity(){
         return new Review()
-            .setAuthorId(authorId)
+            .setAuthor(author)
             .setRating(rating)
-            .setPersonId(personId)
-            .setShopId(shopId)
+            .setPerson(person)
+            .setShop(shop)
             .setComment(comment);
     }
 }

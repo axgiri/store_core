@@ -15,7 +15,7 @@ services:
       - auth-network
   
   authentication-db:
-    image: postgres:13-alpine
+    image: postgres:13
     container_name: authentication-db
     ports:
       - "5432:5432"
@@ -23,6 +23,13 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1
       POSTGRES_DB: authenticationdb
+    command: >
+      bash -c "
+      apt-get update &&
+      apt-get install -y postgresql-13-cron &&
+      exec docker-entrypoint.sh postgres
+        -c shared_preload_libraries=pg_cron
+      "
     volumes:
       - authentication_db_data:/var/lib/postgresql/data
     networks:

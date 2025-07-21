@@ -20,13 +20,16 @@ public class OldLabApplication {
 
 	private final int coreProcessors = Runtime.getRuntime().availableProcessors();
 
-	@Bean(name = "asyncExecutor")
+    @Bean(name = "asyncExecutor")
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(coreProcessors - 1);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(50);
-        executor.setThreadNamePrefix("T-");
+        executor.setCorePoolSize(Math.max(
+                2, Runtime.getRuntime().
+                        availableProcessors() - 1)); // Минимум 2 потока
+
+        executor.setMaxPoolSize(20); // Увеличено значение
+        executor.setQueueCapacity(100); // Увеличено значение
+        executor.setThreadNamePrefix("Async-Thread-");
         executor.initialize();
         return executor;
     }

@@ -33,17 +33,17 @@ public class Review {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    private Long authorId;
+    private Person author;
 
     private Long rating;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
-    private Long personId;
+    private Person person;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
-    private Long shopId;
+    private Shop shop;
 
     private String comment;
 }
