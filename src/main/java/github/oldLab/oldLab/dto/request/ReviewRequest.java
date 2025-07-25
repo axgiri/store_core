@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Review;
 import github.oldLab.oldLab.entity.Shop;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -14,24 +15,29 @@ import lombok.Data;
 public class ReviewRequest {
 
     @NotNull(message = "authorId cannot be null")
-    private Person author;
+    private Long authorId;
 
     @NotNull(message = "rating cannot be null")
     private Long rating;
 
-    private Person person;
+    private Long personId;
 
-    private Shop shop;
+    private Long shopId;
 
     private String comment;
 
     public Review toEntity(){
         return new Review()
-            .setAuthor(author)
+        .setAuthor(new Person().setId(authorId))
             .setRating(rating)
-            .setPerson(person)
-            .setShop(shop)
+            .setPerson(personId != null ? new Person().setId(personId): null)
+            .setShop(shopId != null ? new Shop().setId(shopId) : null)
             .setComment(comment);
+    }
+
+    @AssertTrue(message = "exactly one of personId or shopId must be provided")
+    private boolean isPersonXorShop() {
+        return (personId != null) ^ (shopId != null);
     }
 }
 
