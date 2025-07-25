@@ -1,10 +1,10 @@
-spring:
-  application:
-    name: oldLab
+# spring:
+#   application:
+#     name: oldLab
   
-  minio:
-  url: http://localhost:9000
-  access-key: minio
-  secret-key: minio123
-  bucket: user-avatars
+#   minio:
+#   url: http://localhost:9000
+#   access-key: minio
+#   secret-key: minio123
+#   bucket: user-avatars
   
