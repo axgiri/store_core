@@ -22,7 +22,7 @@ public class OldLabApplication {
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         int processors = Runtime.getRuntime().availableProcessors();
-        int corePool = Math.max(1, processors - 1); //to not make it NULL, you can change it
+        int corePool = Math.max(2, processors - 1); //to not make it NULL, you can change it. minimum 2 threads
         int maxPool = corePool * 2;
         executor.setCorePoolSize(corePool);
         executor.setMaxPoolSize(maxPool);
