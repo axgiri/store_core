@@ -26,10 +26,10 @@ public class ReviewResponse {
         return new ReviewResponse()
             .setId(review.getId())
             .setVersion(review.getVersion())
-            .setAuthorId(review.getAuthorId())
+            .setAuthorId(review.getAuthor() != null ? review.getAuthor().getId() : null)
             .setRating(review.getRating())
-            .setPersonId(review.getPersonId())
-            .setShopId(review.getShopId())
+            .setPersonId(review.getPerson() != null ? review.getPerson().getId() : null)
+            .setShopId(review.getShop() != null ? review.getShop().getId() : null)
             .setComment(review.getComment());
     }
 }

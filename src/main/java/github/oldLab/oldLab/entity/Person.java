@@ -58,6 +58,9 @@ public class Person implements UserDetails {
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
+    @Column(name = "email", unique = true)
+    private String email;
+
     @NotNull(message = "password cannot be null")
     private String password;
 

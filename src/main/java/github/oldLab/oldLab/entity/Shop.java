@@ -42,4 +42,5 @@ public class Shop {
     private String description;
 
     private List<CategoryEnum> category;
+    //TODO: add employees
 }
