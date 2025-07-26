@@ -15,4 +15,10 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     Optional<Person> findByPhoneNumber(String phoneNumber);
 
     Page<Person> findByCompanyId(Long companyId, Pageable pageable);
+
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    boolean existsByEmail(String email);
+
+    Optional<Person> findByEmail(String email);
 }

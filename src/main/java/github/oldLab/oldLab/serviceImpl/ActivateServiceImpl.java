@@ -1,10 +1,12 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.exception.InvalidOtpException;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.dto.request.ActivateRequest;
@@ -17,6 +19,7 @@ import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.service.ActivateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -143,5 +146,39 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("sending login OTP to phone number: {}", phoneNumber);
         saveForLogin(phoneNumber);
         sendOtp(phoneNumber);
+    }
+
+    // Methods for reset password
+    public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin) {
+        Activate activate = repository.findByPhoneNumber(phoneNumber)
+                .orElse(new Activate());
+        activate.setPhoneNumber(phoneNumber);
+        activate.setOtpReset(otp);
+        activate.setActive(true);
+        activate.setLogin(isForLogin);
+        activate.setCreatedAt(LocalDateTime.now());
+
+        repository.save(activate);
+    }
+
+    public void validateOtpReset(String phoneNumber, String otp) {
+        Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, Integer.parseInt(otp), true)
+                .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
+
+        if (activate.getCreatedAt().plusMinutes(15).isBefore(LocalDateTime.now())) {
+            throw new InvalidOtpException("OTP expired");
+        }
+
+        activate.setActive(false);
+        repository.save(activate);
+    }
+    // End of Section
+
+    // Cleanup Method
+    @Transactional
+    public void cleanupOldRecords() {
+        // Удаляем записи старше 15 минут (TTL для otp)
+        LocalDateTime cutoffDate = LocalDateTime.now(ZoneOffset.UTC).minusMinutes(15);
+        repository.deleteOlderThan(cutoffDate);
     }
 }

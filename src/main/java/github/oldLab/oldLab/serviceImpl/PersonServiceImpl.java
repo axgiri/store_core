@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -164,5 +165,48 @@ public class PersonServiceImpl implements PersonService {
 
     public void sendOtp(String email){ //TODO: implement this method
         throw new NotImplementedException("sendOtp method by email is not implemented yet");
+    }
+
+    @Override
+    public void requestPasswordReset(String contact) {
+        boolean isEmail = contact.contains("@"); // Check is Email
+
+        Person person = isEmail
+                ? repository.findByEmail(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                : repository.findByPhoneNumber(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        int otp = activateService.setOtp();
+
+        activateService.saveOtpReset(person.getPhoneNumber(), otp, false);
+
+        if (isEmail) {
+            sendOtp(person.getEmail());
+        } else {
+            sendOtp(person.getPhoneNumber());
+        }
+
+        log.info("OTP sent to {}: {}", contact, otp);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void resetPassword(ResetPasswordRequest request) {
+        log.info("Resetting password for: {}", request.getContact());
+
+        activateService.validateOtpReset(request.getContact(), request.getOtp());
+
+        Person person = request.isEmail()
+                ? repository.findByEmail(request.getContact())
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                : repository.findByPhoneNumber(request.getContact())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        person.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        person.setUpdatedAt(LocalDate.now());
+
+        repository.save(person);
+        log.info("Password reset successfully for: {}", request.getContact());
     }
 }

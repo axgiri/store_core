@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
+import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.exception.NotImplementedException;
@@ -34,4 +35,10 @@ public interface PersonService {
     public List<PersonResponse> getColleaguesAsync(String token, int page, int size);
 
     public void sendOtp(String email) throws NotImplementedException;
+
+    // Reset Password Section
+    public void requestPasswordReset(String phoneNumber);
+
+    public void resetPassword(ResetPasswordRequest request);
+    // End of Section
 }

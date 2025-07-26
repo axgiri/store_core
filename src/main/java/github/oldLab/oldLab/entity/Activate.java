@@ -12,9 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,4 +41,9 @@ public class Activate {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    // Field for reset password
+    @Column(name = "otp_reset", nullable = true)
+    private int otpReset;
+
 }
