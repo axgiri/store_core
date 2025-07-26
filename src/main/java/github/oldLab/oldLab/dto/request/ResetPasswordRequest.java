@@ -4,13 +4,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Data
 public class ResetPasswordRequest {
 
-    @NotNull(message = "phone number cannot be null")
-    @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "phone number must be valid")
-    private String phoneNumber;
+    @NotBlank
+    private String contact;  // Может быть email или телефон
+    private boolean isEmail;
 
     @NotNull(message = "otp cannot be null")
     @Size(min = 4, max = 4, message = "otp must be 4 digits")

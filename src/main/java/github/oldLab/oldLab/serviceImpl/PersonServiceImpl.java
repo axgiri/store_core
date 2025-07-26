@@ -167,36 +167,46 @@ public class PersonServiceImpl implements PersonService {
         throw new NotImplementedException("sendOtp method by email is not implemented yet");
     }
 
-    // Methods for reset password
     @Override
-    public void requestPasswordReset(String phoneNumber) {
-        if (repository.findByPhoneNumber(phoneNumber).isPresent()) {
-            throw new UserNotFoundException("User not found");
-        }
-        Person person = repository.findByPhoneNumber(phoneNumber).get();
+    public void requestPasswordReset(String contact) {
+        boolean isEmail = contact.contains("@"); // Check is Email
+
+        Person person = isEmail
+                ? repository.findByEmail(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                : repository.findByPhoneNumber(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
         int otp = activateService.setOtp();
-        activateService.saveOtpReset(phoneNumber, otp, false);
-        // Отправка otp на почту
-        sendOtp(person.getEmail());
-        log.info("OTP for {}: {}", phoneNumber, otp);
+
+        activateService.saveOtpReset(person.getPhoneNumber(), otp, false);
+
+        if (isEmail) {
+            sendOtp(person.getEmail());
+        } else {
+            sendOtp(person.getPhoneNumber());
+        }
+
+        log.info("OTP sent to {}: {}", contact, otp);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void resetPassword(ResetPasswordRequest request) {
-        log.info("Resetting password for: {}", request.getPhoneNumber());
+        log.info("Resetting password for: {}", request.getContact());
 
-        // Валидируем OTP
-        activateService.validateOtpReset(request.getPhoneNumber(), request.getOtp());
+        activateService.validateOtpReset(request.getContact(), request.getOtp());
 
-        // Обновляем пароль
-        Person person = repository.findByPhoneNumber(request.getPhoneNumber())
+        Person person = request.isEmail()
+                ? repository.findByEmail(request.getContact())
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                : repository.findByPhoneNumber(request.getContact())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         person.setPassword(passwordEncoder.encode(request.getNewPassword()));
         person.setUpdatedAt(LocalDate.now());
-        repository.save(person);
 
-        log.info("Password reset successfully for: {}", request.getPhoneNumber());
+        repository.save(person);
+        log.info("Password reset successfully for: {}", request.getContact());
     }
 }

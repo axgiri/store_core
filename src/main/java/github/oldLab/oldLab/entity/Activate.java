@@ -8,7 +8,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -40,6 +44,6 @@ public class Activate {
 
     // Field for reset password
     @Column(name = "otp_reset", nullable = true)
-    private Integer otpReset;
+    private int otpReset;
 
 }

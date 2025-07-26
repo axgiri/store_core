@@ -25,7 +25,10 @@ public interface ActivateRepository extends JpaRepository<Activate, Long>{
 
     Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     @Modifying
     @Query("DELETE FROM Activate a WHERE a.createdAt < :cutoffDate")
     void deleteOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
+
 }
