@@ -102,7 +102,7 @@ public class ActivateServiceImpl implements ActivateService {
             .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please register first"));
 
         if (activation.getCreatedAt().plusMinutes(OTP_EXPIRATION_MINUTES).isBefore(LocalDateTime.now())) {
-            saveForRegister(phoneNumber); //TODO: may be should not access to the database twice here and
+            saveForRegister(phoneNumber);
         }
 
         sendOtp(phoneNumber, getOtp(phoneNumber)); //here
@@ -141,7 +141,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public void sendLoginOtp(String phoneNumber) { 
         log.debug("sending login OTP to phone number: {}", phoneNumber);
-        saveForLogin(phoneNumber); //TODO: can make it multithreaded, but lock here until done. may cause dirty reads if not locked
+        saveForLogin(phoneNumber);
         sendOtp(phoneNumber);
     }
 }

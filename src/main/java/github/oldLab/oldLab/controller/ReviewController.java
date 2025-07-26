@@ -2,7 +2,6 @@ package github.oldLab.oldLab.controller;
 
 import github.oldLab.oldLab.dto.request.ReviewRequest;
 import github.oldLab.oldLab.dto.response.ReviewResponse;
-import github.oldLab.oldLab.entity.Review;
 import github.oldLab.oldLab.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,20 +26,28 @@ public class ReviewController {
     }
 
     @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<Review>> getReviewsByShopId(@PathVariable Long shopId) {
-        List<Review> reviews = reviewService.getReviewsByShopId(shopId);
+    public ResponseEntity<List<ReviewResponse>> getReviewsByShopId(
+            @PathVariable Long shopId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<ReviewResponse> reviews = reviewService.getReviewsByShopId(shopId, page, size);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/person/{personId}")
-    public ResponseEntity<List<Review>> getReviewsByPersonId(@PathVariable Long personId) {
-        List<Review> reviews = reviewService.getReviewsByPersonId(personId);
+    public ResponseEntity<List<ReviewResponse>> getReviewsByPersonId(
+            @PathVariable Long personId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<ReviewResponse> reviews = reviewService.getReviewsByPersonId(personId, page, size);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews() {
-        List<Review> reviews = reviewService.getAllReviewsPaginated();
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<ReviewResponse> reviews = reviewService.getAllReviewsPaginated(page, size);
         return ResponseEntity.ok(reviews);
     }
 

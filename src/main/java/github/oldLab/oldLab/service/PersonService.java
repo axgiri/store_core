@@ -31,7 +31,7 @@ public interface PersonService {
 
     public void updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
 
-    public List<PersonResponse> getColleaguesAsync(String token);
+    public List<PersonResponse> getColleaguesAsync(String token, int page, int size);
 
     public void sendOtp(String email) throws NotImplementedException;
 }
