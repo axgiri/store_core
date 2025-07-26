@@ -112,15 +112,15 @@ public class PersonController {
     // Reset Password Mapping
     @PostMapping("/requestPasswordReset")
     public ResponseEntity<Void> requestPasswordReset(
-            @Valid @RequestBody String phoneNumber) {
-        log.debug("waiting request for reset password from phone number: {}", phoneNumber);
-        service.requestPasswordReset(phoneNumber);
+            @Valid @RequestBody String contact) {
+        log.debug("waiting request for reset password from contact: {}", contact);
+        service.requestPasswordReset(contact);
         return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/resetPassword")
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        log.debug("updating password for phone number: {}", request.getPhoneNumber());
+        log.debug("updating password for contact: {}", request.getContact());
         service.resetPassword(request);
         return ResponseEntity.ok().build();
     }
