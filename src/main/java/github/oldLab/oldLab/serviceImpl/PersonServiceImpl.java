@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -146,7 +147,7 @@ public class PersonServiceImpl implements PersonService {
         });
     }
 
-    public List<PersonResponse> getColleaguesAsync(String token) {
+    public List<PersonResponse> getColleaguesAsync(String token, int page, int size) {
         log.info("getting colleagues for token: {}", token);
         if (token == null || token.isEmpty()) {
             throw new InvalidTokenException("token is empty");
@@ -156,7 +157,7 @@ public class PersonServiceImpl implements PersonService {
         Person person = repository.findByPhoneNumber(tokenService.extractUsername(actualToken))
             .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
 
-        return repository.findByCompanyId(person.getCompanyId()).stream()
+        return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).stream()
             .map(PersonResponse::fromEntityToDto)
             .toList();
     }

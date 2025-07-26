@@ -4,15 +4,14 @@ import java.util.List;
 
 import github.oldLab.oldLab.dto.request.ReviewRequest;
 import github.oldLab.oldLab.dto.response.ReviewResponse;
-import github.oldLab.oldLab.entity.Review;
 
 public interface ReviewService {
     ReviewResponse createReview(ReviewRequest reviewRequest);
-    List<Review> getReviewsByShopId(Long id);
+    List<ReviewResponse> getReviewsByShopId(Long id, int page, int size);
 
-    List<Review> getReviewsByPersonId(Long id);
+    List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size);
 
-    List<Review> getAllReviewsPaginated();
-    
+    List<ReviewResponse> getAllReviewsPaginated(int page, int size);
+
     void deleteReview(Long id);
 }

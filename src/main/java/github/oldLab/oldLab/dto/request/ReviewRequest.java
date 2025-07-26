@@ -40,6 +40,3 @@ public class ReviewRequest {
         return (personId != null) ^ (shopId != null);
     }
 }
-
-//TODO: check all annotations in dto and entities, add missing ones
-

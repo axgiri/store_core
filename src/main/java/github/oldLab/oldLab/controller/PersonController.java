@@ -90,15 +90,14 @@ public class PersonController {
         return ResponseEntity.ok(role);
     }
 
-    //TODO:
-    //make another endpoint for getting colleaguesPaginated
-    //because this method is too complicated due to the fact that it takes all the records from the database and then paginates them
-    //it is better to immediately find out the indexes of which records to take.
     @GetMapping("/getMyColleagues")
-    public ResponseEntity<List<PersonResponse>> getColleagues(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<PersonResponse>> getColleagues(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         log.debug("getting colleagues for token: {}", token);
         service.validateToken(token);
-        List<PersonResponse> colleagues = service.getColleaguesAsync(token);
+        List<PersonResponse> colleagues = service.getColleaguesAsync(token, page, size);
         return ResponseEntity.ok(colleagues);
     }
 

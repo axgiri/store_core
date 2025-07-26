@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.dto.request.ReviewRequest;
@@ -32,9 +33,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getReviewsByShopId(Long id) {
+    public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
         log.info("getting reviews for shopId: {}", id);
-        List<Review> reviews = repository.findByShopId(id);
+        List<ReviewResponse> reviews = repository.findByShopId(id, PageRequest.of(page, size)).stream()
+            .map(ReviewResponse::fromEntityToDto)
+            .toList();
         if (reviews.isEmpty()) {
             log.warn("no reviews found for shopId: {}", id);
         }
@@ -42,9 +45,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getReviewsByPersonId(Long id) {
+    public List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size) {
         log.info("getting reviews for personId: {}", id);
-        List<Review> reviews = repository.findByPersonId(id);
+        List<ReviewResponse> reviews = repository.findByPersonId(id, PageRequest.of(page, size)).stream()
+            .map(ReviewResponse::fromEntityToDto)
+            .toList();
         if (reviews.isEmpty()) {
             log.warn("no reviews found for personId: {}", id);
         }
@@ -52,9 +57,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getAllReviewsPaginated() { //TODO: add pagination
+    public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
         log.info("getting all reviews paginated");
-        List<Review> reviews = repository.findAll();
+        List<ReviewResponse> reviews = repository.findAll(PageRequest.of(page, size)).stream()
+            .map(ReviewResponse::fromEntityToDto)
+            .toList();
         if (reviews.isEmpty()) {
             log.warn("no reviews found");
         }
