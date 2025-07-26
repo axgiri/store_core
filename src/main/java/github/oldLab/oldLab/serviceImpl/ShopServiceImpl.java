@@ -43,7 +43,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     public List<ShopResponse> getAllShopsPaginated(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size)).stream()
+        return repository.findAll(PageRequest.of(page, size)).getContent().stream()
                 .map(ShopResponse::fromEntityToDto)
                 .toList();
     }

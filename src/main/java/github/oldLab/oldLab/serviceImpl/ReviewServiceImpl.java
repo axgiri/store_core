@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
         log.info("getting reviews for shopId: {}", id);
-        List<ReviewResponse> reviews = repository.findByShopId(id, PageRequest.of(page, size)).stream()
+        List<ReviewResponse> reviews = repository.findByShopId(id, PageRequest.of(page, size)).getContent().stream()
             .map(ReviewResponse::fromEntityToDto)
             .toList();
         if (reviews.isEmpty()) {
@@ -47,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size) {
         log.info("getting reviews for personId: {}", id);
-        List<ReviewResponse> reviews = repository.findByPersonId(id, PageRequest.of(page, size)).stream()
+        List<ReviewResponse> reviews = repository.findByPersonId(id, PageRequest.of(page, size)).getContent().stream()
             .map(ReviewResponse::fromEntityToDto)
             .toList();
         if (reviews.isEmpty()) {
@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
         log.info("getting all reviews paginated");
-        List<ReviewResponse> reviews = repository.findAll(PageRequest.of(page, size)).stream()
+        List<ReviewResponse> reviews = repository.findAll(PageRequest.of(page, size)).getContent().stream()
             .map(ReviewResponse::fromEntityToDto)
             .toList();
         if (reviews.isEmpty()) {

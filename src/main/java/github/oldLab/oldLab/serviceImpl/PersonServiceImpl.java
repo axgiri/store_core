@@ -157,7 +157,7 @@ public class PersonServiceImpl implements PersonService {
         Person person = repository.findByPhoneNumber(tokenService.extractUsername(actualToken))
             .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
 
-        return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).stream()
+        return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).getContent().stream()
             .map(PersonResponse::fromEntityToDto)
             .toList();
     }
