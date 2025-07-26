@@ -3,6 +3,7 @@ package github.oldLab.oldLab.controller;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,4 +108,21 @@ public class PersonController {
         service.updatePasswordAsync(loginRequest, oldPassword);
         return ResponseEntity.ok().build();
     }
+
+    // Reset Password Mapping
+    @PostMapping("/requestPasswordReset")
+    public ResponseEntity<Void> requestPasswordReset(
+            @Valid @RequestBody String phoneNumber) {
+        log.debug("waiting request for reset password from phone number: {}", phoneNumber);
+        service.requestPasswordReset(phoneNumber);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        log.debug("updating password for phone number: {}", request.getPhoneNumber());
+        service.resetPassword(request);
+        return ResponseEntity.ok().build();
+    }
+
 }

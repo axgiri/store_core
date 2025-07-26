@@ -21,4 +21,6 @@ public interface ActivateRepository extends JpaRepository<Activate, Long>{
                                     @Param("isActive") boolean active);
 
     Optional<Activate> findByPhoneNumberAndIsLogin(String phoneNumber, boolean isLogin);
+
+    Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);
 }

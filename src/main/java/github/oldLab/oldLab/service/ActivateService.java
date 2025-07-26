@@ -29,4 +29,10 @@ public interface ActivateService {
     public void delete(String phoneNumber);
 
     public void sendLoginOtp(String phoneNumber);
+
+    // Methods for reset password
+    public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin);
+
+    public void validateOtpReset(String phoneNumber, String otp);
+    // End
 }

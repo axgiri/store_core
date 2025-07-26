@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -164,5 +165,38 @@ public class PersonServiceImpl implements PersonService {
 
     public void sendOtp(String email){ //TODO: implement this method
         throw new NotImplementedException("sendOtp method by email is not implemented yet");
+    }
+
+    // Methods for reset password
+    @Override
+    public void requestPasswordReset(String phoneNumber) {
+        if (repository.findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new UserNotFoundException("User not found");
+        }
+        Person person = repository.findByPhoneNumber(phoneNumber).get();
+        int otp = activateService.setOtp();
+        activateService.saveOtpReset(phoneNumber, otp, false);
+        // Отправка otp на почту
+        sendOtp(person.getEmail());
+        log.info("OTP for {}: {}", phoneNumber, otp);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        log.info("Resetting password for: {}", request.getPhoneNumber());
+
+        // Валидируем OTP
+        activateService.validateOtpReset(request.getPhoneNumber(), request.getOtp());
+
+        // Обновляем пароль
+        Person person = repository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        person.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        person.setUpdatedAt(LocalDate.now());
+        repository.save(person);
+
+        log.info("Password reset successfully for: {}", request.getPhoneNumber());
     }
 }

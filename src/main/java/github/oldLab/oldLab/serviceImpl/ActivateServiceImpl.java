@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.exception.InvalidOtpException;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.dto.request.ActivateRequest;
@@ -143,5 +144,43 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("sending login OTP to phone number: {}", phoneNumber);
         saveForLogin(phoneNumber);
         sendOtp(phoneNumber);
+    }
+
+    // Methods for reset password
+    public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin) {
+        repository.findByPhoneNumber(phoneNumber).ifPresentOrElse(
+                existing -> repository.save(
+                        Activate.builder()
+                                .id(existing.getId())
+                                .phoneNumber(phoneNumber)
+                                .otpReset(otp)
+                                .isActive(true)
+                                .isLogin(isForLogin)
+                                .createdAt(LocalDateTime.now())
+                                .build()
+                ),
+                () -> repository.save(
+                        Activate.builder()
+                                .phoneNumber(phoneNumber)
+                                .otpReset(otp)
+                                .isActive(true)
+                                .isLogin(isForLogin)
+                                .createdAt(LocalDateTime.now())
+                                .build()
+                )
+        );
+    }
+
+    public void validateOtpReset(String phoneNumber, String otp) {
+        Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, Integer.parseInt(otp), true)
+                .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
+
+        if (activate.getCreatedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
+            throw new InvalidOtpException("OTP expired");
+        }
+
+        // Деактивируем OTP после использования
+        activate.setActive(false);
+        repository.save(activate);
     }
 }
