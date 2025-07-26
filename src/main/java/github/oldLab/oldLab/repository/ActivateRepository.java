@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,8 @@ public interface ActivateRepository extends JpaRepository<Activate, Long>{
     Optional<Activate> findByPhoneNumberAndIsLogin(String phoneNumber, boolean isLogin);
 
     Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);
+
+    @Modifying
+    @Query("DELETE FROM Activate a WHERE a.createdAt < :cutoffDate")
+    void deleteOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
 }

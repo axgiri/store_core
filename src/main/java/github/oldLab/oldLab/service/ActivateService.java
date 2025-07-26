@@ -35,4 +35,5 @@ public interface ActivateService {
 
     public void validateOtpReset(String phoneNumber, String otp);
     // End
+    public void cleanupOldRecords();
 }

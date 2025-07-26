@@ -1,6 +1,7 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +19,7 @@ import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.service.ActivateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -182,5 +184,14 @@ public class ActivateServiceImpl implements ActivateService {
         // Деактивируем OTP после использования
         activate.setActive(false);
         repository.save(activate);
+    }
+    // End of Section
+
+    // Cleanup Method
+    @Transactional
+    public void cleanupOldRecords() {
+        // Удаляем записи старше 15 минут (TTL для otp)
+        LocalDateTime cutoffDate = LocalDateTime.now(ZoneOffset.UTC).minusMinutes(15);
+        repository.deleteOlderThan(cutoffDate);
     }
 }

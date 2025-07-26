@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,7 @@ public class AsyncJwtFilter extends OncePerRequestFilter {
 
     private final TokenServiceImpl tokenService;
     private final UserDetailsService userDetailsService;
+    @Qualifier("asyncExecutor")
     private final Executor asyncExecutor;
 
     @Override
