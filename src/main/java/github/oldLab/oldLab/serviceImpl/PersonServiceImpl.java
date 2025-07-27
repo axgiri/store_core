@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.serviceImpl;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -92,7 +93,7 @@ public class PersonServiceImpl implements PersonService {
             person.setFirstName(personRequest.getFirstName());
             person.setLastName(personRequest.getLastName());
             person.setPhoneNumber(personRequest.getPhoneNumber());
-            person.setUpdatedAt(LocalDate.now());
+            person.setUpdatedAt(Instant.now());
             return PersonResponse.fromEntityToDto(repository.save(person));
         }, taskExecutor);
     }
@@ -194,7 +195,7 @@ public class PersonServiceImpl implements PersonService {
     public void resetPassword(ResetPasswordRequest request) {
         log.info("Resetting password for: {}", request.getContact());
 
-        activateService.validateOtpReset(request.getContact(), request.getOtp());
+        activateService.validateOtpReset(request.getContact(), request.getOtpReset());
 
         Person person = request.isEmail()
                 ? repository.findByEmail(request.getContact())
@@ -203,7 +204,7 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         person.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        person.setUpdatedAt(LocalDate.now());
+        person.setUpdatedAt(Instant.now());
 
         repository.save(person);
         log.info("Password reset successfully for: {}", request.getContact());

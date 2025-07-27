@@ -1,7 +1,10 @@
 package github.oldLab.oldLab.serviceImpl;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -36,9 +39,12 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("saving to activate with phone number: {}", request.getPhoneNumber());
         Activate activation = repository.findByPhoneNumber(request.getPhoneNumber())
             .orElseThrow(() -> new UserNotFoundException("no OTP found for phone number: " + request.getPhoneNumber()));
-
-        if (activation.getCreatedAt().plusMinutes(OTP_EXPIRATION_MINUTES).isAfter(LocalDateTime.now())) {
-            throw new UserNotFoundException("OTP expired for phone number: " + request.getPhoneNumber());
+        Instant createdAt = activation.getCreatedAt();
+        Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
+        if (Instant.now().isAfter(expiration)) {
+            throw new UserNotFoundException(
+                    "OTP expired for phone number: " + request.getPhoneNumber()
+            );
         }
 
         if (activation.getOtp() != request.getOtp()) {
@@ -62,7 +68,7 @@ public class ActivateServiceImpl implements ActivateService {
     public void save(String phoneNumber, Optional<Boolean> isLogin) {
         log.debug("saving to activate with phone number: {}, loginAttempted={}", phoneNumber, isLogin);
         int otp = setOtp();
-        LocalDateTime createdAt = LocalDateTime.now();
+        Instant createdAt = Instant.now();
         Activate activation = Activate.builder()
             .phoneNumber(phoneNumber)
             .otp(otp)
@@ -104,10 +110,11 @@ public class ActivateServiceImpl implements ActivateService {
         Activate activation = repository.findByPhoneNumber(phoneNumber)
             .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please register first"));
 
-        if (activation.getCreatedAt().plusMinutes(OTP_EXPIRATION_MINUTES).isBefore(LocalDateTime.now())) {
+        Instant createdAt = activation.getCreatedAt();
+        Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
+        if (Instant.now().isAfter(expiration)) {
             saveForRegister(phoneNumber);
         }
-
         sendOtp(phoneNumber, getOtp(phoneNumber)); //here
     }
 
@@ -115,10 +122,11 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("logging by otp in user with phone number: {}", phoneNumber);
         Activate activation = repository.findByPhoneNumberAndIsLogin(phoneNumber, true)
             .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please send OTP first"));
-        if (activation.getCreatedAt().plusMinutes(OTP_EXPIRATION_MINUTES).isBefore(LocalDateTime.now())) {
+        Instant createdAt = activation.getCreatedAt();
+        Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
+        if (Instant.now().isAfter(expiration)) {
             throw new UserNotFoundException("OTP expired for phone number: " + phoneNumber);
         }
-
         if (activation.getOtp() != OTP) {
             throw new UserNotFoundException("invalid OTP for phone number: " + phoneNumber);
         }
@@ -156,19 +164,20 @@ public class ActivateServiceImpl implements ActivateService {
         activate.setOtpReset(otp);
         activate.setActive(true);
         activate.setLogin(isForLogin);
-        activate.setCreatedAt(LocalDateTime.now());
+        activate.setCreatedAt(Instant.now());
 
         repository.save(activate);
     }
 
-    public void validateOtpReset(String phoneNumber, String otp) {
-        Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, Integer.parseInt(otp), true)
+    public void validateOtpReset(String phoneNumber, int otp) {
+        Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, otp, true)
                 .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
 
-        if (activate.getCreatedAt().plusMinutes(15).isBefore(LocalDateTime.now())) {
+        Instant createdAt = activate.getCreatedAt();
+        Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
+        if (Instant.now().isAfter(expiration)) {
             throw new InvalidOtpException("OTP expired");
         }
-
         activate.setActive(false);
         repository.save(activate);
     }

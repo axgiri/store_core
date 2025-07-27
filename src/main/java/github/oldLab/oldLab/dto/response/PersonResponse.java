@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.dto.response;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,10 +32,10 @@ public class PersonResponse {
     private Long companyId;
 
     @JsonProperty("created_at")
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     @JsonProperty("updated_at")
-    private LocalDate updatedAt;
+    private Instant updatedAt;
     
     public static PersonResponse fromEntityToDto(Person person) {
         return new PersonResponse()

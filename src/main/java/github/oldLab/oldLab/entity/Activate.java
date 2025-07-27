@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.entity;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -40,7 +41,7 @@ public class Activate {
     private boolean isLogin;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     // Field for reset password
     @Column(name = "otp_reset", nullable = true)

@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.entity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -72,10 +73,10 @@ public class Person implements UserDetails {
     private Long companyId;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private Instant updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
