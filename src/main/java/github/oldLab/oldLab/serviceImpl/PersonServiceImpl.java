@@ -47,7 +47,6 @@ public class PersonServiceImpl implements PersonService {
     public PersonResponse create(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
         personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
-        activateService.saveForRegister(personRequest.getPhoneNumber());
         return PersonResponse.fromEntityToDto(repository.save(personRequest.toEntity()));
     }
 

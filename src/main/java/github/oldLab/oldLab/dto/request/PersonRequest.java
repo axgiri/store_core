@@ -42,7 +42,7 @@ public class PersonRequest {
             .setLastName(lastName)
             .setPhoneNumber(phoneNumber)
             .setPassword(password)
-            .setRoleEnum(role)
+            .setRoleEnum(this.role != null ? role : RoleEnum.USER)
             .setCreatedAt(LocalDate.now())
             .setUpdatedAt(LocalDate.now());
     }

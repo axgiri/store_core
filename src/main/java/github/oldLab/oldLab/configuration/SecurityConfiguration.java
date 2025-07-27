@@ -32,9 +32,13 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                    "/api/v1/persons/signup",
-                    "/api/v1/persons/login",
-                    "/api/v1/persons/async/signup"
+                        "/api/v1/persons/signup",
+                        "/api/v1/persons/login",
+                        "/api/v1/persons/async/signup",
+                        "/api/v1/activate/**",
+                        "/error",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
                 )
                 .permitAll()
                 .anyRequest()

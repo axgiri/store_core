@@ -67,14 +67,14 @@ public class ActivateServiceImpl implements ActivateService {
             .phoneNumber(phoneNumber)
             .otp(otp)
             .isActive(false)
-            .isLogin(isLogin.orElse(null))
+                .isLogin(isLogin.orElse(false))
             .createdAt(createdAt)
             .build();
         repository.save(activation);
     }
 
     public void saveForRegister(String phoneNumber) {
-        save(phoneNumber, Optional.of(null));
+        save(phoneNumber, Optional.ofNullable(null));
     }
 
     public void saveForLogin(String phoneNumber) {
