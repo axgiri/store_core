@@ -1,8 +1,6 @@
 package github.oldLab.oldLab.dto.request;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

@@ -2,6 +2,8 @@ package github.oldLab.oldLab.dto.request;
 
 import java.util.List;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -12,6 +14,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@DynamicUpdate
 public class ShopRequest {
     
     @NotNull(message = "name cannot be null")

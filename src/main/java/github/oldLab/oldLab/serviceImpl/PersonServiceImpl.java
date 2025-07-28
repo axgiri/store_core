@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,15 +44,6 @@ public class PersonServiceImpl implements PersonService {
 
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
-
-    public PersonResponse create(PersonRequest personRequest) {
-        log.info("creating person with first name: {}", personRequest.getFirstName());
-        if (repository.existsByPhoneNumber(personRequest.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Phone number " + personRequest.getPhoneNumber() + " already exists");
-        }
-        personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
-        return PersonResponse.fromEntityToDto(repository.save(personRequest.toEntity()));
-    }
 
     public void createAsync(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());

@@ -11,8 +11,6 @@ import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.exception.NotImplementedException;
 
 public interface PersonService {
-    
-    public PersonResponse create(PersonRequest personRequest);
 
     public void createAsync(PersonRequest personRequest);
 

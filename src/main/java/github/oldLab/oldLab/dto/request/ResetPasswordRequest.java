@@ -2,16 +2,13 @@ package github.oldLab.oldLab.dto.request;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 @Data
 public class ResetPasswordRequest {
 
-    @NotBlank
-    private String contact;  // Может быть email или телефон
+    private String contact;
     private boolean isEmail;
 
     @NotNull(message = "otp cannot be null")
