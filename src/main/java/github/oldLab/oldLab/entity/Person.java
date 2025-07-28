@@ -71,6 +71,9 @@ public class Person implements UserDetails {
     @Column(name = "company_id", nullable = true)
     private Long companyId;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @Column(name = "created_at")
     private LocalDate createdAt;
 

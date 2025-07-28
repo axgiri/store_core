@@ -46,9 +46,11 @@ public class PersonServiceImpl implements PersonService {
 
     public PersonResponse create(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
-        personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
+        personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword())); //TODO: make logic of not singing in if flag is FALSE
+        Person person = personRequest.toEntity();
+        person.setIsActive(false);
         activateService.saveForRegister(personRequest.getPhoneNumber());
-        return PersonResponse.fromEntityToDto(repository.save(personRequest.toEntity()));
+        return PersonResponse.fromEntityToDto(repository.save(person));
     }
 
     public void createAsync(PersonRequest personRequest) {
