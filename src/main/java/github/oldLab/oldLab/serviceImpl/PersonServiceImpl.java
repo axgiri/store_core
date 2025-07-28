@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
-import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -48,18 +47,13 @@ public class PersonServiceImpl implements PersonService {
 
     public PersonResponse create(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
-        if (repository.existsByPhoneNumber(personRequest.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Phone number " + personRequest.getPhoneNumber() + " already exists");
-        }
         personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
+        activateService.saveForRegister(personRequest.getPhoneNumber());
         return PersonResponse.fromEntityToDto(repository.save(personRequest.toEntity()));
     }
 
     public void createAsync(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
-        if (repository.existsByPhoneNumber(personRequest.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Phone number " + personRequest.getPhoneNumber() + " already exists");
-        }
         taskExecutor.execute(() -> {
             activateService.saveForRegister(personRequest.getPhoneNumber());
             personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
@@ -129,7 +123,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public String getRole(String token) {
-        token = token.substring(7);
+
         
         if(token == null || token.isEmpty()) {
             throw new InvalidTokenException("token is empty");
@@ -178,13 +172,11 @@ public class PersonServiceImpl implements PersonService {
     public void requestPasswordReset(String contact) {
         boolean isEmail = contact.contains("@"); // Check is Email
 
-        String normalizedContact = isEmail ? contact : normalizePhoneNumber(contact);
-
         Person person = isEmail
-                ? repository.findByEmail(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contact))
-                : repository.findByPhoneNumber(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with phone: " + contact));
+                ? repository.findByEmail(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                : repository.findByPhoneNumber(contact)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         int otp = activateService.setOtp();
 
@@ -197,10 +189,6 @@ public class PersonServiceImpl implements PersonService {
         }
 
         log.info("OTP sent to {}: {}", contact, otp);
-    }
-    private String normalizePhoneNumber(String phoneNumber) {
-        // Удаляем все нецифровые символы и добавляем '+' в начале
-        return "+" + phoneNumber.replaceAll("[^0-9]", "");
     }
 
     @Override
