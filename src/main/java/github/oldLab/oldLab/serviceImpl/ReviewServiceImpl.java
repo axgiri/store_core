@@ -2,6 +2,12 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.util.List;
 
+import github.oldLab.oldLab.entity.Person;
+import github.oldLab.oldLab.entity.Shop;
+import github.oldLab.oldLab.exception.ShopNotFoundException;
+import github.oldLab.oldLab.exception.UserNotFoundException;
+import github.oldLab.oldLab.repository.PersonRepository;
+import github.oldLab.oldLab.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -24,12 +30,26 @@ public class ReviewServiceImpl implements ReviewService {
     private final TaskExecutor taskExecutor;
 
     private final ReviewRepository repository;
+    private final PersonRepository personRepository;
+    private final ShopRepository shopRepository;
 
     @Override
     public ReviewResponse createReview(ReviewRequest reviewRequest) {
         log.info("creating review for shopId: {}", reviewRequest.getShopId());
-        Review review = repository.save(reviewRequest.toEntity());
-        return ReviewResponse.fromEntityToDto(review);
+        Shop shop = shopRepository.findById(reviewRequest.getShopId())
+                .orElseThrow(() -> new ShopNotFoundException("Shop not found with id: " + reviewRequest.getShopId()));
+
+        Person author = personRepository.findById(reviewRequest.getAuthorId())
+                .orElseThrow(() -> new UserNotFoundException("Author not found with id: " +  reviewRequest.getAuthorId()));
+        Review review = new Review()
+                .setAuthor(author)
+                .setShop(shop)
+                .setComment(reviewRequest.getComment())
+                .setRating(reviewRequest.getRating());
+
+        Review savedReview = repository.save(review);
+
+        return ReviewResponse.fromEntityToDto(savedReview);
     }
 
     @Override

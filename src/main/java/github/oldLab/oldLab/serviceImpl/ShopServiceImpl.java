@@ -48,11 +48,17 @@ public class ShopServiceImpl implements ShopService {
                 .toList();
     }
 
-    public void updateShopAsync(Long id, ShopRequest shop) {
+    public void updateShopAsync(Long id, ShopRequest shopRequest) {
         taskExecutor.execute(() -> {
-            repository.findById(id)
+            Shop shop = repository.findById(id)
                     .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
-            repository.save(shop.toEntity());
+            shop.setName(shopRequest.getName() == null ? shop.getName() : shopRequest.getName());
+            shop.setCategory(shopRequest.getCategory() == null ? shop.getCategory() : shopRequest.getCategory());
+            shop.setDescription(shopRequest.getDescription() == null ? shop.getDescription() : shopRequest.getDescription());
+            shop.setAddress(shopRequest.getAddress() == null ? shop.getAddress() : shopRequest.getAddress());
+            shop.setPhotoHeader(shopRequest.getPhotoHeader() == null? shop.getPhotoHeader(): shopRequest.getPhotoHeader());
+            shop.setVersion(shopRequest.toEntity().getVersion() == null? 0 : shopRequest.toEntity().getVersion()+1);
+            repository.save(shop);
             log.info("updated shop with id: {}", id);
         });
     }
@@ -61,9 +67,9 @@ public class ShopServiceImpl implements ShopService {
         repository.deleteById(id);
     }
 
-    public List<ShopResponse> getShopsByCategory(CategoryEnum category) {
-        log.info("fetching shops by category: {}", category);
-        List<Shop> shops = repository.findByCategory(category);
+    public List<ShopResponse> getShopsByCategory(List<CategoryEnum> category) {
+        log.info("fetching shops by category: {}", category.getFirst());
+        List<Shop> shops = repository.findByCategoryIn(category);
         
         if (shops.isEmpty()) {
             throw new ShopNotFoundException("no shops found for category: " + category);

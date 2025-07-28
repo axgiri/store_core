@@ -55,7 +55,7 @@ public class ShopController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<ShopResponse>> getShopsByCategory(@RequestParam("category") CategoryEnum category) {
+    public ResponseEntity<List<ShopResponse>> getShopsByCategory(@RequestParam("category") List<CategoryEnum> category) {
         List<ShopResponse> shops = shopService.getShopsByCategory(category);
         return ResponseEntity.ok(shops);
     }

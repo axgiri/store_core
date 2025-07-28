@@ -35,6 +35,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     private final int OTP_EXPIRATION_MINUTES = 15;
 
+    @Transactional
     public void setActive(ActivateRequest request) {
         log.debug("saving to activate with phone number: {}", request.getPhoneNumber());
         Activate activation = repository.findByPhoneNumber(request.getPhoneNumber())
@@ -62,7 +63,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public int setOtp() {
         log.debug("generating otp");
-        return new Random().nextInt(9999);
+        return 1000 + new Random().nextInt(9000);
     }
 
     public void save(String phoneNumber, Optional<Boolean> isLogin) {
@@ -169,6 +170,7 @@ public class ActivateServiceImpl implements ActivateService {
         repository.save(activate);
     }
 
+    @Transactional
     public void validateOtpReset(String phoneNumber, int otp) {
         Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, otp, true)
                 .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
