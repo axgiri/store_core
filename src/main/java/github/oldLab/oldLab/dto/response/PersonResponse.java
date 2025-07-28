@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.dto.response;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

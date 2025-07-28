@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.entity;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 

@@ -1,8 +1,6 @@
 package github.oldLab.oldLab.dto.request;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -21,7 +19,7 @@ public class PersonRequest {
     @NotNull(message = "first name cannot be null")
     @Size(min = 2, max = 32, message = "first name must be between 2 and 32 characters")
     private String firstName;
-    
+
     @NotNull(message = "last name cannot be null")
     @Size(min = 2, max = 32, message = "last name must be between 2 and 32 characters")
     private String lastName;
@@ -40,15 +38,15 @@ public class PersonRequest {
 
     public Person toEntity() {
         return new Person()
-            .setFirstName(firstName)
-            .setLastName(lastName)
-            .setPhoneNumber(phoneNumber)
-            .setPassword(password)
-            .setRoleEnum(this.role != null ? role : RoleEnum.USER)
-            .setCreatedAt(Instant.now())
-            .setUpdatedAt(Instant.now());
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPhoneNumber(phoneNumber)
+                .setPassword(password)
+                .setRoleEnum(this.role != null ? role : RoleEnum.USER)
+                .setCreatedAt(Instant.now())
+                .setUpdatedAt(Instant.now());
     }
 }
 
-//WHEN JWT filters will be implemented 
-//TODO: add companyId, because company is not connected to person yet 
+//WHEN JWT filters will be implemented
+//TODO: add companyId, because company is not connected to person yet

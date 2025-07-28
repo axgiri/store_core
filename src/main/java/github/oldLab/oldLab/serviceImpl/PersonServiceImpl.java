@@ -1,11 +1,11 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
+import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class PersonServiceImpl implements PersonService {
-    
+
     private final PersonRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -45,15 +45,11 @@ public class PersonServiceImpl implements PersonService {
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
 
-    public PersonResponse create(PersonRequest personRequest) {
-        log.info("creating person with first name: {}", personRequest.getFirstName());
-        personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
-        activateService.saveForRegister(personRequest.getPhoneNumber());
-        return PersonResponse.fromEntityToDto(repository.save(personRequest.toEntity()));
-    }
-
     public void createAsync(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
+        if (repository.existsByPhoneNumber(personRequest.getPhoneNumber())) {
+            throw new UserAlreadyExistsException("Phone number " + personRequest.getPhoneNumber() + " already exists");
+        }
         taskExecutor.execute(() -> {
             activateService.saveForRegister(personRequest.getPhoneNumber());
             personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
@@ -65,7 +61,7 @@ public class PersonServiceImpl implements PersonService {
     public AuthResponse authenticate(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(), request.getPassword()));
         var person = repository.findByPhoneNumber(request.getPhoneNumber())
-            .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + request.getPhoneNumber()));
+                .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + request.getPhoneNumber()));
         CompletableFuture<String> token = tokenService.generateToken(person);
         return new AuthResponse(token.join(), PersonResponse.fromEntityToDto(person));
     }
@@ -90,7 +86,7 @@ public class PersonServiceImpl implements PersonService {
         return CompletableFuture.supplyAsync(() -> {
             Person person = repository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
-                    
+
             person.setFirstName(personRequest.getFirstName());
             person.setLastName(personRequest.getLastName());
             person.setPhoneNumber(personRequest.getPhoneNumber());
@@ -123,8 +119,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public String getRole(String token) {
+        token = token.substring(7);
 
-        
         if(token == null || token.isEmpty()) {
             throw new InvalidTokenException("token is empty");
         }
@@ -138,7 +134,7 @@ public class PersonServiceImpl implements PersonService {
         log.info("updating password for phone number: {}", loginRequest.getPhoneNumber());
         taskExecutor.execute(() -> {
             Person person = repository.findByPhoneNumber(loginRequest.getPhoneNumber())
-                .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + loginRequest.getPhoneNumber()));
+                    .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + loginRequest.getPhoneNumber()));
             if (!passwordEncoder.matches(oldPassword, person.getPassword())) {
                 throw new UserNotFoundException("incorrect current password for phone number: " + loginRequest.getPhoneNumber());
             }
@@ -157,11 +153,11 @@ public class PersonServiceImpl implements PersonService {
 
         final String actualToken = token.substring(7);
         Person person = repository.findByPhoneNumber(tokenService.extractUsername(actualToken))
-            .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
+                .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
 
         return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).getContent().stream()
-            .map(PersonResponse::fromEntityToDto)
-            .toList();
+                .map(PersonResponse::fromEntityToDto)
+                .toList();
     }
 
     public void sendOtp(String email){ //TODO: implement this method
@@ -172,11 +168,13 @@ public class PersonServiceImpl implements PersonService {
     public void requestPasswordReset(String contact) {
         boolean isEmail = contact.contains("@"); // Check is Email
 
+        String normalizedContact = isEmail ? contact : normalizePhoneNumber(contact);
+
         Person person = isEmail
-                ? repository.findByEmail(contact)
-                .orElseThrow(() -> new UserNotFoundException("User not found"))
-                : repository.findByPhoneNumber(contact)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                ? repository.findByEmail(normalizedContact)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contact))
+                : repository.findByPhoneNumber(normalizedContact)
+                .orElseThrow(() -> new UserNotFoundException("User not found with phone: " + contact));
 
         int otp = activateService.setOtp();
 
@@ -189,6 +187,10 @@ public class PersonServiceImpl implements PersonService {
         }
 
         log.info("OTP sent to {}: {}", contact, otp);
+    }
+    private String normalizePhoneNumber(String phoneNumber) {
+        // Удаляем все нецифровые символы и добавляем '+' в начале
+        return "+" + phoneNumber.replaceAll("[^0-9]", "");
     }
 
     @Override

@@ -8,9 +8,7 @@ import lombok.Data;
 @Data
 public class ResetPasswordRequest {
 
-    @NotNull(message = "contact is email or phone number, and it cannot be null")
     private String contact;
-
     private boolean isEmail;
 
     @NotNull(message = "otp cannot be null")
@@ -21,4 +19,3 @@ public class ResetPasswordRequest {
     @Size(min = 6, max = 32, message = "password must be between 6 and 32 characters")
     private String newPassword;
 }
-

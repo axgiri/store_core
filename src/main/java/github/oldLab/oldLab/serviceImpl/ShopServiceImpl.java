@@ -10,6 +10,7 @@ import github.oldLab.oldLab.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -48,16 +49,13 @@ public class ShopServiceImpl implements ShopService {
                 .toList();
     }
 
-    public void updateShopAsync(Long id, ShopRequest shopRequest) {
+    public void updateShopAsync(Long id, ShopRequest dto) {
         taskExecutor.execute(() -> {
             Shop shop = repository.findById(id)
                     .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
-            shop.setName(shopRequest.getName() == null ? shop.getName() : shopRequest.getName());
-            shop.setCategory(shopRequest.getCategory() == null ? shop.getCategory() : shopRequest.getCategory());
-            shop.setDescription(shopRequest.getDescription() == null ? shop.getDescription() : shopRequest.getDescription());
-            shop.setAddress(shopRequest.getAddress() == null ? shop.getAddress() : shopRequest.getAddress());
-            shop.setPhotoHeader(shopRequest.getPhotoHeader() == null? shop.getPhotoHeader(): shopRequest.getPhotoHeader());
-            shop.setVersion(shopRequest.toEntity().getVersion() == null? 0 : shopRequest.toEntity().getVersion()+1);
+
+            BeanUtils.copyProperties(dto, shop, "id", "version");
+
             repository.save(shop);
             log.info("updated shop with id: {}", id);
         });
