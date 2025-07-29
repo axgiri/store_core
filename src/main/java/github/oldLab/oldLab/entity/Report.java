@@ -30,14 +30,14 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
-    private Person reporter; // Кто отправил жалобу
+    private Person reporter; // Person, who throw report
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReportReasonEnum reason;
 
     @Column(columnDefinition = "TEXT")
-    private String details; // Доп. пояснение (обязательно, если reason == OTHER)
+    private String details; // For other reason
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -51,7 +51,7 @@ public class Report {
     private Instant createdAt = Instant.now();
 
     @Column(name = "resolved_at")
-    private Instant resolvedAt;
+    private Instant updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "report_type", nullable = false)
