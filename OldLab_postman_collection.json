@@ -925,7 +925,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"targetType\": \"PERSON\",\n    \"reason\": \"Inappropriate behavior\",\n    \"description\": \"User was harassing other users\"\n}",
+							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SCAM\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -954,7 +954,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"targetType\": \"PERSON\",\n    \"reason\": \"Inappropriate behavior\",\n    \"description\": \"User was harassing other users\"\n}",
+							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
