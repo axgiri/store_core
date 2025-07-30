@@ -8,7 +8,6 @@ import github.oldLab.oldLab.entity.Report;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.ReportRepository;
-import github.oldLab.oldLab.service.PhotoService;
 import github.oldLab.oldLab.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

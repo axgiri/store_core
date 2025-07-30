@@ -3,13 +3,7 @@ package github.oldLab.oldLab.service;
 import github.oldLab.oldLab.Enum.ReportStatusEnum;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
-import github.oldLab.oldLab.entity.Person;
-import github.oldLab.oldLab.entity.Report;
-import github.oldLab.oldLab.exception.UserNotFoundException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 public interface ReportService {
