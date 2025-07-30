@@ -51,11 +51,11 @@ public class ShopServiceImpl implements ShopService {
 
     public void updateShopAsync(Long id, ShopRequest dto) {
         taskExecutor.execute(() -> {
-            Shop shop = repository.findById(id)
-                    .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
-
+            if (!repository.existsById(id)) {
+                throw new ShopNotFoundException("shop not found with id: " + id);
+            }
+            Shop shop = repository.getReferenceById(id);
             BeanUtils.copyProperties(dto, shop, "id", "version");
-
             repository.save(shop);
             log.info("updated shop with id: {}", id);
         });
@@ -65,8 +65,11 @@ public class ShopServiceImpl implements ShopService {
         repository.deleteById(id);
     }
 
-    public List<ShopResponse> getShopsByCategory(List<CategoryEnum> category) {
-        log.info("fetching shops by category: {}", category.getFirst());
+    public List<ShopResponse> getShopsByCategory(List<CategoryEnum> category, int page, int size) {
+        if (category == null || category.isEmpty()) {
+            throw new ShopNotFoundException("Category list is empty or null.");
+        }
+        log.info("fetching shops by category: {}", category.get(0));
         List<Shop> shops = repository.findByCategoryIn(category);
         
         if (shops.isEmpty()) {

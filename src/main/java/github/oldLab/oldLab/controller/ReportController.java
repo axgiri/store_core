@@ -43,12 +43,15 @@ public class ReportController {
 
     @GetMapping("/status/{status}")
     public ResponseEntity<List<ReportResponse>> getReportsByStatus(
-            @PathVariable ReportStatusEnum status) {
-        List<ReportResponse> responses = service.getReportsByStatus(status);
+            @PathVariable ReportStatusEnum status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        List<ReportResponse> responses = service.getReportsByStatus(status, page, size);
         return ResponseEntity.ok(responses);
     }
 
     @PatchMapping("/{reportId}/status")
+
     public ResponseEntity<ReportResponse> updateReportStatus(
             @PathVariable Long reportId,
             @RequestParam ReportStatusEnum status,

@@ -189,7 +189,7 @@ public class PersonServiceImpl implements PersonService {
         log.info("OTP sent to {}: {}", contact, otp);
     }
     private String normalizePhoneNumber(String phoneNumber) {
-        // Удаляем все нецифровые символы и добавляем '+' в начале
+        // Remove all non-numeric characters and add '+' at the beginning
         return "+" + phoneNumber.replaceAll("[^0-9]", "");
     }
 
