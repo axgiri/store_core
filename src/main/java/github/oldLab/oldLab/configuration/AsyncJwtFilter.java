@@ -2,16 +2,13 @@ package github.oldLab.oldLab.configuration;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.AsyncContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,54 +31,59 @@ public class AsyncJwtFilter extends OncePerRequestFilter {
 
     private final TokenServiceImpl tokenService;
     private final UserDetailsService userDetailsService;
-    @Qualifier("asyncExecutor")
-    private final Executor asyncExecutor;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
-        String jwt = header.substring(7);
+        final String authHeader = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        AsyncContext asyncCtx = request.startAsync();
-        asyncCtx.setTimeout(5000);
+        final String jwt = authHeader.substring(7);
 
-        asyncExecutor.execute(() -> {
-            try {
-                String username = tokenService.extractUsername(jwt);
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    Claims claims = tokenService.extractAllClaimsAsync(jwt).join();
-                    log.debug("Extracted claims: {}", claims);
-                    List<SimpleGrantedAuthority> auths = ((List<?>) claims.get("roles"))
-                        .stream()
-                        .map(r -> new SimpleGrantedAuthority((String) r))
-                        .collect(Collectors.toList());
-
-                    if (tokenService.isTokenValid(jwt, userDetails)) {
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, auths);
-                        authToken.setDetails(new WebAuthenticationDetailsSource()
-                            .buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
-                }
-                filterChain.doFilter(asyncCtx.getRequest(), asyncCtx.getResponse());
-            } catch (Exception e) {
-                log.debug(("async JWT processing failed"));
-                try {
-                    filterChain.doFilter(asyncCtx.getRequest(), asyncCtx.getResponse());
-                } catch (Exception ex) {
-                    log.error("error in fallback filterChain", ex);
-                }
-            } finally {
-                asyncCtx.complete();
+        try {
+            String username = tokenService.extractUsername(jwt);
+            if (username == null) {
+                log.warn("Invalid JWT - unable to extract username");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token");
+                return;
             }
-        });
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (!tokenService.isTokenValid(jwt, userDetails)) {
+                log.warn("Invalid JWT for user: {}", username);
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token");
+                return;
+            }
+
+            Claims claims = tokenService.extractAllClaimsAsync(jwt).join();
+            List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles"))
+                    .stream()
+                    .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
+                    .collect(Collectors.toList());
+
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            authorities);
+            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        } catch (Exception e) {
+            log.error("JWT Authentication Error: {}", e.getMessage(), e);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Authentication failed");
+            return;
+        }
+
+        filterChain.doFilter(request, response);
     }
 }

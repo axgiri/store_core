@@ -33,7 +33,7 @@ public interface ActivateService {
     // Methods for reset password
     public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin);
 
-    public void validateOtpReset(String phoneNumber, String otp);
+    public void validateOtpReset(String phoneNumber, int otp);
     // End
     public void cleanupOldRecords();
 }

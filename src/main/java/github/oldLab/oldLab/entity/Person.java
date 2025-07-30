@@ -1,6 +1,6 @@
 package github.oldLab.oldLab.entity;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -75,10 +75,10 @@ public class Person implements UserDetails {
     private Boolean isActive;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private Instant updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

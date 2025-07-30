@@ -16,5 +16,5 @@ public interface ShopService {
 
     void deleteShop(Long id);
 
-    List<ShopResponse> getShopsByCategory(CategoryEnum category);
+    List<ShopResponse> getShopsByCategory(List<CategoryEnum> category, int page, int size);
 }
