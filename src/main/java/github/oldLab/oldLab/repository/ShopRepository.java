@@ -10,6 +10,6 @@ import github.oldLab.oldLab.entity.Shop;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
-    
-    List<Shop> findByCategory(CategoryEnum category);
+
+    List<Shop> findByCategoryIn(List<CategoryEnum> categories);
 }

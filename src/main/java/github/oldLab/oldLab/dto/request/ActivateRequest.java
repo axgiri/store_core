@@ -3,9 +3,9 @@ package github.oldLab.oldLab.dto.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -17,6 +17,6 @@ public class ActivateRequest {
     private String phoneNumber;
 
     @NotNull(message = "otp cannot be null")
-    @Size(min = 4, max = 4, message = "otp must be 4 digits")
+    @Digits(integer = 4, fraction = 0, message = "otp must be 4 digits")
     private int otp;
 }

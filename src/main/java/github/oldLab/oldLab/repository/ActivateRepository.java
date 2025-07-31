@@ -10,19 +10,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import github.oldLab.oldLab.entity.Activate;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ActivateRepository extends JpaRepository<Activate, Long>{
     
     Optional<Activate> findByPhoneNumber(String phoneNumber);
 
-    @Modifying
-    @Query("UPDATE Activate a SET a.isActive = :active WHERE a.phoneNumber = :phoneNumber")
-    Activate setActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber,
-                                    @Param("isActive") boolean active);
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Transactional
+    @Query("UPDATE Activate a SET a.isActive = :isActive WHERE a.phoneNumber = :phoneNumber")
+    int setActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber,
+                               @Param("isActive") boolean isActive);
 
     Optional<Activate> findByPhoneNumberAndIsLogin(String phoneNumber, boolean isLogin);
 
+    @Transactional
     Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);
 
     boolean existsByPhoneNumber(String phoneNumber);

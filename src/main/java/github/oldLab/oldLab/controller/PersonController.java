@@ -32,12 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonController {
 
     private final PersonServiceImpl service;
-    
-    @PostMapping("/signup")
-    public ResponseEntity<PersonResponse> create(@Valid @RequestBody PersonRequest personRequest) {
-        log.debug("creating person: {}", personRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(personRequest));
-    }
 
     @PostMapping("/async/signup")
     public ResponseEntity<Void> createAsync(@Valid @RequestBody PersonRequest personRequest) {

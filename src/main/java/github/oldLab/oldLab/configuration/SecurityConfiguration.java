@@ -22,27 +22,27 @@ public class SecurityConfiguration {
     private final AsyncJwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    @SuppressWarnings("removal")
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                .disable()
-                .cors()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers(
-                    "/api/v1/persons/signup",
-                    "/api/v1/persons/login",
-                    "/api/v1/persons/async/signup"
-                )
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .securityMatcher("/api/v1/persons/signup",
+                        "/api/v1/persons/login",
+                        "/api/v1/persons/async/signup")
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(a -> a.anyRequest().permitAll())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain protectedSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/api/v1/**")
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(a -> a.anyRequest().authenticated())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
