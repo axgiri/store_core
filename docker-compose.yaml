@@ -1,0 +1,15 @@
+services:
+  pgadmin:
+    image: dpage/pgadmin4:9.6
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ax@micro.kz
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "7313:80"
+    networks:
+      - auth-network
+
+networks:
+  auth-network:
+    driver: bridge
