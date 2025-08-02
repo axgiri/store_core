@@ -2,6 +2,7 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.util.List;
 
+import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
@@ -56,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
             }
 
             if (repository.existsByShopIdAndAuthorId(shopId, reviewRequest.getAuthorId())) {
-                throw new RuntimeException("author has already reviewed this shop"); //TODO: implement DuplicateReviewException
+                throw new DuplicateReviewException("author has already reviewed this shop");
             }
 
             review.setShop(shopRepository.getReferenceById(shopId));
@@ -68,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
             }
 
             if (repository.existsByPersonIdAndAuthorId(personId, reviewRequest.getAuthorId())) {
-                throw new RuntimeException("author has already reviewed this person"); //TODO: implement DuplicateReviewException
+                throw new DuplicateReviewException("author has already reviewed this person");
             }
 
             review.setPerson(personRepository.getReferenceById(personId));
