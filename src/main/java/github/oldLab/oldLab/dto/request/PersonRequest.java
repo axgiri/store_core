@@ -46,6 +46,3 @@ public class PersonRequest {
                 .setUpdatedAt(Instant.now());
     }
 }
-
-//WHEN JWT filters will be implemented
-//TODO: add companyId, because company is not connected to person yet
