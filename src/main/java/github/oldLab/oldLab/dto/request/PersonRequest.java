@@ -34,14 +34,13 @@ public class PersonRequest {
 
     private RoleEnum role;
 
-    private boolean isActive;
-
     public Person toEntity() {
         return new Person()
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPhoneNumber(phoneNumber)
                 .setPassword(password)
+                .setIsActive(false)
                 .setRoleEnum(this.role != null ? role : RoleEnum.USER)
                 .setCreatedAt(Instant.now())
                 .setUpdatedAt(Instant.now());
