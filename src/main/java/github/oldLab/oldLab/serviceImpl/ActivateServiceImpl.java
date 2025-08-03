@@ -182,12 +182,9 @@ public class ActivateServiceImpl implements ActivateService {
         activate.setActive(false);
         repository.save(activate);
     }
-    // End of Section
-
-    // Cleanup Method
+    
     @Transactional
     public void cleanupOldRecords() {
-        // Удаляем записи старше 15 минут (TTL для otp)
         LocalDateTime cutoffDate = LocalDateTime.now(ZoneOffset.UTC).minusMinutes(15);
         repository.deleteOlderThan(cutoffDate);
     }

@@ -34,19 +34,15 @@ public class PersonRequest {
 
     private RoleEnum role;
 
-    private boolean isActive;
-
     public Person toEntity() {
         return new Person()
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPhoneNumber(phoneNumber)
                 .setPassword(password)
+                .setIsActive(false)
                 .setRoleEnum(this.role != null ? role : RoleEnum.USER)
                 .setCreatedAt(Instant.now())
                 .setUpdatedAt(Instant.now());
     }
 }
-
-//WHEN JWT filters will be implemented
-//TODO: add companyId, because company is not connected to person yet
