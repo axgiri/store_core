@@ -1,10 +1,36 @@
 # spring:
 #   application:
 #     name: oldLab
+
+# jwt:
+#   secret: difasdfjasdf;asdfjru2398uofijsdfsajf #random secret
+
+# spring:
+#   datasource:
+#     url: jdbc:postgresql://authentication-db:5432/authenticationdb
+#     username: postgres
+#     password: "1"
+#     driver-class-name: org.postgresql.Driver
+
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: true
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.PostgreSQLDialect
+#         format_sql: true
   
 #   minio:
-#   url: http://localhost:9000
-#   access-key: minio
-#   secret-key: minio123
-#   bucket: user-avatars
-  
+#     url: http://localhost:9000
+#     access-key: minio
+#     secret-key: minio123
+#     bucket: user-avatars
+
+# #spring:
+# #  kafka:
+# #    bootstrap-servers: kafka:9092
+
+# logging:
+#   level:
+#     org.springframework.security: DEBUG

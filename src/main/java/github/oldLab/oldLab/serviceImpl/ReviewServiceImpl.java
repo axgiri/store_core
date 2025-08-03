@@ -3,7 +3,6 @@ package github.oldLab.oldLab.serviceImpl;
 import java.util.List;
 
 import github.oldLab.oldLab.exception.DuplicateReviewException;
-import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.ShopRepository;
@@ -17,7 +16,6 @@ import github.oldLab.oldLab.dto.response.ReviewResponse;
 import github.oldLab.oldLab.entity.Review;
 import github.oldLab.oldLab.repository.ReviewRepository;
 import github.oldLab.oldLab.service.ReviewService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,13 +31,16 @@ public class ReviewServiceImpl implements ReviewService {
     private final PersonRepository personRepository;
     private final ShopRepository shopRepository;
 
-    @Transactional
     @Override
-    public ReviewResponse createReview(ReviewRequest reviewRequest) {
-        log.info("creating review: shopId={}, personId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getPersonId(), reviewRequest.getAuthorId());
+    public ReviewResponse createReviewToPerson(ReviewRequest reviewRequest) {
+        log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
-        if (!personRepository.existsById(reviewRequest.getAuthorId())) {
-            throw new UserNotFoundException("author not found with id: " + reviewRequest.getAuthorId());
+        if (!personRepository.existsById(reviewRequest.getAuthorId()) && !personRepository.existsById(reviewRequest.getPersonId())) {
+            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
+        }
+
+        if (repository.existsByShopIdAndAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
+            throw new DuplicateReviewException("author has already reviewed this person");
         }
 
         var authorRef = personRepository.getReferenceById(reviewRequest.getAuthorId());
@@ -47,36 +48,33 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = new Review()
                 .setAuthor(authorRef)
                 .setComment(reviewRequest.getComment())
-                .setRating(reviewRequest.getRating());
+                .setRating(reviewRequest.getRating())
+                .setPerson(personRepository.getReferenceById(reviewRequest.getPersonId()));
 
-        if (reviewRequest.getShopId() != null) {
-            Long shopId = reviewRequest.getShopId();
+        return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
+    }
 
-            if (!shopRepository.existsById(shopId)) {
-                throw new ShopNotFoundException("shop not found with id: " + shopId);
-            }
+    @Override
+    public ReviewResponse createReviewToShop(ReviewRequest reviewRequest) {
+        log.info("creating review to shop: shopId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getAuthorId());
 
-            if (repository.existsByShopIdAndAuthorId(shopId, reviewRequest.getAuthorId())) {
-                throw new DuplicateReviewException("author has already reviewed this shop");
-            }
-
-            review.setShop(shopRepository.getReferenceById(shopId));
-        } else {
-            Long personId = reviewRequest.getPersonId();
-
-            if (!personRepository.existsById(personId)) {
-                throw new UserNotFoundException("person not found with id: " + personId);
-            }
-
-            if (repository.existsByPersonIdAndAuthorId(personId, reviewRequest.getAuthorId())) {
-                throw new DuplicateReviewException("author has already reviewed this person");
-            }
-
-            review.setPerson(personRepository.getReferenceById(personId));
+        if (!personRepository.existsById(reviewRequest.getAuthorId()) && !shopRepository.existsById(reviewRequest.getShopId())) {
+            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or shopId " + reviewRequest.getShopId() + " not found");
         }
 
-        Review saved = repository.saveAndFlush(review);
-        return ReviewResponse.fromEntityToDto(saved);
+        if (repository.existsByShopIdAndAuthorId(reviewRequest.getShopId(), reviewRequest.getAuthorId())) {
+                throw new DuplicateReviewException("author has already reviewed this shop");
+        }
+
+        var authorRef = personRepository.getReferenceById(reviewRequest.getAuthorId());
+
+        Review review = new Review()
+                .setAuthor(authorRef)
+                .setComment(reviewRequest.getComment())
+                .setRating(reviewRequest.getRating())
+                .setShop(shopRepository.getReferenceById(reviewRequest.getShopId()));
+
+        return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
     }
 
     @Override

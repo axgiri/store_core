@@ -146,7 +146,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"securePassword123\"\n}",
+							"raw": "{\n    \"first_name\": \"testUser3\",\n    \"last_name\": \"testUser3\",\n    \"phone_number\": \"+7777777773\",\n    \"password\": \"testUser3\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -176,7 +176,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"securePassword123\"\n}",
+							"raw": "{\n    \"phone_number\": \"+877800712300\",\n    \"password\": \"testUser\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -585,13 +585,23 @@
 			"name": "Review",
 			"item": [
 				{
-					"name": "Create Review",
+					"name": "Create Review to person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"personId\": 1,\n    \"shopId\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 4,\n    \"person_id\": 35,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -599,14 +609,44 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews",
+							"raw": "{{base_url}}/api/v1/reviews/person",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"reviews"
+								"reviews",
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Review to shop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"author_id\": 1,\n    \"shop_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews/shop",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"shop"
 							]
 						}
 					},
@@ -614,9 +654,21 @@
 				},
 				{
 					"name": "Get Reviews by Shop ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/reviews/shop/1?page=0&size=20",
 							"host": [
@@ -920,11 +972,21 @@
 				{
 					"name": "Create Report Async",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"reporter_id\": 4,\n    \"target_id\": 34,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
