@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "b5e27d4f-4dec-4836-8440-3a5676a091f4",
+		"_postman_id": "a998a013-be40-4e32-a4a8-859cf3b489fa",
 		"name": "OldLab API Collection",
 		"description": "Postman collection for OldLab API endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "46679422",
-		"_collection_link": "https://scheldie.postman.co/workspace/Scheldie's-Workspace~7454fa17-088a-45e1-84d8-4291c454aa30/collection/46679422-b5e27d4f-4dec-4836-8440-3a5676a091f4?action=share&source=collection_link&creator=46679422"
+		"_exporter_id": "36832826"
 	},
 	"item": [
 		{
@@ -141,42 +140,13 @@
 			"name": "Person",
 			"item": [
 				{
-					"name": "Signup",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"securePassword123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/signup",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Async Signup",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"securePassword123\"\n}",
+							"raw": "{\n    \"first_name\": \"testUser3\",\n    \"last_name\": \"testUser3\",\n    \"phone_number\": \"+7777777773\",\n    \"password\": \"testUser3\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -206,7 +176,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"securePassword123\"\n}",
+							"raw": "{\n    \"phone_number\": \"+877800712300\",\n    \"password\": \"testUser\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -615,13 +585,23 @@
 			"name": "Review",
 			"item": [
 				{
-					"name": "Create Review",
+					"name": "Create Review to person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"personId\": 1,\n    \"shopId\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 4,\n    \"person_id\": 35,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -629,14 +609,44 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews",
+							"raw": "{{base_url}}/api/v1/reviews/person",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"reviews"
+								"reviews",
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Review to shop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"author_id\": 1,\n    \"shop_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews/shop",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"shop"
 							]
 						}
 					},
@@ -644,9 +654,21 @@
 				},
 				{
 					"name": "Get Reviews by Shop ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/reviews/shop/1?page=0&size=20",
 							"host": [
@@ -950,11 +972,21 @@
 				{
 					"name": "Create Report Async",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"reporter_id\": 4,\n    \"target_id\": 34,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1062,10 +1094,33 @@
 			]
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8080"
+			"value": "https://3000mostcommonwords.com/list-of-3000-most-common-polish-words-in-english",
+			"type": "string"
 		}
 	]
 }
