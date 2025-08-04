@@ -44,7 +44,8 @@ public class Report {
     @NotNull(message = "Reporter id cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
-    private Person reporter; // Person, who throw report
+    @Column(name = "reporter_id")
+    private Person reporterId; // Person, who throw report
 
     @NotNull(message = "Report reason cannot be null")
     @Enumerated(EnumType.STRING)

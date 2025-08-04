@@ -212,4 +212,17 @@ public class PersonServiceImpl implements PersonService {
         repository.save(person);
         log.info("Password reset successfully for: {}", request.getContact());
     }
+
+    public Long getIdFromPhoneNumber(String phoneNumber) {
+        log.info("getting id for user with phone number: {}", phoneNumber);
+        return repository.findIdByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + phoneNumber));
+    }
+
+    public void setCompanyIdForExistingPerson(Long personId, Long companyId) {
+        log.info("setting company id for person with id: {}", personId);
+        Person person = repository.getReferenceById(personId);
+        person.setCompanyId(companyId);
+        repository.save(person);
+    }
 }

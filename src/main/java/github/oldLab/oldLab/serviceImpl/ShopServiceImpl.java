@@ -5,6 +5,7 @@ import github.oldLab.oldLab.dto.request.ShopRequest;
 import github.oldLab.oldLab.dto.response.ShopResponse;
 import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.exception.ShopNotFoundException;
+import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.ShopRepository;
 import github.oldLab.oldLab.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,12 +30,26 @@ public class ShopServiceImpl implements ShopService {
     private final TaskExecutor taskExecutor;
 
     private final ShopRepository repository;
+    private final TokenServiceImpl tokenService;
+    private final PersonServiceImpl personService;
+    private final PersonRepository personRepository;
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
-    public void createShopAsync(ShopRequest shopRequest) {
+    public void createShopAsync(ShopRequest shopRequest, String token) {
         log.info("creating shop with name: {}", shopRequest.getName());
         taskExecutor.execute(() -> {
-            repository.save(shopRequest.toEntity());
+            
+            String phoneNumber = tokenService.extractUsername(token);
+            Long personId = personService.getIdFromPhoneNumber(phoneNumber);
+            var personReference = personRepository.getReferenceById(personId);
+            
+            Shop shop = shopRequest.toEntity()
+                .setOwnerId(personReference);
+
+            Shop savedShop = repository.save(shop);
+
+            personService.setCompanyIdForExistingPerson(personId, savedShop.getId());
             log.info("created shop with name: {}", shopRequest.getName());
         });
     }

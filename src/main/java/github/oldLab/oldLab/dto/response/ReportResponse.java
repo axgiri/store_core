@@ -52,8 +52,8 @@ public class ReportResponse {
     public static ReportResponse fromEntityToDto(Report report) {
         return new ReportResponse()
         .setId(report.getId())
-        .setReporterId(report.getReporter().getId())
-            .setReporterName(report.getReporter().getFirstName() + " " + report.getReporter().getLastName())
+        .setReporterId(report.getReporterId().getId())
+            .setReporterName(report.getReporterId().getFirstName() + " " + report.getReporterId().getLastName())
         .setReason(report.getReason())
         .setDetails(report.getDetails())
         .setStatus(report.getStatus())
