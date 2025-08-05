@@ -5,7 +5,6 @@ import github.oldLab.oldLab.dto.request.ShopRequest;
 import github.oldLab.oldLab.dto.response.ShopResponse;
 import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.exception.ShopNotFoundException;
-import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.ShopRepository;
 import github.oldLab.oldLab.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository repository;
     private final TokenServiceImpl tokenService;
     private final PersonServiceImpl personService;
-    private final PersonRepository personRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
@@ -42,8 +40,8 @@ public class ShopServiceImpl implements ShopService {
             
             String phoneNumber = tokenService.extractUsername(token);
             Long personId = personService.getIdFromPhoneNumber(phoneNumber);
-            var personReference = personRepository.getReferenceById(personId);
-            
+            var personReference = personService.getReferenceById(personId);
+
             Shop shop = shopRequest.toEntity()
                 .setOwnerId(personReference);
 
@@ -58,6 +56,11 @@ public class ShopServiceImpl implements ShopService {
         Shop shop = repository.findById(id)
                 .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
         return ShopResponse.fromEntityToDto(shop);
+    }
+
+    public Shop findEntityById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
     }
 
     public List<ShopResponse> getAllShopsPaginated(int page, int size) {
@@ -96,5 +99,13 @@ public class ShopServiceImpl implements ShopService {
         return shops.stream()
                 .map(ShopResponse::fromEntityToDto)
                 .toList();
+    }
+
+    public Shop getReferenceById(Long id) {
+        return repository.getReferenceById(id);
+    }
+
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
     }
 }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
-import github.oldLab.oldLab.repository.PersonRepository;
-import github.oldLab.oldLab.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
@@ -28,14 +26,14 @@ public class ReviewServiceImpl implements ReviewService {
     private final TaskExecutor taskExecutor;
 
     private final ReviewRepository repository;
-    private final PersonRepository personRepository;
-    private final ShopRepository shopRepository;
+    private final PersonServiceImpl personService;
+    private final ShopServiceImpl shopService;
 
     @Override
     public ReviewResponse createReviewToPerson(ReviewRequest reviewRequest) {
         log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
-        if (!personRepository.existsById(reviewRequest.getAuthorId()) && !personRepository.existsById(reviewRequest.getPersonId())) {
+        if (!personService.existsById(reviewRequest.getAuthorId()) && !personService.existsById(reviewRequest.getPersonId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
@@ -43,13 +41,13 @@ public class ReviewServiceImpl implements ReviewService {
             throw new DuplicateReviewException("author has already reviewed this person");
         }
 
-        var authorRef = personRepository.getReferenceById(reviewRequest.getAuthorId());
+        var authorRef = personService.getReferenceById(reviewRequest.getAuthorId());
 
         Review review = new Review()
                 .setAuthor(authorRef)
                 .setComment(reviewRequest.getComment())
                 .setRating(reviewRequest.getRating())
-                .setPerson(personRepository.getReferenceById(reviewRequest.getPersonId()));
+                .setPerson(personService.getReferenceById(reviewRequest.getPersonId()));
 
         return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
     }
@@ -58,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponse createReviewToShop(ReviewRequest reviewRequest) {
         log.info("creating review to shop: shopId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getAuthorId());
 
-        if (!personRepository.existsById(reviewRequest.getAuthorId()) && !shopRepository.existsById(reviewRequest.getShopId())) {
+        if (!personService.existsById(reviewRequest.getAuthorId()) && !shopService.existsById(reviewRequest.getShopId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or shopId " + reviewRequest.getShopId() + " not found");
         }
 
@@ -66,13 +64,13 @@ public class ReviewServiceImpl implements ReviewService {
                 throw new DuplicateReviewException("author has already reviewed this shop");
         }
 
-        var authorRef = personRepository.getReferenceById(reviewRequest.getAuthorId());
+        var authorRef = personService.getReferenceById(reviewRequest.getAuthorId());
 
         Review review = new Review()
                 .setAuthor(authorRef)
                 .setComment(reviewRequest.getComment())
                 .setRating(reviewRequest.getRating())
-                .setShop(shopRepository.getReferenceById(reviewRequest.getShopId()));
+                .setShop(shopService.getReferenceById(reviewRequest.getShopId()));
 
         return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
     }

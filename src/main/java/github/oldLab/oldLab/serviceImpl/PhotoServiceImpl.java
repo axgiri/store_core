@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
 import github.oldLab.oldLab.entity.Shop;
-import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.PhotoRepository;
-import github.oldLab.oldLab.repository.ShopRepository;
 import github.oldLab.oldLab.service.PhotoService;
 import github.oldLab.oldLab.service.PhotoStorage;
 import jakarta.transaction.Transactional;
@@ -22,14 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class PhotoServiceImpl implements PhotoService {
 
     private final PhotoRepository repository;
-    private final PersonRepository personRepository;
-    private final ShopRepository shopRepository;
+    private final PersonServiceImpl personService;
+    private final ShopServiceImpl shopService;
     private final PhotoStorage storage;
 
     @Transactional
     public void uploadForPerson(Long personId, MultipartFile file) throws IOException {
-        Person person = personRepository.findById(personId)
-                          .orElseThrow(() -> new RuntimeException("person not found"));
+        Person person = personService.findEntityById(personId);
 
         repository.findByPersonId(personId).ifPresent(this::removePhoto);
 
@@ -52,8 +49,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Transactional
     public void uploadForShop(Long shopId, MultipartFile file) throws IOException {
-        Shop shop = shopRepository.findById(shopId)
-                      .orElseThrow(() -> new RuntimeException("shop not found"));
+        Shop shop = shopService.findEntityById(shopId);
 
         repository.findByShopId(shopId).ifPresent(this::removePhoto);
 
