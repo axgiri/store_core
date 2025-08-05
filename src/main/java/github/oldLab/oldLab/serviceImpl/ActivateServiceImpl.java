@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivateServiceImpl implements ActivateService {
 
     private final ActivateRepository repository;
-    public final PersonServiceImpl personService;
+    private final PersonServiceImpl personService;
     private final TokenServiceImpl tokenService;
 
     private final int OTP_EXPIRATION_MINUTES = 15;

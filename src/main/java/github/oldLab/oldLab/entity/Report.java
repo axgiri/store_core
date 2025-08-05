@@ -44,7 +44,6 @@ public class Report {
     @NotNull(message = "Reporter id cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
-    @Column(name = "reporter_id")
     private Person reporterId; // Person, who throw report
 
     @NotNull(message = "Report reason cannot be null")

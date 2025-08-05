@@ -56,6 +56,5 @@ public class Shop {
     @NotNull(message = "owner cannot be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
-    @Column(name = "owner_id")
     private Person ownerId;
 }
