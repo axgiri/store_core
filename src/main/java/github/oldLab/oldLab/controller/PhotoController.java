@@ -30,7 +30,7 @@ public class PhotoController {
     public ResponseEntity<byte[]> getPersonPhoto(@PathVariable Long id) {
         byte[] bytes = service.loadForPerson(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(MediaType.parseMediaType("image/webp"))
                 .cacheControl(CacheControl.noCache())
                 .body(bytes);
     }
@@ -44,7 +44,7 @@ public class PhotoController {
     public ResponseEntity<byte[]> getShopPhoto(@PathVariable Long id) {
         byte[] bytes = service.loadForShop(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(MediaType.parseMediaType("image/webp"))
                 .cacheControl(CacheControl.noCache())
                 .body(bytes);
     }

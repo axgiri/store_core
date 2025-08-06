@@ -2,7 +2,6 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.io.IOException;
 
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +9,7 @@ import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
 import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.repository.PhotoRepository;
+import github.oldLab.oldLab.service.ImageProcessingService;
 import github.oldLab.oldLab.service.PhotoService;
 import github.oldLab.oldLab.service.PhotoStorage;
 import jakarta.transaction.Transactional;
@@ -23,6 +23,7 @@ public class PhotoServiceImpl implements PhotoService {
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
     private final PhotoStorage storage;
+    private final ImageProcessingService imageProcessor;
 
     @Transactional
     public void uploadForPerson(Long personId, MultipartFile file) throws IOException {
@@ -30,12 +31,14 @@ public class PhotoServiceImpl implements PhotoService {
 
         repository.findByPersonId(personId).ifPresent(this::removePhoto);
 
-        String key = storage.save(file.getBytes(),file.getOriginalFilename(),detectContentType(file));
+        byte[] processedImage = imageProcessor.processImage(file);
+
+        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
-                        .contentType(file.getContentType())
-                        .size(file.getSize())
+                        .contentType("image/webp")
+                        .size((long) processedImage.length)
                         .person(person)
                         .build();
         repository.save(photo);
@@ -53,15 +56,17 @@ public class PhotoServiceImpl implements PhotoService {
 
         repository.findByShopId(shopId).ifPresent(this::removePhoto);
 
-        String key = storage.save(file.getBytes(),file.getOriginalFilename(),detectContentType(file));
+        byte[] processedImage = imageProcessor.processImage(file);
 
-        Photo ph = Photo.builder()
+        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
+
+        Photo photo = Photo.builder()
                         .objectKey(key)
-                        .contentType(file.getContentType())
-                        .size(file.getSize())
+                        .contentType("image/webp") 
+                        .size((long) processedImage.length)
                         .shop(shop)
                         .build();
-        repository.save(ph);
+        repository.save(photo);
     }
 
     public byte[] loadForShop(Long shopId) {
@@ -74,10 +79,6 @@ public class PhotoServiceImpl implements PhotoService {
     private void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey());
         repository.delete(ph);
-    }
-
-    private String detectContentType(MultipartFile f) {
-        return (f.getContentType() != null) ? f.getContentType() : MediaType.APPLICATION_OCTET_STREAM_VALUE;
     }
 }
 
