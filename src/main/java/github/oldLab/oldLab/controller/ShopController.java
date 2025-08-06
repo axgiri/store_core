@@ -21,9 +21,10 @@ public class ShopController {
     private final ShopService shopService;
 
     @PostMapping("/async/create")
-    public ResponseEntity<Void> createShop(@RequestBody ShopRequest shopRequest) {
+    public ResponseEntity<Void> createShop(@RequestBody ShopRequest shopRequest, @RequestHeader("Authorization") String header) {
         log.debug("Received request to create shop: {}", shopRequest);
-        shopService.createShopAsync(shopRequest);
+        String token = header.substring(7);
+        shopService.createShopAsync(shopRequest, token);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

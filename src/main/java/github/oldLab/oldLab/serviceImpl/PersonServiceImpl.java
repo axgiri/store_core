@@ -72,11 +72,23 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id)));
     }
 
+    public Person findEntityById(Long id) {
+        log.info("finding person with id: {}", id);
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
+    }
+
     public PersonResponse findByPhoneNumber(String phoneNumber) {
         log.info("finding person with phone number: {}", phoneNumber);
         return PersonResponse.fromEntityToDto(repository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber))
         );
+    }
+
+    public Person findEntityByPhoneNumber(String phoneNumber) {
+        log.info("finding person with phone number: {}", phoneNumber);
+        return repository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
     }
 
     @Async("asyncExecutor")
@@ -211,5 +223,34 @@ public class PersonServiceImpl implements PersonService {
 
         repository.save(person);
         log.info("Password reset successfully for: {}", request.getContact());
+    }
+
+    public Long getIdFromPhoneNumber(String phoneNumber) {
+        log.info("getting id for user with phone number: {}", phoneNumber);
+        return repository.findIdByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + phoneNumber));
+    }
+
+    public Long getCompanyIdByPersonId(Long personId) {
+        log.info("getting company id for person with id: {}", personId);
+        return repository.findCompanyIdByPersonId(personId)
+                .orElseThrow(() -> new UserNotFoundException("company not found for person with id: " + personId));
+    }
+
+    public void setCompanyIdForExistingPerson(Long personId, Long companyId) {
+        log.info("setting company id for person with id: {}", personId);
+        Person person = repository.getReferenceById(personId);
+        person.setCompanyId(companyId);
+        repository.save(person);
+    }
+
+    public boolean existsById(Long id) {
+        log.info("checking if person exists with id: {}", id);
+        return repository.existsById(id);
+    }
+
+    public Person getReferenceById(Long id) {
+        log.info("getting reference for person with id: {}", id);
+        return repository.getReferenceById(id);
     }
 }

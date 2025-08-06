@@ -6,8 +6,8 @@ import github.oldLab.oldLab.dto.response.ShopResponse;
 import java.util.List;
 
 public interface ShopService {
-    void createShopAsync(ShopRequest shopRequest);
-    
+    void createShopAsync(ShopRequest shopRequest, String token);
+
     ShopResponse getShop(Long id);
 
     List<ShopResponse> getAllShopsPaginated(int page, int size);

@@ -10,6 +10,10 @@ import lombok.Data;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
 public class ReportRequest {
 
@@ -29,10 +33,10 @@ public class ReportRequest {
 
     public Report toEntity(Person reporter) {
         return new Report()
-                .setReporter(reporter)
+                .setReporterId(reporter)
                 .setReason(this.reason)
                 .setDetails(this.details)
-                .setStatus(ReportStatusEnum.PENDING) // Статус по умолчанию
+                .setStatus(ReportStatusEnum.PENDING)
                 .setType(this.type)
                 .setTargetId(this.targetId)
                 .setCreatedAt(Instant.now());
