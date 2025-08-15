@@ -20,15 +20,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/person")
-    public ResponseEntity<ReviewResponse> createReviewToPerson(@RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse response = reviewService.createReviewToPerson(reviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createReviewToPerson(@RequestBody ReviewRequest reviewRequest) {
+        reviewService.createReviewToPerson(reviewRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/shop")
-    public ResponseEntity<ReviewResponse> createReviewToShop(@RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse response = reviewService.createReviewToShop(reviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createReviewToShop(@RequestBody ReviewRequest reviewRequest) {
+        reviewService.createReviewToShop(reviewRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/shop/{shopId}")

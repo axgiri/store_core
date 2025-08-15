@@ -1,119 +1,124 @@
 package github.oldLab.oldLab.serviceImpl;
 
+import java.time.Instant;
 import java.util.List;
 
-import github.oldLab.oldLab.exception.DuplicateReviewException;
+
+import github.oldLab.oldLab.dto.events.ReviewEvent;
 import github.oldLab.oldLab.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.domain.PageRequest;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.kafka.core.KafkaTemplate;
+
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.dto.request.ReviewRequest;
 import github.oldLab.oldLab.dto.response.ReviewResponse;
-import github.oldLab.oldLab.entity.Review;
-import github.oldLab.oldLab.repository.ReviewRepository;
 import github.oldLab.oldLab.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-    
-    @Qualifier("asyncExecutor")
-    private final TaskExecutor taskExecutor;
 
-    private final ReviewRepository repository;
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
+    private final KafkaTemplate<String, ReviewEvent> kafkaTemplate;
+    private final CircuitBreaker circuitBreaker;
+    private final RestTemplate restTemplate;
 
     @Override
-    public ReviewResponse createReviewToPerson(ReviewRequest reviewRequest) {
+    public void createReviewToPerson(ReviewRequest reviewRequest) {
         log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
         if (!personService.existsById(reviewRequest.getAuthorId()) && !personService.existsById(reviewRequest.getPersonId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
-        if (repository.existsByShopIdAndAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
-            throw new DuplicateReviewException("author has already reviewed this person");
-        }
+        //if (repository.existsByShopIdAndAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
+        //    throw new DuplicateReviewException("author has already reviewed this person");
+        //}
+        // Validation will be in Notification
 
-        var authorRef = personService.getReferenceById(reviewRequest.getAuthorId());
-
-        Review review = new Review()
-                .setAuthor(authorRef)
-                .setComment(reviewRequest.getComment())
-                .setRating(reviewRequest.getRating())
-                .setPerson(personService.getReferenceById(reviewRequest.getPersonId()));
-
-        return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
+        ReviewEvent event = new ReviewEvent();
+                event.setEventType("CREATE");
+                event.setTimestamp(Instant.now());
+                event.setPayload(reviewRequest);
+        kafkaTemplate.send("review-events", "create", event);
     }
 
     @Override
-    public ReviewResponse createReviewToShop(ReviewRequest reviewRequest) {
+    public void createReviewToShop(ReviewRequest reviewRequest) {
         log.info("creating review to shop: shopId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getAuthorId());
 
         if (!personService.existsById(reviewRequest.getAuthorId()) && !shopService.existsById(reviewRequest.getShopId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or shopId " + reviewRequest.getShopId() + " not found");
         }
 
-        if (repository.existsByShopIdAndAuthorId(reviewRequest.getShopId(), reviewRequest.getAuthorId())) {
-                throw new DuplicateReviewException("author has already reviewed this shop");
-        }
+        //if (repository.existsByShopIdAndAuthorId(reviewRequest.getShopId(), reviewRequest.getAuthorId())) {
+        //        throw new DuplicateReviewException("author has already reviewed this shop");
+        //}
+        // Validation will be in Notification
 
-        var authorRef = personService.getReferenceById(reviewRequest.getAuthorId());
+        ReviewEvent event = new ReviewEvent();
+            event.setEventType("CREATE");
+            event.setTimestamp(Instant.now());
+            event.setPayload(reviewRequest);
 
-        Review review = new Review()
-                .setAuthor(authorRef)
-                .setComment(reviewRequest.getComment())
-                .setRating(reviewRequest.getRating())
-                .setShop(shopService.getReferenceById(reviewRequest.getShopId()));
-
-        return ReviewResponse.fromEntityToDto(repository.saveAndFlush(review));
+        kafkaTemplate.send("review-events", "create", event);
     }
 
     @Override
     public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
-        log.info("getting reviews for shopId: {}", id);
-        List<ReviewResponse> reviews = repository.findByShopId(id, PageRequest.of(page, size)).getContent().stream()
-            .map(ReviewResponse::fromEntityToDto)
-            .toList();
-        if (reviews.isEmpty()) {
-            log.warn("no reviews found for shopId: {}", id);
-        }
-        return reviews;
+        String url = "http://api/notification/reviews?shopId={id}&page={page}&size={size}";
+        return circuitBreaker.executeSupplier(() ->
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<ReviewResponse>>() {},
+                        page, size
+                ).getBody()
+        );
     }
 
     @Override
     public List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size) {
-        log.info("getting reviews for personId: {}", id);
-        List<ReviewResponse> reviews = repository.findByPersonId(id, PageRequest.of(page, size)).getContent().stream()
-            .map(ReviewResponse::fromEntityToDto)
-            .toList();
-        if (reviews.isEmpty()) {
-            log.warn("no reviews found for personId: {}", id);
-        }
-        return reviews;
+        String url = "http://api/notification/reviews?personId={id}&page={page}&size={size}";
+        return circuitBreaker.executeSupplier(() ->
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<ReviewResponse>>() {},
+                        page, size
+                ).getBody()
+        );
     }
 
     @Override
     public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
-        log.info("getting all reviews paginated");
-        List<ReviewResponse> reviews = repository.findAll(PageRequest.of(page, size)).getContent().stream()
-            .map(ReviewResponse::fromEntityToDto)
-            .toList();
-        if (reviews.isEmpty()) {
-            log.warn("no reviews found");
-        }
-        return reviews;
+        String url = "http://api/notification/reviews?page={page}&size={size}";
+        return circuitBreaker.executeSupplier(() ->
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<List<ReviewResponse>>() {},
+                        page, size
+                ).getBody()
+        );
     }
 
     @Override
     public void deleteReview(Long id) {
-        log.info("deleting review with id: {}", id);
-        repository.deleteById(id);
+        ReviewEvent event = new ReviewEvent();
+            event.setEventType("DELETE");
+            event.setReviewId(id);
+        kafkaTemplate.send("review-events", "create", event);
     }
 }
