@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
-@Configuration
+@Configuration           //TODO: check this config and improve it
 @EnableFeignClients
 public class FeignConfig {
 

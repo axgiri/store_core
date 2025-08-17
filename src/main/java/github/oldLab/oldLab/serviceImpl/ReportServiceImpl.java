@@ -1,11 +1,11 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import github.oldLab.oldLab.Enum.ReportStatusEnum;
+import github.oldLab.oldLab.controller.FeignNotificationController;
 import github.oldLab.oldLab.dto.events.ReportEvent;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.exception.UserNotFoundException;
-import github.oldLab.oldLab.repository.ReportRepository;
 import github.oldLab.oldLab.service.ReportService;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,11 @@ import java.util.List;
 @Slf4j
 public class ReportServiceImpl implements ReportService {
 
-    private final ReportRepository repository;
     private final CircuitBreaker circuitBreaker;
     private final KafkaTemplate<String, ReportEvent> kafkaTemplate;
     private final RestTemplate restTemplate;
     private final PersonServiceImpl personService;
+    private final FeignNotificationController feignNotificationController;
 
     @Override
     public void createReport(ReportRequest request) {
@@ -43,7 +43,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void updateReportStatus(Long reportId, ReportStatusEnum status, Long moderatorId) {
-        if(!repository.existsById(reportId)) {
+        ReportResponse response = feignNotificationController.getReportById(reportId);
+        if(response==null) {
             throw new UserNotFoundException("Report not found");
         }
         if(!personService.existsById(moderatorId)) {
@@ -60,7 +61,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     public List<ReportResponse> getAllReports(int page, int size) {
-        String url = "http://api/notification/reports?page={page}&size={size}";
+        String url = "http://api/notifications/reports?page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
@@ -75,14 +76,14 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public List<ReportResponse> getReportsByStatus(ReportStatusEnum status, int page, int size) {
-        String url = "http://api/notification/reports?status={status}&page={page}&size={size}";
+        String url = "http://api/notifications/reports/status?status={status}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<ReportResponse>>() {},
-                        page, size
+                        status, page, size
                 ).getBody()
         );
     }

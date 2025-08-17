@@ -4,11 +4,14 @@ import java.time.Instant;
 import java.util.List;
 
 
+import github.oldLab.oldLab.controller.FeignNotificationController;
 import github.oldLab.oldLab.dto.events.ReviewEvent;
+import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final KafkaTemplate<String, ReviewEvent> kafkaTemplate;
     private final CircuitBreaker circuitBreaker;
     private final RestTemplate restTemplate;
+    private final FeignNotificationController feignNotificationController;
 
     @Override
     public void createReviewToPerson(ReviewRequest reviewRequest) {
@@ -39,10 +43,16 @@ public class ReviewServiceImpl implements ReviewService {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
-        //if (repository.existsByShopIdAndAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
-        //    throw new DuplicateReviewException("author has already reviewed this person");
-        //}
-        // Validation will be in Notification
+        ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfPersonsByAuthorId(reviewRequest.getAuthorId());
+        if (response.getBody() != null) {
+            boolean hasDuplicate = response.getBody().stream()
+                    .anyMatch(r ->
+                            (reviewRequest.getPersonId() != null && r.getPersonId() != null
+                                    && r.getPersonId().equals(reviewRequest.getPersonId())));
+            if (hasDuplicate) {
+                throw new DuplicateReviewException("author has already reviewed this person");
+            }
+        }
 
         ReviewEvent event = new ReviewEvent();
                 event.setEventType("CREATE");
@@ -59,10 +69,16 @@ public class ReviewServiceImpl implements ReviewService {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or shopId " + reviewRequest.getShopId() + " not found");
         }
 
-        //if (repository.existsByShopIdAndAuthorId(reviewRequest.getShopId(), reviewRequest.getAuthorId())) {
-        //        throw new DuplicateReviewException("author has already reviewed this shop");
-        //}
-        // Validation will be in Notification
+        ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfShopsByAuthorId(reviewRequest.getAuthorId());
+        if (response.getBody() != null) {
+            boolean hasDuplicate = response.getBody().stream()
+                    .anyMatch(r ->
+                                    (reviewRequest.getShopId() != null && r.getShopId() != null &&
+                                            r.getShopId().equals(reviewRequest.getShopId())));
+            if (hasDuplicate) {
+                throw new DuplicateReviewException("author has already reviewed this shop");
+            }
+        }
 
         ReviewEvent event = new ReviewEvent();
             event.setEventType("CREATE");
@@ -74,35 +90,35 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
-        String url = "http://api/notification/reviews?shopId={id}&page={page}&size={size}";
+        String url = "http://api/notifications/reviews?shopId={id}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<ReviewResponse>>() {},
-                        page, size
+                        id, page, size
                 ).getBody()
         );
     }
 
     @Override
     public List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size) {
-        String url = "http://api/notification/reviews?personId={id}&page={page}&size={size}";
+        String url = "http://api/notifications/reviews?personId={id}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<ReviewResponse>>() {},
-                        page, size
+                        id, page, size
                 ).getBody()
         );
     }
 
     @Override
     public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
-        String url = "http://api/notification/reviews?page={page}&size={size}";
+        String url = "http://api/notifications/reviews?page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
@@ -119,6 +135,6 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewEvent event = new ReviewEvent();
             event.setEventType("DELETE");
             event.setReviewId(id);
-        kafkaTemplate.send("review-events", "create", event);
+        kafkaTemplate.send("review-events", "delete", event);
     }
 }

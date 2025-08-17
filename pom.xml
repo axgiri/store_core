@@ -135,8 +135,19 @@
     		<version>2.31.77</version>
 		</dependency>
 		<dependency>
+<<<<<<< HEAD
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
+=======
+    		<groupId>net.coobird</groupId>
+    		<artifactId>thumbnailator</artifactId>
+    		<version>0.4.20</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.sejda.imageio</groupId>
+    		<artifactId>webp-imageio</artifactId>
+    		<version>0.1.6</version>
+>>>>>>> 67dc969b17f7adbbbfa8f3c48f4f106c9f969a0c
 		</dependency>
 	</dependencies>
 
