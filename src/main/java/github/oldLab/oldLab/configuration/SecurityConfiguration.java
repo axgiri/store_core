@@ -25,9 +25,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/v1/persons/signup",
-                        "/api/v1/persons/login",
-                        "/api/v1/persons/async/signup")
+        .securityMatcher(
+            "/api/v1/persons/signup",
+            "/api/v1/persons/login",
+            "/api/v1/persons/refresh",
+            "/api/v1/persons/async/signup")
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(a -> a.anyRequest().permitAll())

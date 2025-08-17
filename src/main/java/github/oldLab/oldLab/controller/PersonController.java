@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
+import github.oldLab.oldLab.dto.request.RefreshRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
@@ -44,6 +45,24 @@ public class PersonController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         AuthResponse authResponse = service.authenticate(loginRequest);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request){
+        AuthResponse response = service.refreshAccessToken(request.getRefreshToken());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/revoke")
+    public ResponseEntity<Void> revoke(@Valid @RequestBody RefreshRequest request){
+        service.revoke(request.getRefreshToken());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/revokeAll")
+    public ResponseEntity<Void> revokeAll(@Valid @RequestBody RefreshRequest request){
+        service.revokeAll(request.getRefreshToken());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/findById/{id}")
