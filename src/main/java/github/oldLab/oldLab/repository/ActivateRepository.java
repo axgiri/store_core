@@ -1,6 +1,6 @@
 package github.oldLab.oldLab.repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,6 +32,6 @@ public interface ActivateRepository extends JpaRepository<Activate, Long>{
 
     @Modifying
     @Query("DELETE FROM Activate a WHERE a.createdAt < :cutoffDate")
-    void deleteOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
+    void deleteOlderThan(@Param("cutoffDate") Instant cutoffDate);
 
 }

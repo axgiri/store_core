@@ -41,6 +41,7 @@ public class PersonServiceImpl implements PersonService {
     private final AuthenticationManager authenticationManager;
     private final TokenServiceImpl tokenService;
     private final ActivateServiceImpl activateService;
+    private final github.oldLab.oldLab.service.RefreshTokenService refreshTokenService;
 
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
@@ -63,7 +64,23 @@ public class PersonServiceImpl implements PersonService {
         var person = repository.findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + request.getPhoneNumber()));
         CompletableFuture<String> token = tokenService.generateToken(person);
-        return new AuthResponse(token.join(), PersonResponse.fromEntityToDto(person));
+        String refreshToken = refreshTokenService.issue(person);
+        return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
+    }
+
+    public AuthResponse refreshAccessToken(String refreshToken) {
+        var rotated = refreshTokenService.rotate(refreshToken);
+        var person = rotated.getPerson();
+        CompletableFuture<String> access = tokenService.generateToken(person);
+        return new AuthResponse(access.join(), rotated.getTokenHash(), PersonResponse.fromEntityToDto(person));
+    }
+
+    public void revoke(String refreshToken) {
+        refreshTokenService.revoke(refreshToken);
+    }
+
+    public void revokeAll(String refreshToken) {
+        refreshTokenService.revokeAllForPerson(refreshToken);
     }
 
     public PersonResponse findById(Long id) {

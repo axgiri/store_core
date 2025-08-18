@@ -1,6 +1,7 @@
 package github.oldLab.oldLab.configuration;
 
 import github.oldLab.oldLab.service.ActivateService;
+import github.oldLab.oldLab.serviceImpl.RefreshTokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class ScheduledTasksConfig {
 
     private final ActivateService activateService;
+    private final RefreshTokenServiceImpl refreshTokenService;
 
     @Value("${app.cleanup.cron}")
     private String cleanupCron;
@@ -23,5 +25,10 @@ public class ScheduledTasksConfig {
     @Scheduled(cron = "${app.cleanup.cron}", zone = "${app.cleanup.timezone}")
     public void cleanupActiveTable() {
         activateService.cleanupOldRecords();
+    }
+
+    @Scheduled(cron = "${app.cleanup.cron}", zone = "${app.cleanup.timezone}")
+    public void cleanupExpiredTokens() {
+        refreshTokenService.cleanupExpiredTokens();
     }
 }

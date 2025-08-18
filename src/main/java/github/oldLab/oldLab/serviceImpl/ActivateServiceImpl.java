@@ -2,8 +2,6 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -183,7 +181,7 @@ public class ActivateServiceImpl implements ActivateService {
     
     @Transactional
     public void cleanupOldRecords() {
-        LocalDateTime cutoffDate = LocalDateTime.now(ZoneOffset.UTC).minusMinutes(15);
+        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * OTP_EXPIRATION_MINUTES); //60sec * 60min * 24hour * minutes in .application
         repository.deleteOlderThan(cutoffDate);
     }
 }
