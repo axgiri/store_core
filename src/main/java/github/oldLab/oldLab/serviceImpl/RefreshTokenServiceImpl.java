@@ -7,6 +7,7 @@ import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import github.oldLab.oldLab.entity.Person;
@@ -23,7 +24,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository repository;
     private final TokenHashServiceImpl tokenHashService;
 
-    // secret is used by TokenHashService; keep property for configuration completeness if needed elsewhere
     @Value("${refresh.token.secret}")
     private String refreshTokenSecret;
 
@@ -82,7 +82,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void revoke(String token) {
         String hash = tokenHashService.hash(token);
         RefreshToken rt = repository.findByTokenHash(hash)
@@ -92,6 +92,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         repository.save(rt);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void revokeAllForPerson(String refreshToken) {
         Long personId = getPersonFromToken(refreshToken).getId();
         repository.findByPersonId(personId).forEach(rt -> {
@@ -105,6 +106,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         String hash = tokenHashService.hash(rawToken);
         RefreshToken rt = repository.findByTokenHash(hash)
                 .orElseThrow(() -> new InvalidTokenException("refresh token not found"));
+        if (rt.isRevoked() || rt.getExpiresAt().isBefore(Instant.now()))
+            throw new InvalidTokenException("refresh token invalid or expired");
         return rt.getPerson();
     }
 
@@ -115,7 +118,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     public void cleanupExpiredTokens() {
-        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * 180);
+        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * refreshExpiresDays); //60sec * 60min * 24hour * days in .application
         repository.deleteOlderThan(cutoffDate);
     }
 }
