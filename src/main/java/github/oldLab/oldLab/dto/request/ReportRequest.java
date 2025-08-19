@@ -29,6 +29,8 @@ public class ReportRequest {
     @NotNull(message = "Report reason cannot be null")
     private ReportReasonEnum reason;
 
+    private ReportStatusEnum status;
+
     private String details; // Must be if reason == OTHER
 
     public Report toEntity(Person reporter) {

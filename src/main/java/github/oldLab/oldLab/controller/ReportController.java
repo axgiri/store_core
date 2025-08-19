@@ -6,7 +6,6 @@ import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +20,10 @@ public class ReportController {
     private final ReportService service;
 
     @PostMapping("/create")
-    public ResponseEntity<ReportResponse> createReport(
+    public ResponseEntity<Void> createReport(
             @RequestBody ReportRequest request) {
-        ReportResponse response = service.createReport(request);
-        return ResponseEntity.ok(response);
-    }
-    @PostMapping("/async/create")
-    public ResponseEntity<Void> createAsync(@RequestBody ReportRequest request) {
-        log.debug("creating report async: {}", request);
-        service.createAsync(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        service.createReport(request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
@@ -52,11 +45,11 @@ public class ReportController {
 
     @PatchMapping("/{reportId}/status")
 
-    public ResponseEntity<ReportResponse> updateReportStatus(
+    public ResponseEntity<Void> updateReportStatus(
             @PathVariable Long reportId,
             @RequestParam ReportStatusEnum status,
             @RequestHeader("X-Moderator-Id") Long moderatorId) {
-        ReportResponse response = service.updateReportStatus(reportId, status, moderatorId);
-        return ResponseEntity.ok(response);
+        service.updateReportStatus(reportId, status, moderatorId);
+        return ResponseEntity.ok().build();
     }
 }

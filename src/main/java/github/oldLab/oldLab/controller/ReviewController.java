@@ -5,7 +5,6 @@ import github.oldLab.oldLab.dto.response.ReviewResponse;
 import github.oldLab.oldLab.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,15 +19,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/person")
-    public ResponseEntity<ReviewResponse> createReviewToPerson(@RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse response = reviewService.createReviewToPerson(reviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createReviewToPerson(@RequestBody ReviewRequest reviewRequest) {
+        reviewService.createReviewToPerson(reviewRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/shop")
-    public ResponseEntity<ReviewResponse> createReviewToShop(@RequestBody ReviewRequest reviewRequest) {
-        ReviewResponse response = reviewService.createReviewToShop(reviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createReviewToShop(@RequestBody ReviewRequest reviewRequest) {
+        reviewService.createReviewToShop(reviewRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/shop/{shopId}")
