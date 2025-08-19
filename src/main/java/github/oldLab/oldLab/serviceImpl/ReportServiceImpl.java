@@ -2,7 +2,7 @@ package github.oldLab.oldLab.serviceImpl;
 
 import github.oldLab.oldLab.Enum.ReportStatusEnum;
 import github.oldLab.oldLab.controller.FeignNotificationController;
-import github.oldLab.oldLab.dto.events.ReportEvent;
+import github.oldLab.oldLab.dto.events.ReportMessage;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.exception.UserNotFoundException;
@@ -10,6 +10,8 @@ import github.oldLab.oldLab.service.ReportService;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -24,8 +26,17 @@ import java.util.List;
 @Slf4j
 public class ReportServiceImpl implements ReportService {
 
+    @Value("${kafka.topic.report}")
+    private String reportTopic;
+
+    @Value("${kafka.partition.report.create}")
+    private String reportPartitionCreate;
+
+    @Value("${kafka.partition.report.update}")
+    private String reportPartitionUpdate;
+
     private final CircuitBreaker circuitBreaker;
-    private final KafkaTemplate<String, ReportEvent> kafkaTemplate;
+    private final KafkaTemplate<String, ReportMessage> kafkaTemplate;
     private final RestTemplate restTemplate;
     private final PersonServiceImpl personService;
     private final FeignNotificationController feignNotificationController;
@@ -35,29 +46,38 @@ public class ReportServiceImpl implements ReportService {
         if(!personService.existsById(request.getReporterId())) {
             throw new UserNotFoundException("Reporter not found");
         }
-        ReportEvent event = new ReportEvent();
-            event.setEventType("CREATE");
+        ReportMessage event = new ReportMessage();
             event.setPayload(request);
-        kafkaTemplate.send("report-events", "create", event);
+        kafkaTemplate.send(reportTopic, reportPartitionCreate, event);
     }
 
     @Override
     public void updateReportStatus(Long reportId, ReportStatusEnum status, Long moderatorId) {
-        ReportResponse response = feignNotificationController.getReportById(reportId);
+        ReportResponse response = feignNotificationController.getReportById(reportId); 
+        
+        /* TODO n1
+         * Vanya, here you can add CompletableFuture and skip the logic of checking the response below if needed 
+         * this way, the code will continue working and will only stop if it doesn't get a response from another service
+         * fewer blockages to optimize logic
+         */
+
         if(response==null) {
             throw new UserNotFoundException("Report not found");
         }
+
         if(!personService.existsById(moderatorId)) {
             throw new UserNotFoundException("Moderator not found");
         }
+
         ReportRequest request = new ReportRequest();
             request.setStatus(status);
-        ReportEvent event = new ReportEvent();
-            event.setModeratorId(moderatorId);
-            event.setReportId(reportId);
-            event.setEventType("UPDATE_STATUS");
-            event.setPayload(request);
-        kafkaTemplate.send("report-events", "update-status", event);
+            
+        ReportMessage message = new ReportMessage();
+            message.setModeratorId(moderatorId);
+            message.setReportId(reportId);
+            message.setPayload(request);
+
+        kafkaTemplate.send(reportTopic, reportPartitionUpdate, message);
     }
 
     public List<ReportResponse> getAllReports(int page, int size) {

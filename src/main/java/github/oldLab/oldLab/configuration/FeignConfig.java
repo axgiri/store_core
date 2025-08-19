@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
-@Configuration           //TODO: check this config and improve it
+@Configuration
 @EnableFeignClients
 public class FeignConfig {
 
@@ -22,12 +22,13 @@ public class FeignConfig {
     public CircuitBreakerConfig circuitBreakerConfig() {
         return CircuitBreakerConfig.custom()
                 .failureRateThreshold(50)
-                .waitDurationInOpenState(Duration.ofMillis(1000 + (long) (Math.random() * 2000))) //1-3 secs
+                .waitDurationInOpenState(Duration.ofMillis(3000 + (long) (Math.random() * 5000)))
                 .permittedNumberOfCallsInHalfOpenState(3)
                 .slidingWindowSize(10)
                 .recordExceptions(FeignException.class, TimeoutException.class)
                 .build();
     }
+
     @Bean
     public CircuitBreakerRegistry circuitBreakerRegistry() {
         return CircuitBreakerRegistry.of(circuitBreakerConfig());
@@ -42,9 +43,9 @@ public class FeignConfig {
     public Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;
     }
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }

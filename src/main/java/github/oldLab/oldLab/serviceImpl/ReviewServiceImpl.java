@@ -2,13 +2,15 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
 import java.util.List;
-
+import java.util.Optional;
 
 import github.oldLab.oldLab.controller.FeignNotificationController;
-import github.oldLab.oldLab.dto.events.ReviewEvent;
+import github.oldLab.oldLab.dto.events.ReviewMessage;
 import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,18 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
+    @Value("${kafka.topic.review}")
+    private String reviewTopic;
+
+    @Value("${kafka.partition.review.create}")
+    private String reviewPartitionCreate;
+
+    @Value("${kafka.partition.review.delete}")
+    private String reviewPartitionDelete;
+
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
-    private final KafkaTemplate<String, ReviewEvent> kafkaTemplate;
+    private final KafkaTemplate<String, ReviewMessage> kafkaTemplate;
     private final CircuitBreaker circuitBreaker;
     private final RestTemplate restTemplate;
     private final FeignNotificationController feignNotificationController;
@@ -45,20 +56,22 @@ public class ReviewServiceImpl implements ReviewService {
 
         ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfPersonsByAuthorId(reviewRequest.getAuthorId());
         if (response.getBody() != null) {
-            boolean hasDuplicate = response.getBody().stream()
-                    .anyMatch(r ->
-                            (reviewRequest.getPersonId() != null && r.getPersonId() != null
-                                    && r.getPersonId().equals(reviewRequest.getPersonId())));
+            boolean hasDuplicate = Optional.ofNullable(response.getBody())
+            .orElseThrow(() -> new DuplicateReviewException("author has already reviewed this person")).stream()
+                    .anyMatch(r -> (reviewRequest.getPersonId() != null
+                        && r.getPersonId() != null
+                        && r.getPersonId().equals(reviewRequest.getPersonId()))
+                    );
             if (hasDuplicate) {
                 throw new DuplicateReviewException("author has already reviewed this person");
             }
         }
 
-        ReviewEvent event = new ReviewEvent();
-                event.setEventType("CREATE");
-                event.setTimestamp(Instant.now());
-                event.setPayload(reviewRequest);
-        kafkaTemplate.send("review-events", "create", event);
+        ReviewMessage message = new ReviewMessage();
+            message.setTimestamp(Instant.now());
+            message.setPayload(reviewRequest);
+
+        kafkaTemplate.send(reviewTopic, reviewPartitionCreate, message);
     }
 
     @Override
@@ -70,22 +83,21 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfShopsByAuthorId(reviewRequest.getAuthorId());
-        if (response.getBody() != null) {
-            boolean hasDuplicate = response.getBody().stream()
-                    .anyMatch(r ->
-                                    (reviewRequest.getShopId() != null && r.getShopId() != null &&
-                                            r.getShopId().equals(reviewRequest.getShopId())));
+        boolean hasDuplicate = Optional.ofNullable(response.getBody())
+            .orElseThrow(() -> new DuplicateReviewException("author has already reviewed this shop")).stream()
+                .anyMatch(r ->
+                                (reviewRequest.getShopId() != null && r.getShopId() != null &&
+                                        r.getShopId().equals(reviewRequest.getShopId())));
             if (hasDuplicate) {
                 throw new DuplicateReviewException("author has already reviewed this shop");
             }
-        }
+        
 
-        ReviewEvent event = new ReviewEvent();
-            event.setEventType("CREATE");
-            event.setTimestamp(Instant.now());
-            event.setPayload(reviewRequest);
+        ReviewMessage message = new ReviewMessage();
+            message.setTimestamp(Instant.now());
+            message.setPayload(reviewRequest);
 
-        kafkaTemplate.send("review-events", "create", event);
+        kafkaTemplate.send(reviewTopic, reviewPartitionCreate, message);
     }
 
     @Override
@@ -132,9 +144,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(Long id) {
-        ReviewEvent event = new ReviewEvent();
-            event.setEventType("DELETE");
-            event.setReviewId(id);
-        kafkaTemplate.send("review-events", "delete", event);
+        ReviewMessage message = new ReviewMessage();
+            message.setReviewId(id);
+        kafkaTemplate.send(reviewTopic, reviewPartitionDelete, message);
     }
 }
