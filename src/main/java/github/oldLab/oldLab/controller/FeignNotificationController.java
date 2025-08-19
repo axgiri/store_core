@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "notification-service", url = "http://localhost:8081/api/notifications")
+@FeignClient(name = "notification-reports", url = "${api.service.notification-reports}")
 public interface FeignNotificationController {
 
     @GetMapping("/reports/report/{reportId}")

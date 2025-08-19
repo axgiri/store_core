@@ -7,6 +7,7 @@ import java.util.Optional;
 import github.oldLab.oldLab.controller.FeignNotificationController;
 import github.oldLab.oldLab.dto.events.ReviewMessage;
 import github.oldLab.oldLab.exception.DuplicateReviewException;
+import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 
@@ -39,6 +40,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Value("${kafka.partition.review.delete}")
     private String reviewPartitionDelete;
 
+    @Value("${api.service.notification-reports}")
+    private String notificationReportsApiUrl;
+
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
     private final KafkaTemplate<String, ReviewMessage> kafkaTemplate;
@@ -50,8 +54,12 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReviewToPerson(ReviewRequest reviewRequest) {
         log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
-        if (!personService.existsById(reviewRequest.getAuthorId()) && !personService.existsById(reviewRequest.getPersonId())) {
-            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
+        if (!personService.existsById(reviewRequest.getAuthorId())) {
+            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " not found");
+        }
+
+        if (!shopService.existsById(reviewRequest.getShopId())){
+            throw new ShopNotFoundException("shopId " + reviewRequest.getShopId() + " not found");
         }
 
         ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfPersonsByAuthorId(reviewRequest.getAuthorId());
@@ -78,8 +86,12 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReviewToShop(ReviewRequest reviewRequest) {
         log.info("creating review to shop: shopId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getAuthorId());
 
-        if (!personService.existsById(reviewRequest.getAuthorId()) && !shopService.existsById(reviewRequest.getShopId())) {
-            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or shopId " + reviewRequest.getShopId() + " not found");
+        if (!personService.existsById(reviewRequest.getAuthorId())) {
+            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " not found");
+        }
+
+        if (!shopService.existsById(reviewRequest.getShopId())){
+            throw new ShopNotFoundException("shopId " + reviewRequest.getShopId() + " not found");
         }
 
         ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfShopsByAuthorId(reviewRequest.getAuthorId());
@@ -102,7 +114,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
-        String url = "http://api/notifications/reviews?shopId={id}&page={page}&size={size}";
+        String url = notificationReportsApiUrl + "/reviews?shopId={id}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
@@ -116,7 +128,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size) {
-        String url = "http://api/notifications/reviews?personId={id}&page={page}&size={size}";
+        String url = notificationReportsApiUrl + "/reviews?personId={id}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
@@ -130,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
-        String url = "http://api/notifications/reviews?page={page}&size={size}";
+        String url = "http://api/notifications/reviews?page={page}&size={size}"; //TODO hardcode
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,

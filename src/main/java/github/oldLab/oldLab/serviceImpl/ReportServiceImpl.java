@@ -35,6 +35,9 @@ public class ReportServiceImpl implements ReportService {
     @Value("${kafka.partition.report.update}")
     private String reportPartitionUpdate;
 
+    @Value("${api.service.notification-reports}")
+    private String notificationReportsApiUrl;
+
     private final CircuitBreaker circuitBreaker;
     private final KafkaTemplate<String, ReportMessage> kafkaTemplate;
     private final RestTemplate restTemplate;
@@ -81,7 +84,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     public List<ReportResponse> getAllReports(int page, int size) {
-        String url = "http://api/notifications/reports?page={page}&size={size}";
+        String url = notificationReportsApiUrl + "/reports?page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
@@ -96,7 +99,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public List<ReportResponse> getReportsByStatus(ReportStatusEnum status, int page, int size) {
-        String url = "http://api/notifications/reports/status?status={status}&page={page}&size={size}";
+        String url = notificationReportsApiUrl + "/reports/status?status={status}&page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
