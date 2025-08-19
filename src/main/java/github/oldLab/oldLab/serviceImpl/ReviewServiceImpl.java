@@ -142,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewResponse> getAllReviewsPaginated(int page, int size) {
-        String url = "http://api/notifications/reviews?page={page}&size={size}"; //TODO hardcode
+        String url = notificationReportsApiUrl + "/reviews?page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
