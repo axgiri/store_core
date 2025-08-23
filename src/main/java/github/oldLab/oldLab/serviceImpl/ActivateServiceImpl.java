@@ -15,7 +15,9 @@ import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.entity.Activate;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.ActivateRepository;
+import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.service.ActivateService;
+import github.oldLab.oldLab.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivateServiceImpl implements ActivateService {
 
     private final ActivateRepository repository;
-    private final PersonServiceImpl personService;
-    private final TokenServiceImpl tokenService;
+    private final PersonRepository personRepository;
+    private final TokenService tokenService;
 
     private final int OTP_EXPIRATION_MINUTES = 15;
 
@@ -134,7 +136,8 @@ public class ActivateServiceImpl implements ActivateService {
 
         delete(phoneNumber);
 
-        var person = personService.findEntityByPhoneNumber(phoneNumber);
+        var person = personRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
         CompletableFuture<String> token = tokenService.generateToken(person);
         return new AuthResponse(token.join(), PersonResponse.fromEntityToDto(person));
     }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import github.oldLab.oldLab.dto.events.ReportMessage;
+import github.oldLab.oldLab.dto.events.ReviewMessage;
+
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
@@ -89,6 +92,30 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
+    public ProducerFactory<String, ReportMessage> reportProducerFactory(ObjectMapper mapper, Map<String, Object> producerProps){
+        DefaultKafkaProducerFactory<String, ReportMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
+        producerFactory.setValueSerializer(new JsonSerializer<>(mapper));
+        return producerFactory;
+    }
+
+    @Bean
+    public KafkaTemplate<String, ReportMessage> reportKafkaTemplate(ProducerFactory<String, ReportMessage> reportProducerFactory) {
+        return new KafkaTemplate<>(reportProducerFactory);
+    }
+
+    @Bean
+    public ProducerFactory<String, ReviewMessage> reviewProducerFactory(ObjectMapper mapper, Map<String, Object> producerProps){
+        DefaultKafkaProducerFactory<String, ReviewMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
+        producerFactory.setValueSerializer(new JsonSerializer<>(mapper));
+        return producerFactory;
+    }
+
+    @Bean
+    public KafkaTemplate<String, ReviewMessage> reviewKafkaTemplate(ProducerFactory<String, ReviewMessage> reviewProducerFactory) {
+        return new KafkaTemplate<>(reviewProducerFactory);
     }
 
     @Bean

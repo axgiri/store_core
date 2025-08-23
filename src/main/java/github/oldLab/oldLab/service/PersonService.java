@@ -8,6 +8,7 @@ import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.NotImplementedException;
 
 public interface PersonService {
@@ -39,4 +40,6 @@ public interface PersonService {
 
     public void resetPassword(ResetPasswordRequest request);
     // End of Section
+
+     public Person findEntityByPhoneNumber(String phoneNumber);
 }
