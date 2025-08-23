@@ -26,7 +26,10 @@ import github.oldLab.oldLab.exception.InvalidTokenException;
 import github.oldLab.oldLab.exception.NotImplementedException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
+import github.oldLab.oldLab.service.ActivateService;
 import github.oldLab.oldLab.service.PersonService;
+import github.oldLab.oldLab.service.RefreshTokenService;
+import github.oldLab.oldLab.service.TokenService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +42,9 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final TokenServiceImpl tokenService;
-    private final ActivateServiceImpl activateService;
-    private final github.oldLab.oldLab.service.RefreshTokenService refreshTokenService;
+    private final TokenService tokenService;
+    private final ActivateService activateService;
+    private final RefreshTokenService refreshTokenService;
 
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
@@ -250,7 +253,7 @@ public class PersonServiceImpl implements PersonService {
 
     public Long getCompanyIdByPersonId(Long personId) {
         log.info("getting company id for person with id: {}", personId);
-        return repository.findCompanyIdByPersonId(personId)
+        return repository.findCompanyIdById(personId)
                 .orElseThrow(() -> new UserNotFoundException("company not found for person with id: " + personId));
     }
 

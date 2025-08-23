@@ -24,5 +24,5 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     Optional<Long> findIdByPhoneNumber(String phoneNumber);
 
-    Optional<Long> findCompanyIdByPersonId(Long personId);
+    Optional<Long> findCompanyIdById(Long personId);
 }
