@@ -79,7 +79,6 @@ public class ReportServiceImpl implements ReportService {
             message.setModeratorId(moderatorId);
             message.setReportId(reportId);
             message.setPayload(request);
-
         kafkaTemplate.send(reportTopic, reportPartitionUpdate, message);
     }
 
@@ -99,7 +98,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     @Override
     public List<ReportResponse> getReportsByStatus(ReportStatusEnum status, int page, int size) {
-        String url = notificationReportsApiUrl + "/reports/status?status={status}&page={page}&size={size}";
+        String url = notificationReportsApiUrl + "/reports/status/{status}?page={page}&size={size}";
         return circuitBreaker.executeSupplier(() ->
                 restTemplate.exchange(
                         url,
