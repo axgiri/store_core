@@ -319,7 +319,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"testUser3\",\n    \"last_name\": \"testUser3\",\n    \"phone_number\": \"+7777777773\",\n    \"password\": \"testUser3\"\n}",
+							"raw": "{\n    \"first_name\": \"axgiri\",\n    \"last_name\": \"axgiri\",\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -352,7 +352,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+7777777773\",\n    \"password\": \"testUser3\"\n}",
+							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -793,7 +793,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
 									"type": "string"
 								}
 							]
@@ -802,7 +802,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"author_id\": 4,\n    \"person_id\": 35,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 2,\n    \"person_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"lalal\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -810,9 +810,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/person",
+							"raw": "{{OldLab}}/api/v1/reviews/person",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -827,11 +827,21 @@
 				{
 					"name": "Create Review to shop",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"author_id\": 1,\n    \"shop_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 2,\n    \"shop_id\": 2,\n    \"rating\": 5,\n    \"comment\": \"хуйня магаз\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -839,9 +849,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/shop",
+							"raw": "{{OldLab}}/api/v1/reviews/shop",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -964,7 +974,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2MTI5ODk3LCJleHAiOjE3NTYxMzEzOTd9.Co5X8mLFOTWDs_CJPcjwfViM99ySfKXHxFYC3AClJxI",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
 									"type": "string"
 								}
 							]
@@ -972,9 +982,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/1",
+							"raw": "{{OldLab}}/api/v1/reviews/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -999,7 +1009,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2MTI3NDQ2LCJleHAiOjE3NTYxMjg5NDZ9.BOeM_dSq9C4BKmAq1ICLo94CZwSiR0ne34t3eJo2QLY",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzgyMywiZXhwIjoxNzU2NjU1MzIzfQ.WEDxJh1KBAvmsjfRP6AcQ3k6oU5oLgl85Dv5U2x_giI",
 									"type": "string"
 								}
 							]
@@ -1008,7 +1018,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporter_id\": 3,\n    \"target_id\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SCAM\"\n}",
+							"raw": "{\n    \"reporter_id\": 2,\n    \"target_id\": 3,\n    \"type\": \"SHOP\",\n    \"reason\": \"SCAM\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1016,9 +1026,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reports/create",
+							"raw": "{{OldLab}}/api/v1/reports/create",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",

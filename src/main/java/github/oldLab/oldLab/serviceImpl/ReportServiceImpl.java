@@ -6,6 +6,7 @@ import github.oldLab.oldLab.dto.events.ReportMessage;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.exception.UserNotFoundException;
+import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.service.ReportService;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,39 @@ public class ReportServiceImpl implements ReportService {
     private final KafkaTemplate<String, ReportMessage> kafkaTemplate;
     private final RestTemplate restTemplate;
     private final PersonServiceImpl personService;
+    private final ShopServiceImpl shopService;
     private final FeignNotificationController feignNotificationController;
 
     @Override
     public void createReport(ReportRequest request) {
+        
         if(!personService.existsById(request.getReporterId())) {
             throw new UserNotFoundException("Reporter not found");
         }
+
+        switch (request.getType()) {
+            case USER: {
+                if (!personService.existsById(request.getTargetId())) {
+                    throw new UserNotFoundException("target user not found");
+                }
+                break;
+            }
+
+            case SHOP: {
+                if (!shopService.existsById(request.getTargetId())) {
+                    throw new ShopNotFoundException("target shop not found");
+                }
+                break;
+            }
+
+            case REVIEW:
+                // TODO: нужна логика проверки существования ревью в другом сервисе по notificationReportsApiUrl
+                break;
+
+            default:
+                throw new IllegalArgumentException("unexpected report type: " + request.getType());
+        }
+
         ReportMessage event = new ReportMessage();
             event.setPayload(request);
         kafkaTemplate.send(reportTopic, reportPartitionCreate, event);
