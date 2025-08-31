@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import github.oldLab.oldLab.Enum.RoleEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -64,7 +65,7 @@ public class Person implements UserDetails {
     @NotNull(message = "password cannot be null")
     private String password;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "role_enum", nullable = true)
     private RoleEnum roleEnum;
 

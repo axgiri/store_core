@@ -54,12 +54,8 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReviewToPerson(ReviewRequest reviewRequest) {
         log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
-        if (!personService.existsById(reviewRequest.getAuthorId())) {
-            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " not found");
-        }
-
-        if (!shopService.existsById(reviewRequest.getShopId())){
-            throw new ShopNotFoundException("shopId " + reviewRequest.getShopId() + " not found");
+        if (!personService.existsById(reviewRequest.getPersonId()) && !personService.existsById(reviewRequest.getAuthorId())) {
+            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
         ResponseEntity<List<ReviewResponse>> response = feignNotificationController.getReviewsOfPersonsByAuthorId(reviewRequest.getAuthorId());

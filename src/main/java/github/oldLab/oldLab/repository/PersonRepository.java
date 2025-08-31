@@ -5,7 +5,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import github.oldLab.oldLab.entity.Person;
 
@@ -22,7 +24,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     Optional<Person> findByEmail(String email);
 
+    @Query("SELECT p.id FROM Person p WHERE p.phoneNumber = :phoneNumber")
     Optional<Long> findIdByPhoneNumber(String phoneNumber);
 
-    Optional<Long> findCompanyIdById(Long personId);
+    @Query("select p.companyId from Person p where p.id = :personId")
+    Optional<Long> findCompanyIdById(@Param("personId") Long personId);
 }

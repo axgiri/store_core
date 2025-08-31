@@ -8,6 +8,523 @@
 	},
 	"item": [
 		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "Find by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/findById/1",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"findById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find by Phone Number",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+12345567890",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"findByPhoneNumber",
+								"+12345567890"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer your_token_here"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/getRoleName",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"getRoleName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Colleagues",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer your_token_here"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/getMyColleagues?page=0&size=20",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"getMyColleagues"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Async Update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/async/update/1",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"async",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/delete/4",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"delete",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/updatePassword?oldPassword=oldSecurePassword123",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"updatePassword"
+							],
+							"query": [
+								{
+									"key": "oldPassword",
+									"value": "oldSecurePassword123"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Password Reset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"+1234567890\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/requestPasswordReset",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"requestPasswordReset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contact\": \"+1234567890\",\n    \"new_password\": \"newSecurePassword123\",\n    \"otp\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/resetPassword",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"resetPassword"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JWT",
+			"item": [
+				{
+					"name": "Async Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"axgiri\",\n    \"last_name\": \"axgiri\",\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/async/signup",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"async",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login by phone and password",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/login",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\":\"W0ikv7jhHL6GDTPOUWmkfK_nHqtOqAfDxthgOjIIXgLgqPl8rdeTfQlnOMNKMXYyV5o9wztBdWI9W2wkW7wFyQ\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/refresh",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revoke",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk1Njg4LCJleHAiOjE3NTY0OTcxODh9.De31Mu4vzby2uWZvZ0IUY8I0RT1tt9KVUc16P6LwO0M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\":\"VbAt02jCgSV8-DDQu-jXLzOldU-p-Tx9PMC3EBLXGH8i7cUA27lqBQj13GQIHmQGV5onvom5rtX2nDNaJoIyNw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/revoke",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"revoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revoke all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU3MzkyLCJleHAiOjE3NTY1NTg4OTJ9.J2yinOrdzv-rl08p2znefbK93XrZrSCeIcIYXH8jRJk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\":\"wwL254odNmUfwTWihwtg_oiNuILq86TFXThL_6QEoZ2pjIgKWDJFqm01E_fMghbVD-goM-3Gmu_H6aj5YgDBGQ\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/revokeAll",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"revokeAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU3MzkyLCJleHAiOjE3NTY1NTg4OTJ9.J2yinOrdzv-rl08p2znefbK93XrZrSCeIcIYXH8jRJk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer your_token_here"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/validate",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Activate",
 			"item": [
 				{
@@ -84,7 +601,7 @@
 					"response": []
 				},
 				{
-					"name": "Login",
+					"name": "Login by OTP",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -137,347 +654,21 @@
 			]
 		},
 		{
-			"name": "Person",
-			"item": [
-				{
-					"name": "Async Signup",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"testUser3\",\n    \"last_name\": \"testUser3\",\n    \"phone_number\": \"+7777777773\",\n    \"password\": \"testUser3\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/async/signup",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"async",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+877800712300\",\n    \"password\": \"testUser\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Find by ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/findById/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"findById",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Find by Phone Number",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/findByPhoneNumber/+1234567890",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"findByPhoneNumber",
-								"+1234567890"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Async Update",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/async/update/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"async",
-								"update",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/delete/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"delete",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Validate Token",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/validate",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"validate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Role Name",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/getRoleName",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getRoleName"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Colleagues",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/getMyColleagues?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getMyColleagues"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Password",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/updatePassword?oldPassword=oldSecurePassword123",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"updatePassword"
-							],
-							"query": [
-								{
-									"key": "oldPassword",
-									"value": "oldSecurePassword123"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Request Password Reset",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "\"+1234567890\"",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/requestPasswordReset",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"requestPasswordReset"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset Password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"contact\": \"+1234567890\",\n    \"new_password\": \"newSecurePassword123\",\n    \"otp\": \"123456\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/persons/resetPassword",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"resetPassword"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Photo",
 			"item": [
 				{
 					"name": "Upload Person Photo",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU5MDg5LCJleHAiOjE3NTY1NjA1ODl9.LZDDzVHOnpMfbyU0PEngacRcrq10h6lWBcqvLFrZKl0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -486,14 +677,14 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/path/to/your/image.jpg"
+									"src": "/home/axgiri/Pictures/Screenshots/Screenshot From 2025-08-30 14-38-44.png"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/photos/persons/1",
+							"raw": "{{OldLab}}/api/v1/photos/persons/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -509,12 +700,22 @@
 				{
 					"name": "Get Person Photo",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU5MDg5LCJleHAiOjE3NTY1NjA1ODl9.LZDDzVHOnpMfbyU0PEngacRcrq10h6lWBcqvLFrZKl0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/photos/persons/1",
+							"raw": "{{OldLab}}/api/v1/photos/persons/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -543,9 +744,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/photos/shops/1",
+							"raw": "{{OldLab}}/api/v1/photos/shops/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -564,9 +765,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/photos/shops/1",
+							"raw": "{{OldLab}}/api/v1/photos/shops/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -592,7 +793,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
 									"type": "string"
 								}
 							]
@@ -601,7 +802,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"author_id\": 4,\n    \"person_id\": 35,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 2,\n    \"person_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"lalal\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -609,9 +810,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/person",
+							"raw": "{{OldLab}}/api/v1/reviews/person",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -626,11 +827,21 @@
 				{
 					"name": "Create Review to shop",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"author_id\": 1,\n    \"shop_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"Great service!\"\n}",
+							"raw": "{\n    \"author_id\": 2,\n    \"shop_id\": 2,\n    \"rating\": 5,\n    \"comment\": \"хуйня магаз\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -638,9 +849,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/shop",
+							"raw": "{{OldLab}}/api/v1/reviews/shop",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -758,12 +969,22 @@
 				{
 					"name": "Delete Review",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/1",
+							"raw": "{{OldLab}}/api/v1/reviews/1",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -778,176 +999,26 @@
 			]
 		},
 		{
-			"name": "Shop",
-			"item": [
-				{
-					"name": "Async Create Shop",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Best Shop\",\n    \"description\": \"The best shop in town\",\n    \"category\": \"RESTAURANT\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/async/create",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shop",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Shops",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Async Update Shop",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Updated Shop Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"STORE\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/async/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Shop",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shops by Category",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/category?category=RESTAURANT",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"category"
-							],
-							"query": [
-								{
-									"key": "category",
-									"value": "RESTAURANT"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Report",
 			"item": [
 				{
 					"name": "Create Report",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzgyMywiZXhwIjoxNzU2NjU1MzIzfQ.WEDxJh1KBAvmsjfRP6AcQ3k6oU5oLgl85Dv5U2x_giI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"reporterId\": 1,\n    \"targetId\": 2,\n    \"type\": \"USER\",\n    \"reason\": \"SCAM\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"reporter_id\": 2,\n    \"target_id\": 3,\n    \"type\": \"SHOP\",\n    \"reason\": \"SCAM\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -955,9 +1026,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reports/create",
+							"raw": "{{OldLab}}/api/v1/reports/create",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -1062,6 +1133,16 @@
 				{
 					"name": "Update Report Status",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2MTI3NDQ2LCJleHAiOjE3NTYxMjg5NDZ9.BOeM_dSq9C4BKmAq1ICLo94CZwSiR0ne34t3eJo2QLY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [
 							{
@@ -1070,7 +1151,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/v1/reports/1/status?status=RESOLVED",
+							"raw": "{{base_url}}/api/v1/reports/1/status?status=PENDING",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1084,7 +1165,472 @@
 							"query": [
 								{
 									"key": "status",
-									"value": "RESOLVED"
+									"value": "PENDING"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shop",
+			"item": [
+				{
+					"name": "Async Create Shop",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Best Shop\",\n    \"description\": \"The best shop in town\",\n    \"category\": [\"TABLETS\", \"SMARTPHONES\", \"LAPTOPS\"],\n    \"phone_number\":\"+7777777773\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/shops/async/create",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops",
+								"async",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Shop",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYwNjc2LCJleHAiOjE3NTY1NjIxNzZ9.2UZX3z35Dku2KvGAOPED03hAMSvlof4P2lh4G_pjgV8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/shops/1",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Shops",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYwNjc2LCJleHAiOjE3NTY1NjIxNzZ9.2UZX3z35Dku2KvGAOPED03hAMSvlof4P2lh4G_pjgV8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/shops?page=0&size=20",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Async Update Shop",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Shop Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"STORE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/shops/async/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops",
+								"async",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Shop",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/shops/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Shops by Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/shops/category?category=RESTAURANT",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"shops",
+								"category"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "RESTAURANT"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"New device\",\n  \"price\": 999.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"black\", \"storage\": \"128GB\"}\n}"
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/1",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products?page=0&size=10",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"description\": \"Updated desc\",\n  \"price\": 1099.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\", \"pro\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"blue\", \"storage\": \"256GB\"}\n}"
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/1",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/2",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/search?q=iphone&page=0&size=5",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "iphone"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
 								}
 							]
 						}
@@ -1118,8 +1664,8 @@
 	],
 	"variable": [
 		{
-			"key": "base_url",
-			"value": "https://3000mostcommonwords.com/list-of-3000-most-common-polish-words-in-english",
+			"key": "OldLab",
+			"value": "",
 			"type": "string"
 		}
 	]

@@ -1,0 +1,20 @@
+-- Photos table
+CREATE TABLE IF NOT EXISTS photos (
+  id BIGSERIAL PRIMARY KEY,
+  version BIGINT,
+  object_key VARCHAR(512) NOT NULL UNIQUE,
+  content_type VARCHAR(255) NOT NULL,
+  size BIGINT NOT NULL,
+  person_id BIGINT UNIQUE,
+  shop_id BIGINT UNIQUE
+);
+
+ALTER TABLE photos
+  ADD CONSTRAINT fk_photos_person
+  FOREIGN KEY (person_id) REFERENCES persons(id)
+  ON DELETE CASCADE;
+
+ALTER TABLE photos
+  ADD CONSTRAINT fk_photos_shop
+  FOREIGN KEY (shop_id) REFERENCES shops(id)
+  ON DELETE CASCADE;
