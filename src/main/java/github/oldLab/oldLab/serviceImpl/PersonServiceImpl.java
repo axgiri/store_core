@@ -193,7 +193,7 @@ public class PersonServiceImpl implements PersonService {
                 .toList();
     }
 
-    public void sendOtp(String email){ //TODO: implement this method
+    public void sendOtp(String email){
         throw new NotImplementedException("sendOtp method by email is not implemented yet");
     }
 

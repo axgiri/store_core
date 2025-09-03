@@ -29,7 +29,9 @@ public class SecurityConfiguration {
             "/api/v1/persons/signup",
             "/api/v1/persons/login",
             "/api/v1/persons/refresh",
-            "/api/v1/persons/async/signup")
+            "/api/v1/persons/async/signup",
+            "/api/v1/products/list",
+            "/api/v1/products/search")
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(a -> a.anyRequest().permitAll())

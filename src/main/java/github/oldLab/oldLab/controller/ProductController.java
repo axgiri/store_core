@@ -28,7 +28,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.get(id));
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<ProductResponse>> list(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(productService.list(page, size));
     }
