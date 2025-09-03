@@ -77,14 +77,4 @@ public class NotificationReportsServiceImpl {
         );
         return response.getBody() != null ? response.getBody() : Collections.emptyList();
     }
-
-    private ReportResponse getReportByIdFallback(Long reportId, Exception ex) {
-        log.warn("Fallback for getReportById({}): {}", reportId, ex.getMessage());
-        return null;
-    }
-
-    private List<ReportResponse> getReportsFallback(Object params, Exception ex) {
-        log.warn("Fallback for reports: {}", ex.getMessage());
-        return Collections.emptyList();
-    }
 }
