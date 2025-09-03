@@ -21,7 +21,6 @@ public interface ActivateService {
 
     public void sendOtp(String phoneNumber);
 
-    public void sendOtp(String phoneNumber, int otp);
 
     public void resendOtp(String phoneNumber);
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
@@ -150,7 +151,7 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    public String getRole(String token) {
+    public RoleEnum getRole(String token) {
         token = token.substring(7);
 
         if(token == null || token.isEmpty()) {
@@ -159,7 +160,7 @@ public class PersonServiceImpl implements PersonService {
 
         log.info("getting role from token: {}", token);
         Claims claim = tokenService.extractAllClaimsAsync(token).join();
-        return claim.get("role", String.class);
+        return claim.get("role", RoleEnum.class);
     }
 
     public void updatePasswordAsync(LoginRequest loginRequest, String oldPassword) {
@@ -259,8 +260,10 @@ public class PersonServiceImpl implements PersonService {
 
     public void setCompanyIdForExistingPerson(Long personId, Long companyId) {
         log.info("setting company id for person with id: {}", personId);
-        Person person = repository.getReferenceById(personId);
+        Person person = repository.findById(personId)
+                .orElseThrow(() -> new UserNotFoundException("user not found with id: " + personId));
         person.setCompanyId(companyId);
+        person.setUpdatedAt(Instant.now());
         repository.save(person);
     }
 

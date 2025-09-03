@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.Enum.MessageChannelEnum;
 import github.oldLab.oldLab.exception.InvalidOtpException;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class ActivateServiceImpl implements ActivateService {
     private final ActivateRepository repository;
     private final PersonRepository personRepository;
     private final TokenService tokenService;
+    private final MessageSenderServiceImpl messageSender;
 
     private final int OTP_EXPIRATION_MINUTES = 15;
 
@@ -63,6 +65,9 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("generating otp");
         return 1000 + new Random().nextInt(9000);
     }
+    public void sendOtp(String phoneNumber) {
+        messageSender.sendOtp(MessageChannelEnum.SMS, phoneNumber, getOtp(phoneNumber));
+    }
 
     public void save(String phoneNumber, Optional<Boolean> isLogin) {
         log.debug("saving to activate with phone number: {}, loginAttempted={}", phoneNumber, isLogin);
@@ -93,16 +98,7 @@ public class ActivateServiceImpl implements ActivateService {
             .getOtp();
     }
 
-    public void sendOtp(String phoneNumber) {
-        log.debug("sending OTP to phone number: {}", phoneNumber);
-        int otp = getOtp(phoneNumber);
-        sendOtp(phoneNumber, otp);
-    }
 
-    public void sendOtp(String phoneNumber, int otp) {
-        log.debug("sending OTP to phone number: {}", phoneNumber);
-        //TODO: send OTP to another service by kafka
-    }
 
     public void resendOtp(String phoneNumber) {
         log.debug("resending OTP to phone number: {}", phoneNumber);
@@ -114,7 +110,7 @@ public class ActivateServiceImpl implements ActivateService {
         if (Instant.now().isAfter(expiration)) {
             saveForRegister(phoneNumber);
         }
-        sendOtp(phoneNumber, getOtp(phoneNumber)); //here
+        messageSender.sendOtp(MessageChannelEnum.SMS,phoneNumber, getOtp(phoneNumber)); //here
     }
 
     public AuthResponse login(String phoneNumber, int OTP) {
@@ -152,7 +148,7 @@ public class ActivateServiceImpl implements ActivateService {
     public void sendLoginOtp(String phoneNumber) { 
         log.debug("sending login OTP to phone number: {}", phoneNumber);
         saveForLogin(phoneNumber);
-        sendOtp(phoneNumber);
+        messageSender.sendOtp(MessageChannelEnum.SMS,phoneNumber, getOtp(phoneNumber));
     }
 
     // Methods for reset password

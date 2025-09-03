@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import github.oldLab.oldLab.exception.UserNotFoundException;
+import github.oldLab.oldLab.exception.ProductNotFoundException;
 import github.oldLab.oldLab.exception.InvalidTokenException;
 import github.oldLab.oldLab.exception.InvalidPasswordException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,16 @@ public class GlobalExceptionHandler {
             "USER_NOT_FOUND",
             ex.getMessage(),
             null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiError> onProductNotFound(ProductNotFoundException ex) {
+        ApiError err = new ApiError(
+                Instant.now(),
+                "PRODUCT_NOT_FOUND",
+                ex.getMessage(),
+                null
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }

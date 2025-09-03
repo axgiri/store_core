@@ -3,6 +3,7 @@ package github.oldLab.oldLab.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
@@ -27,7 +28,7 @@ public interface PersonService {
 
     public void validateToken(String token);
 
-    public String getRole(String token);
+    public RoleEnum getRole(String token);
 
     public void updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
 

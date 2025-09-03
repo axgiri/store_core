@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.RefreshRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
@@ -98,9 +99,9 @@ public class PersonController {
     }
 
     @GetMapping("/getRoleName")
-    public ResponseEntity<String> getRoleName(@RequestHeader("Authorization") String token){
+    public ResponseEntity<RoleEnum> getRoleName(@RequestHeader("Authorization") String token){
         log.debug("getting role from token: {}", token);
-        String role = service.getRole(token);
+        RoleEnum role = service.getRole(token);
         return ResponseEntity.ok(role);
     }
 

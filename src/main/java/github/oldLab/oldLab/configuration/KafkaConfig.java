@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import github.oldLab.oldLab.dto.events.NotificationMessage;
 import github.oldLab.oldLab.dto.events.ReportMessage;
 import github.oldLab.oldLab.dto.events.ReviewMessage;
 
@@ -38,6 +39,12 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Value("${kafka.topic.message}")
+    private String messageTopic;
+
+    @Value("${kafka.dlt.message}")
+    private String messageDltTopic;
 
     @Value("${kafka.topic.review}")
     private String reviewTopic;
@@ -102,6 +109,13 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ProducerFactory<String, NotificationMessage> messageProducerFactory(ObjectMapper mapper, Map<String, Object> producerProps){
+        DefaultKafkaProducerFactory<String, NotificationMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerProps);
+        producerFactory.setValueSerializer(new JsonSerializer<>(mapper));
+        return producerFactory;
+    }
+
+    @Bean
     public KafkaTemplate<String, ReportMessage> reportKafkaTemplate(ProducerFactory<String, ReportMessage> reportProducerFactory) {
         return new KafkaTemplate<>(reportProducerFactory);
     }
@@ -116,6 +130,11 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, ReviewMessage> reviewKafkaTemplate(ProducerFactory<String, ReviewMessage> reviewProducerFactory) {
         return new KafkaTemplate<>(reviewProducerFactory);
+    }
+
+    @Bean
+    public KafkaTemplate<String, NotificationMessage> messageKafkaTemplate(ProducerFactory<String, NotificationMessage> messageProducerFactory) {
+        return new KafkaTemplate<>(messageProducerFactory);
     }
 
     @Bean
@@ -159,6 +178,8 @@ public class KafkaConfig {
         return baseTopic(reportTopic);
     }
 
+    @Bean NewTopic messageEventsTopic() { return baseTopic(messageTopic);}
+
     @Bean 
     public NewTopic reviewEventsDlt() {
         return dltTopic(reviewDltTopic);
@@ -168,4 +189,7 @@ public class KafkaConfig {
     public NewTopic reportEventsDlt() {
         return dltTopic(reportDltTopic);
     }
+
+    @Bean
+    public NewTopic messageEventsDlt() { return dltTopic(messageDltTopic);}
 }

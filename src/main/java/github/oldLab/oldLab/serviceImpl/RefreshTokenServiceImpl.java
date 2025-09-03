@@ -16,9 +16,11 @@ import github.oldLab.oldLab.exception.InvalidTokenException;
 import github.oldLab.oldLab.repository.RefreshTokenRepository;
 import github.oldLab.oldLab.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenRepository repository;
@@ -84,9 +86,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void revoke(String token) {
+        log.debug("initial token: {}", token);
         String hash = tokenHashService.hash(token);
+        log.debug("revoking refresh token with hash: {}", hash);
         RefreshToken rt = repository.findByTokenHash(hash)
             .orElseThrow(() -> new InvalidTokenException("refresh token not found"));
+        log.debug("found refresh token: {}", rt);
+
+        if(rt.isRevoked() || rt.getExpiresAt().isBefore(Instant.now())) {
+            throw new InvalidTokenException("refresh token already revoked or expired");
+        }
+
         rt.setRevoked(true);
         rt.setUpdatedAt(Instant.now());
         repository.save(rt);
