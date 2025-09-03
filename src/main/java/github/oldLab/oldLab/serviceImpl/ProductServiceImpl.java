@@ -12,6 +12,7 @@ import github.oldLab.oldLab.dto.request.ProductRequest;
 import github.oldLab.oldLab.dto.response.ProductResponse;
 import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.entity.Shop;
+import github.oldLab.oldLab.exception.ProductNotFoundException;
 import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.repository.ProductRepository;
 import github.oldLab.oldLab.service.ProductService;
@@ -45,14 +46,13 @@ public class ProductServiceImpl implements ProductService {
         }
         Shop shopRef = shopService.getReferenceById(companyId);
         Product saved = repository.save(request.toEntity(shopRef));
-        // index to Elasticsearch
-    productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
+        productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
         return ProductResponse.fromEntityToDto(saved);
     }
 
     @Override
     public ProductResponse get(Long id) {
-        Product p = repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product p = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return ProductResponse.fromEntityToDto(p);
     }
 
@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
-        Product existing = repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        Product existing = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         BeanUtils.copyProperties(request, existing, "id", "version", "shop");
         Product saved = repository.save(existing);
     productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));

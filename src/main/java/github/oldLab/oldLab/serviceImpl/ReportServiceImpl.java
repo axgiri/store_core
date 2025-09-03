@@ -5,7 +5,6 @@ import github.oldLab.oldLab.dto.events.ReportMessage;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.dto.response.ReviewResponse;
-import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -41,13 +40,13 @@ public class ReportServiceImpl implements ReportService {
     public void createReport(ReportRequest request) {
         
         if(!personService.existsById(request.getReporterId())) {
-            throw new UserNotFoundException("Reporter not found");
+            throw new RuntimeException("Reporter not found");
         }
 
         switch (request.getType()) {
             case USER: {
                 if (!personService.existsById(request.getTargetId())) {
-                    throw new UserNotFoundException("target user not found");
+                    throw new RuntimeException("target user not found");
                 }
                 break;
             }
@@ -62,7 +61,7 @@ public class ReportServiceImpl implements ReportService {
             case REVIEW:
                 ReviewResponse review = notificationReportsService.getReviewById(request.getTargetId());
                 if (review == null) {
-                    throw new UserNotFoundException("target review not found");
+                    throw new RuntimeException("target review not found");
                 }
                 break;
 
@@ -81,11 +80,11 @@ public class ReportServiceImpl implements ReportService {
                 .supplyAsync(() -> notificationReportsService.getReportById(reportId))
                 .thenAcceptAsync(response -> {
                     if (response == null) {
-                        throw new UserNotFoundException("Report not found");
+                        throw new RuntimeException("Report not found");
                     }
 
                     if (!personService.existsById(moderatorId)) {
-                        throw new UserNotFoundException("Moderator not found");
+                        throw new RuntimeException("Moderator not found");
                     }
 
                     ReportRequest request = new ReportRequest();

@@ -6,7 +6,7 @@ import github.oldLab.oldLab.entity.Product;
 public final class ProductDocumentMapper {
     private ProductDocumentMapper() {}
 
-    public static ProductDocument fromEntity(Product product) {
+public static ProductDocument fromEntity(Product product) {
         ProductDocument productDocument = new ProductDocument();
         productDocument.setId(product.getId());
         productDocument.setName(product.getName());

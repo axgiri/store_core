@@ -44,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void createReviewToPerson(ReviewRequest reviewRequest) {
         log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
-        if (!personService.existsById(reviewRequest.getPersonId()) && !personService.existsById(reviewRequest.getAuthorId())) {
+        if (!personService.existsById(reviewRequest.getPersonId()) || !personService.existsById(reviewRequest.getAuthorId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
