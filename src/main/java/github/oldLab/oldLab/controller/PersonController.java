@@ -23,6 +23,9 @@ import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.serviceImpl.PersonServiceImpl;
+import github.oldLab.oldLab.serviceImpl.RateLimiterServiceImpl;
+import io.github.bucket4j.Bucket;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,109 +37,218 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonController {
 
     private final PersonServiceImpl service;
+    private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping("/async/signup")
-    public ResponseEntity<Void> createAsync(@Valid @RequestBody PersonRequest personRequest) {
-        log.debug("creating person: {}", personRequest);
-        service.createAsync(personRequest);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    public ResponseEntity<Void> createAsync(@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("creating person: {}", personRequest);
+            service.createAsync(personRequest);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
-        AuthResponse authResponse = service.authenticate(loginRequest);
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            AuthResponse authResponse = service.authenticate(loginRequest);
+            return ResponseEntity.ok(authResponse);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request){
-        AuthResponse response = service.refreshAccessToken(request.getRefreshToken());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            AuthResponse response = service.refreshAccessToken(request.getRefreshToken());
+            return ResponseEntity.ok(response);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/revoke")
-    public ResponseEntity<Void> revoke(@Valid @RequestBody RefreshRequest request){
-        service.revoke(request.getRefreshToken());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> revoke(@Valid @RequestBody RefreshRequest request, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            service.revoke(request.getRefreshToken());
+            return ResponseEntity.ok().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/revokeAll")
-    public ResponseEntity<Void> revokeAll(@Valid @RequestBody RefreshRequest request){
-        service.revokeAll(request.getRefreshToken());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> revokeAll(@Valid @RequestBody RefreshRequest request, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            service.revokeAll(request.getRefreshToken());
+            return ResponseEntity.ok().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<PersonResponse> findById(@PathVariable Long id) {
-        log.debug("finding person with id: {}", id);
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<PersonResponse> findById(@PathVariable Long id, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        
+        if (bucket.tryConsume(1)) {
+            log.debug("finding person with id: {}", id);
+            return ResponseEntity.ok(service.findById(id));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @GetMapping("/findByPhoneNumber/{phoneNumber}")
-    public ResponseEntity<PersonResponse> findByPhoneNumber(@PathVariable String phoneNumber) {
-        log.debug("finding person with phone number: {}", phoneNumber);
-        return ResponseEntity.ok(service.findByPhoneNumber(phoneNumber));
+    public ResponseEntity<PersonResponse> findByPhoneNumber(@PathVariable String phoneNumber, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        
+        if (bucket.tryConsume(1)) {
+            log.debug("finding person with phone number: {}", phoneNumber);
+            return ResponseEntity.ok(service.findByPhoneNumber(phoneNumber));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/async/update/{id}")
-    public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest) {
-        log.debug("updating person with id: {}", id);
-        return ResponseEntity.ok(service.update(id, personRequest));
+    public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("updating person with id: {}", id);
+            return ResponseEntity.ok(service.update(id, personRequest));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.debug("deleting person with id: {}", id);
-        service.delete(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("deleting person with id: {}", id);
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<String> validate(@RequestHeader("Authorization") String token){
-        log.debug("validating token: {}", token);
-        service.validateToken(token);
-        return ResponseEntity.ok("validation successful");
+    public ResponseEntity<String> validate(@RequestHeader("Authorization") String token, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("validating token: {}", token);
+            service.validateToken(token);
+            return ResponseEntity.ok("validation successful");
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @GetMapping("/getRoleName")
-    public ResponseEntity<RoleEnum> getRoleName(@RequestHeader("Authorization") String token){
-        log.debug("getting role from token: {}", token);
-        RoleEnum role = service.getRole(token);
-        return ResponseEntity.ok(role);
+    public ResponseEntity<RoleEnum> getRoleName(@RequestHeader("Authorization") String token, HttpServletRequest httpRequest){
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting role from token: {}", token);
+            RoleEnum role = service.getRole(token);
+            return ResponseEntity.ok(role);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @GetMapping("/getMyColleagues")
     public ResponseEntity<List<PersonResponse>> getColleagues(
             @RequestHeader("Authorization") String token,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        log.debug("getting colleagues for token: {}", token);
-        service.validateToken(token);
-        List<PersonResponse> colleagues = service.getColleaguesAsync(token, page, size);
-        return ResponseEntity.ok(colleagues);
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting colleagues for token: {}", token);
+            service.validateToken(token);
+            List<PersonResponse> colleagues = service.getColleaguesAsync(token, page, size);
+            return ResponseEntity.ok(colleagues);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword) {
-        log.debug("updating password for phone number: {}", loginRequest.getPhoneNumber());
-        service.updatePasswordAsync(loginRequest, oldPassword);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("updating password for phone number: {}", loginRequest.getPhoneNumber());
+            service.updatePasswordAsync(loginRequest, oldPassword);
+            return ResponseEntity.ok().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     // Reset Password Mapping
     @PostMapping("/requestPasswordReset")
     public ResponseEntity<Void> requestPasswordReset(
-            @Valid @RequestBody String contact) {
-        log.debug("waiting request for reset password from contact: {}", contact);
-        service.requestPasswordReset(contact);
-        return ResponseEntity.accepted().build();
+            @Valid @RequestBody String contact, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("waiting request for reset password from contact: {}", contact);
+            service.requestPasswordReset(contact);
+            return ResponseEntity.accepted().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        log.debug("updating password for contact: {}", request.getContact());
-        service.resetPassword(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request, HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("updating password for contact: {}", request.getContact());
+            service.resetPassword(request);
+            return ResponseEntity.ok().build();
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
     }
 
 }
