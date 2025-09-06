@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
@@ -31,7 +33,11 @@ public class SecurityConfiguration {
             "/api/v1/persons/refresh",
             "/api/v1/persons/async/signup",
             "/api/v1/products/list",
-            "/api/v1/products/search")
+            "/api/v1/products/search",
+            "/api/v1/persons/requestPasswordReset",
+            "/api/v1/persons/resetPassword",
+            "/api/v1/photos/get/persons/**", //сделал get чтобы получать фотки разграничивая не по методу запроса а по url
+            "/api/v1/photos/get/shops/**")
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(a -> a.anyRequest().permitAll())

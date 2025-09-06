@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,6 +107,7 @@ public class PersonController {
     }
 
     @GetMapping("/findById/{id}")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> findById(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -120,6 +122,7 @@ public class PersonController {
     }
 
     @GetMapping("/findByPhoneNumber/{phoneNumber}")
+    @PreAuthorize("@accessControlService.isSelfByPhoneNumber(authentication, #phoneNumber) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> findByPhoneNumber(@PathVariable String phoneNumber, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -134,6 +137,7 @@ public class PersonController {
     }
 
     @PostMapping("/async/update/{id}")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -147,6 +151,7 @@ public class PersonController {
     }
 
     @PostMapping("/delete/{id}")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -189,6 +194,7 @@ public class PersonController {
     }
 
     @GetMapping("/getMyColleagues")
+    @PreAuthorize("@accessControlService.hasCompany(authentication)")
     public ResponseEntity<List<PersonResponse>> getColleagues(
             @RequestHeader("Authorization") String token,
             @RequestParam(defaultValue = "0") int page,
@@ -208,6 +214,7 @@ public class PersonController {
     }
 
     @PutMapping("/updatePassword")
+    @PreAuthorize("@accessControlService.isSelfByPhoneNumber(authentication, #loginRequest.phoneNumber)")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -221,7 +228,6 @@ public class PersonController {
         }
     }
 
-    // Reset Password Mapping
     @PostMapping("/requestPasswordReset")
     public ResponseEntity<Void> requestPasswordReset(
             @Valid @RequestBody String contact, HttpServletRequest httpRequest) {

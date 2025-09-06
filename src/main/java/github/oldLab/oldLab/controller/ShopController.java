@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,6 +72,7 @@ public class ShopController {
     }
 
     @PutMapping("/async/{id}")
+    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> updateShop(@PathVariable Long id,
                                            @RequestBody ShopRequest shopRequest,
                                            HttpServletRequest httpRequest) {
@@ -87,6 +89,7 @@ public class ShopController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteShop(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

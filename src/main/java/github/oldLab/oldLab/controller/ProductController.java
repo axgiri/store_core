@@ -13,6 +13,7 @@ import github.oldLab.oldLab.serviceImpl.RateLimiterServiceImpl;
 import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,8 @@ public class ProductController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping
+    // @PreAuthorize("@accessControlService.hasCompany(authentication)")
+    //TODO: connect it to shop. get products by shop id and securityService check company id by
     public ResponseEntity<ProductResponse> create(@RequestBody @Validated ProductRequest request,
                                                   @RequestHeader("Authorization") String header,
                                                   HttpServletRequest httpRequest) {
@@ -69,6 +72,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id,
                                                   @RequestBody ProductRequest request,
                                                   HttpServletRequest httpRequest) {
@@ -84,6 +88,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

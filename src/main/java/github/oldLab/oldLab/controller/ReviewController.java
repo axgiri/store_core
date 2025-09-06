@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -107,6 +108,8 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@accessControlService.isAdmin(authentication) or @accessControlService.isModerator(authentication)")
+    //TODO: accessControlService.isReviewOwner(authentication, #id)
     public ResponseEntity<Void> deleteReview(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

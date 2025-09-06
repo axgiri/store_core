@@ -4,6 +4,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +30,7 @@ public class PhotoController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PutMapping(path = "/persons/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public void uploadPersonPhoto(@PathVariable Long id,
                                   @RequestPart("file") MultipartFile file,
                                   HttpServletRequest httpRequest) throws Exception {
@@ -43,7 +45,7 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/persons/{id}")
+    @GetMapping("/get/persons/{id}")
     public ResponseEntity<byte[]> getPersonPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -60,6 +62,7 @@ public class PhotoController {
     }
 
     @PutMapping(path = "/shops/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public void uploadShopPhoto(@PathVariable Long id,
                                 @RequestPart("file") MultipartFile file,
                                 HttpServletRequest httpRequest) throws Exception {
@@ -74,7 +77,7 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/shops/{id}")
+    @GetMapping("/get/shops/{id}")
     public ResponseEntity<byte[]> getShopPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
