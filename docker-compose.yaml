@@ -15,6 +15,7 @@ services:
       - elasticsearch
       - kibana
       - minio
+      - redis
     networks:
       - auth-network
   
@@ -47,16 +48,16 @@ services:
     networks:
       - auth-network
   
-  # redis:
-  #   image: redis:6.2.6-alpine
-  #   container_name: redis
-  #   ports:
-  #     - "6379:6379"
-  #   command: redis-server --appendonly yes
-  #   volumes:
-  #     - route for volume. don't forget to make it clear
-  #   networks:
-  #     - auth-network
+  redis:
+    image: redis:6.2.6-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+    - redis_data:/data
+    networks:
+      - auth-network
 
   kafka:
     image: apache/kafka:4.0.0
@@ -128,3 +129,4 @@ volumes:
   pgadmin_data:
   es_data:
   minio_data:
+  redis_data:
