@@ -27,8 +27,7 @@ public class ProductController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping
-    // @PreAuthorize("@accessControlService.hasCompany(authentication)")
-    //TODO: connect it to shop. get products by shop id and securityService check company id by
+    @PreAuthorize("@accessControlService.hasCompany(authentication)")
     public ResponseEntity<ProductResponse> create(@RequestBody @Validated ProductRequest request,
                                                   @RequestHeader("Authorization") String header,
                                                   HttpServletRequest httpRequest) {
@@ -65,6 +64,22 @@ public class ProductController {
         if (bucket.tryConsume(1)) {
             log.debug("listing products page: {}, size: {}", page, size);
             return ResponseEntity.ok(productService.list(page, size));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+
+    @GetMapping("/shop/{shopId}")
+    public ResponseEntity<List<ProductResponse>> listByShop(@PathVariable Long shopId,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "20") int size,
+                                                            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("listing products by shopId: {}, page: {}, size: {}", shopId, page, size);
+            return ResponseEntity.ok(productService.listByShop(shopId, page, size));
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
@@ -117,4 +132,22 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
+
+    @GetMapping("/shop/{shopId}/search")
+    public ResponseEntity<List<ProductResponse>> searchByShop(@PathVariable Long shopId,
+                                                              @RequestParam("q") String query,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "20") int size,
+                                                              HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("searching products by shopId: {}, q: {}, page: {}, size: {}", shopId, query, page, size);
+            return ResponseEntity.ok(productService.searchByShop(shopId, query, page, size));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
 }
+//TODO: open some endpioints for public access 

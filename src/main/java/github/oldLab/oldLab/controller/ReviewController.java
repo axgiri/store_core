@@ -108,8 +108,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accessControlService.isAdmin(authentication) or @accessControlService.isModerator(authentication)")
-    //TODO: accessControlService.isReviewOwner(authentication, #id)
+    @PreAuthorize("@accessControlService.isReviewOwner(authentication, #id) or @accessControlService.isAdmin(authentication) or @accessControlService.isModerator(authentication)")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

@@ -9,6 +9,7 @@ import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.repository.ProductRepository;
+import github.oldLab.oldLab.repository.ReviewRepository;
 import github.oldLab.oldLab.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class AccessControlService {
 
 	private final PersonRepository personRepository;
 	private final ProductRepository productRepository;
+	private final ReviewRepository reviewRepository;
 
 	public boolean isAdmin(Authentication authentication) {
 		return hasRole(authentication, RoleEnum.ADMIN);
@@ -73,6 +75,16 @@ public class AccessControlService {
 		if (authentication == null) return false;
 		Person current = getPersonByPhoneNumber(authentication.getName());
 		return current != null && current.getCompanyId() != null;
+	}
+
+	public boolean isReviewOwner(Authentication authentication, Long reviewId) {
+		if (authentication == null || reviewId == null) return false;
+		Person current = getPersonByPhoneNumber(authentication.getName());
+		if (current == null) return false;
+		return reviewRepository.findById(reviewId)
+			.map(r -> r.getAuthor() != null && r.getAuthor().getId().equals(current.getId()))
+			.map(owner -> owner || isAdmin(authentication) || isModerator(authentication))
+			.orElse(false);
 	}
 
 	@Cacheable(value = "personByPhoneNumber", key = "#phone", unless = "#result == null")

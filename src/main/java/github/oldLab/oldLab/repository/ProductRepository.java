@@ -3,6 +3,8 @@ package github.oldLab.oldLab.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import github.oldLab.oldLab.Enum.CategoryEnum;
@@ -13,6 +15,7 @@ import github.oldLab.oldLab.entity.Shop;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByShop(Shop shop);
+    Page<Product> findByShopId(Long shopId, Pageable pageable);
     
     List<Product> findByCategory(CategoryEnum category);
 }

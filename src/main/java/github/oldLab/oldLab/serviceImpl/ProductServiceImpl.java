@@ -38,9 +38,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse create(ProductRequest request, String bearerToken) {
         String token = bearerToken.startsWith("Bearer ") ? bearerToken.substring(7) : bearerToken;
-    String phone = tokenService.extractUsername(token);
-    Long personId = personService.getIdFromPhoneNumber(phone);
-    Long companyId = personService.getCompanyIdByPersonId(personId);
+        String phone = tokenService.extractUsername(token);
+        Long personId = personService.getIdFromPhoneNumber(phone);
+        Long companyId = personService.getCompanyIdByPersonId(personId);
         if (companyId == null) {
             throw new ShopNotFoundException("User has no companyId; create a shop first");
         }
@@ -64,6 +64,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductResponse> listByShop(Long shopId, int page, int size) {
+        if (!shopService.existsById(shopId)) {
+            throw new ShopNotFoundException("Shop not found: " + shopId);
+        }
+        return repository.findByShopId(shopId, PageRequest.of(page, size))
+                .map(ProductResponse::fromEntityToDto)
+                .getContent();
+    }
+
+    @Override
     @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
         Product existing = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
@@ -84,5 +94,16 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> search(String query, int page, int size) {
     return productSearchRepository.searchByText(query, PageRequest.of(page, size))
         .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> searchByShop(Long shopId, String query, int page, int size) {
+        
+        if (!shopService.existsById(shopId)) {
+            throw new ShopNotFoundException("shop not found: " + shopId);
+        }
+
+        return productSearchRepository.searchByShopAndText(shopId, query, PageRequest.of(page, size))
+                .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 }

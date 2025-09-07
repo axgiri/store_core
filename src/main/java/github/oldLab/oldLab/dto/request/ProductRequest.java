@@ -44,4 +44,4 @@ public class ProductRequest {
                 .setHiddenLabels(hiddenLabels)
                 .setAttributes(attributes);
     }
-} //TODO: connect it to shop. get products by shop id and securityService check company id by
+}
