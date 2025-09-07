@@ -106,8 +106,7 @@ public class AccessControlService {
 	public Long getShopByProductId(Long productId) {
 		log.debug("loading product shop id (cached): {}", productId);
 		return productRepository.findById(productId).map(p -> {
-			Product prod = p;
-			return prod.getShop() != null ? prod.getShop().getId() : null;
+			return p.getShop() != null ? p.getShop().getId() : null;
 		}).orElse(null);
 	}
 }

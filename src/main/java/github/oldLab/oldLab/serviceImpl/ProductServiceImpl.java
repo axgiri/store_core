@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> searchByShop(Long shopId, String query, int page, int size) {
         
         if (!shopService.existsById(shopId)) {
-            throw new ShopNotFoundException("shop not found: " + shopId);
+            throw new ShopNotFoundException("Shop not found: " + shopId);
         }
 
         return productSearchRepository.searchByShopAndText(shopId, query, PageRequest.of(page, size))

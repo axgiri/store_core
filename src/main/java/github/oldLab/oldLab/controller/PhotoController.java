@@ -31,7 +31,7 @@ public class PhotoController {
 
     @PutMapping(path = "/persons/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public void uploadPersonPhoto(@PathVariable Long id,
+    public ResponseEntity<Void> uploadPersonPhoto(@PathVariable Long id,
                                   @RequestPart("file") MultipartFile file,
                                   HttpServletRequest httpRequest) throws Exception {
         String ip = httpRequest.getRemoteAddr();
@@ -39,9 +39,10 @@ public class PhotoController {
         if (bucket.tryConsume(1)) {
             log.debug("upload person photo id: {}", id);
             service.uploadForPerson(id, file);
+            return ResponseEntity.ok().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
-            throw new RuntimeException("Too many requests");
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
 
@@ -63,7 +64,7 @@ public class PhotoController {
 
     @PutMapping(path = "/shops/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public void uploadShopPhoto(@PathVariable Long id,
+    public ResponseEntity<Void> uploadShopPhoto(@PathVariable Long id,
                                 @RequestPart("file") MultipartFile file,
                                 HttpServletRequest httpRequest) throws Exception {
         String ip = httpRequest.getRemoteAddr();
@@ -71,9 +72,10 @@ public class PhotoController {
         if (bucket.tryConsume(1)) {
             log.debug("upload shop photo id: {}", id);
             service.uploadForShop(id, file);
+            return ResponseEntity.ok().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
-            throw new RuntimeException("Too many requests");
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
 
