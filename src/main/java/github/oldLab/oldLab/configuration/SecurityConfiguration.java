@@ -32,7 +32,7 @@ public class SecurityConfiguration {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Persons (public auth / utility)
+                // Persons
                 .requestMatchers(HttpMethod.POST,
                         "/api/v1/persons/async/signup",
                         "/api/v1/persons/login",
@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                         "/api/v1/persons/getRoleName")
                     .permitAll()
 
-                // Activate (OTP / login flows)
+                // Activate (OTP / login)
                 .requestMatchers(HttpMethod.POST,
                         "/api/v1/activate/activate",
                         "/api/v1/activate/send/activate/*",
@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                         "/api/v1/activate/send/login/*")
                     .permitAll()
 
-                // Product public read-only endpoints (keep POST/PUT/DELETE protected)
+                // Product read-only endpoints
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/products/list",
                         "/api/v1/products/search",
@@ -63,23 +63,23 @@ public class SecurityConfiguration {
                         "/api/v1/products/shop/*/search")
                     .permitAll()
 
-                // Reviews (public fetch)
+                // Reviews
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/reviews/shop/*",
                         "/api/v1/reviews/person/*")
                     .permitAll()
 
-                // Shops (public browse)
+                // Shops
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/shops",
                         "/api/v1/shops/category",
                         "/api/v1/shops/*")
                     .permitAll()
 
-                // Photos (public get)
+                // Photos
                 .requestMatchers(HttpMethod.GET,
-                        "/api/v1/photos/get/persons/**",
-                        "/api/v1/photos/get/shops/**")
+                        "/api/v1/photos/persons/**",
+                        "/api/v1/photos/shops/**")
                     .permitAll()
 
                 // Everything else requires auth

@@ -41,7 +41,6 @@ public class TokenServiceImpl implements TokenService {
     
     @Async("asyncExecutor")
     public CompletableFuture<Claims> extractAllClaimsAsync(String token) {
-        log.info("extracting claims from token: {}", token);
         try {
             Jws<Claims> jws = Jwts.parser()
                     .verifyWith(getSignInKey())
