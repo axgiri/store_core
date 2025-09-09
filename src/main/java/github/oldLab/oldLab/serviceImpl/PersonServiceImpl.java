@@ -9,7 +9,6 @@ import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
@@ -31,7 +29,6 @@ import github.oldLab.oldLab.service.ActivateService;
 import github.oldLab.oldLab.service.PersonService;
 import github.oldLab.oldLab.service.RefreshTokenService;
 import github.oldLab.oldLab.service.TokenService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -112,11 +109,9 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
     }
 
-    @Async("asyncExecutor")
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public CompletableFuture<PersonResponse> update(Long id, PersonRequest personRequest) {
+    public PersonResponse update(Long id, PersonRequest personRequest) {
         log.info("updating person with id: {}", id);
-        return CompletableFuture.supplyAsync(() -> {
             Person person = repository.findById(id)
                     .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
 
@@ -125,7 +120,6 @@ public class PersonServiceImpl implements PersonService {
             person.setPhoneNumber(personRequest.getPhoneNumber());
             person.setUpdatedAt(Instant.now());
             return PersonResponse.fromEntityToDto(repository.save(person));
-        }, taskExecutor);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -143,7 +137,6 @@ public class PersonServiceImpl implements PersonService {
             throw new InvalidTokenException("token is empty");
         }
 
-        log.info("validating token: {}", token);
         if (!tokenService.isTokenValid(token,
                 repository.findByPhoneNumber(tokenService.extractUsername(token)).orElseThrow(
                         () -> new UserNotFoundException("person not found")))) {
@@ -151,21 +144,9 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    public RoleEnum getRole(String token) {
-        token = token.substring(7);
-
-        if(token == null || token.isEmpty()) {
-            throw new InvalidTokenException("token is empty");
-        }
-
-        log.info("getting role from token: {}", token);
-        Claims claim = tokenService.extractAllClaimsAsync(token).join();
-        return claim.get("role", RoleEnum.class);
-    }
-
-    public void updatePasswordAsync(LoginRequest loginRequest, String oldPassword) {
+    public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword) {
         log.info("updating password for phone number: {}", loginRequest.getPhoneNumber());
-        taskExecutor.execute(() -> {
+        return CompletableFuture.runAsync(() -> {
             Person person = repository.findByPhoneNumber(loginRequest.getPhoneNumber())
                     .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + loginRequest.getPhoneNumber()));
             if (!passwordEncoder.matches(oldPassword, person.getPassword())) {
@@ -175,7 +156,7 @@ public class PersonServiceImpl implements PersonService {
             person.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
             repository.save(person);
             log.info("updated password for phone number: {}", loginRequest.getPhoneNumber());
-        });
+        }, taskExecutor);
     }
 
     public List<PersonResponse> getColleaguesAsync(String token, int page, int size) {
@@ -199,7 +180,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void requestPasswordReset(String contact) {
-        boolean isEmail = contact.contains("@"); // Check is Email
+        boolean isEmail = contact.contains("@") && contact.contains("."); // Check is Email
 
         String normalizedContact = isEmail ? contact : normalizePhoneNumber(contact);
 
@@ -216,7 +197,7 @@ public class PersonServiceImpl implements PersonService {
         if (isEmail) {
             sendOtp(person.getEmail());
         } else {
-            sendOtp(person.getPhoneNumber());
+            activateService.sendOtp(person.getPhoneNumber());
         }
 
         log.info("OTP sent to {}: {}", contact, otp);

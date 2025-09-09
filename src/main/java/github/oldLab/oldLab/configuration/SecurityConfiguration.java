@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                 // Product read-only endpoints
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/products/list",
-                        "/api/v1/products/search",
+                        "/api/v1/products/search/**",
                         "/api/v1/products/*",
                         "/api/v1/products/shop/*",
                         "/api/v1/products/shop/*/search")

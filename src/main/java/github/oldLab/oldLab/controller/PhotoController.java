@@ -46,7 +46,7 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/get/persons/{id}")
+    @GetMapping("/persons/{id}")
     public ResponseEntity<byte[]> getPersonPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -79,7 +79,7 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/get/shops/{id}")
+    @GetMapping("/shops/{id}")
     public ResponseEntity<byte[]> getShopPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

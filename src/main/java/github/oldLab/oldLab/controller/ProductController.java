@@ -150,4 +150,3 @@ public class ProductController {
         }
     }
 }
-//TODO: open some endpoints for public access

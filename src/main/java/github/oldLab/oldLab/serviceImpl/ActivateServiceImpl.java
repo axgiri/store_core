@@ -58,7 +58,7 @@ public class ActivateServiceImpl implements ActivateService {
 
         delete(request.getPhoneNumber());
 
-        repository.setActiveByPhoneNumber(request.getPhoneNumber(), true);
+        personRepository.setActiveByPhoneNumber(request.getPhoneNumber(), true);
     }
 
     public int setOtp() {
@@ -124,10 +124,6 @@ public class ActivateServiceImpl implements ActivateService {
         }
         if (activation.getOtp() != OTP) {
             throw new UserNotFoundException("invalid OTP for phone number: " + phoneNumber);
-        }
-
-        if (activation.isActive() == false) {
-            throw new UserNotFoundException("user with phone number: " + phoneNumber + " not activated yet, please activate first");
         }
 
         delete(phoneNumber);

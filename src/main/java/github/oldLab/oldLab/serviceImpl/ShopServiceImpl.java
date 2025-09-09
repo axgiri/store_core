@@ -89,7 +89,7 @@ public class ShopServiceImpl implements ShopService {
         if (category == null || category.isEmpty()) {
             throw new ShopNotFoundException("Category list is empty or null.");
         }
-        log.info("fetching shops by category: {}", category.get(0));
+        log.info("fetching shops by category: {}", category);
         List<Shop> shops = repository.findByCategoryIn(category);
         
         if (shops.isEmpty()) {

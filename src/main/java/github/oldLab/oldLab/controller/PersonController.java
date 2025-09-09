@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.controller;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.RefreshRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
@@ -136,9 +134,9 @@ public class PersonController {
         }
     }
 
-    @PostMapping("/async/update/{id}")
+    @PostMapping("/update/{id}")
     @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<CompletableFuture<PersonResponse>> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {
+    public ResponseEntity<PersonResponse> update(@PathVariable Long id,@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
@@ -170,23 +168,8 @@ public class PersonController {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("validating token: {}", token);
             service.validateToken(token);
             return ResponseEntity.ok("validation successful");
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
-    @GetMapping("/getRoleName")
-    public ResponseEntity<RoleEnum> getRoleName(@RequestHeader("Authorization") String token, HttpServletRequest httpRequest){
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("getting role from token: {}", token);
-            RoleEnum role = service.getRole(token);
-            return ResponseEntity.ok(role);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
@@ -220,7 +203,14 @@ public class PersonController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
             log.debug("updating password for phone number: {}", loginRequest.getPhoneNumber());
-            service.updatePasswordAsync(loginRequest, oldPassword);
+            try {
+                service.updatePasswordAsync(loginRequest, oldPassword).join();
+            } catch (java.util.concurrent.CompletionException e) {
+                if (e.getCause() instanceof RuntimeException re) {
+                    throw re;
+                }
+                throw e;
+            }
             return ResponseEntity.ok().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
