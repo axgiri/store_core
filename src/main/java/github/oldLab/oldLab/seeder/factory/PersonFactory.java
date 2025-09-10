@@ -21,7 +21,8 @@ public class PersonFactory implements DataFactory<Person> {
 
     @Override
     public Person create() {
-        var phone = "+" + faker.number().digits(11);
+    int firstDigit = ThreadLocalRandom.current().nextInt(1, 10);
+    var phone = "+" + firstDigit + faker.number().digits(10);
         return new Person()
                 .setFirstName(faker.name().firstName())
                 .setLastName(faker.name().lastName())

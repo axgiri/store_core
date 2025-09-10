@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ActivateRepository extends JpaRepository<Activate, Long>{
-    
-    Optional<Activate> findByPhoneNumber(String phoneNumber);
 
-    Optional<Activate> findByPhoneNumberAndIsLogin(String phoneNumber, boolean isLogin);
+    Optional<Activate> findTopByPhoneNumberOrderByCreatedAtDesc(String phoneNumber);
+
+    Optional<Activate> findTopByPhoneNumberAndIsLoginOrderByCreatedAtDesc(String phoneNumber, boolean isLogin);
 
     @Transactional
     Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);

@@ -18,6 +18,7 @@ import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.ActivateRepository;
 import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.service.ActivateService;
+import github.oldLab.oldLab.service.RefreshTokenService;
 import github.oldLab.oldLab.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +33,14 @@ public class ActivateServiceImpl implements ActivateService {
     private final PersonRepository personRepository;
     private final TokenService tokenService;
     private final MessageSenderServiceImpl messageSender;
+    private final RefreshTokenService refreshTokenService;
 
     private final int OTP_EXPIRATION_MINUTES = 15;
 
     @Transactional
     public void setActive(ActivateRequest request) {
         log.debug("saving to activate with phone number: {}", request.getPhoneNumber());
-        Activate activation = repository.findByPhoneNumber(request.getPhoneNumber())
+    Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(request.getPhoneNumber())
             .orElseThrow(() -> new UserNotFoundException("no OTP found for phone number: " + request.getPhoneNumber()));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
@@ -93,7 +95,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public int getOtp(String phoneNumber) {
         log.debug("getting otp");
-        return repository.findByPhoneNumber(phoneNumber)
+        return repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
             .orElseThrow(() -> new UserNotFoundException("no OTP found for phone number: " + phoneNumber))
             .getOtp();
     }
@@ -102,7 +104,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public void resendOtp(String phoneNumber) {
         log.debug("resending OTP to phone number: {}", phoneNumber);
-        Activate activation = repository.findByPhoneNumber(phoneNumber)
+        Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
             .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please register first"));
 
         Instant createdAt = activation.getCreatedAt();
@@ -115,7 +117,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public AuthResponse login(String phoneNumber, int OTP) {
         log.debug("logging by otp in user with phone number: {}", phoneNumber);
-        Activate activation = repository.findByPhoneNumberAndIsLogin(phoneNumber, true)
+        Activate activation = repository.findTopByPhoneNumberAndIsLoginOrderByCreatedAtDesc(phoneNumber, true)
             .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please send OTP first"));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
@@ -131,12 +133,13 @@ public class ActivateServiceImpl implements ActivateService {
         var person = personRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
         CompletableFuture<String> token = tokenService.generateToken(person);
-        return new AuthResponse(token.join(), PersonResponse.fromEntityToDto(person));
+        String refreshToken = refreshTokenService.issue(person);
+        return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
     }
 
     public void delete(String phoneNumber) {
         log.debug("deleting activation with phone number: {}", phoneNumber);
-        Activate activation = repository.findByPhoneNumber(phoneNumber)
+        Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
             .orElseThrow(() -> new UserNotFoundException("activation with phone number: " + phoneNumber + " not found"));
         repository.delete(activation);
     }
@@ -149,8 +152,8 @@ public class ActivateServiceImpl implements ActivateService {
 
     // Methods for reset password
     public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin) {
-        Activate activate = repository.findByPhoneNumber(phoneNumber)
-                .orElse(new Activate());
+    Activate activate = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
+        .orElse(new Activate());
         activate.setPhoneNumber(phoneNumber);
         activate.setOtpReset(otp);
         activate.setActive(true);
