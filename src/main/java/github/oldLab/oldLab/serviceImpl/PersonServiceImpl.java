@@ -25,6 +25,8 @@ import github.oldLab.oldLab.exception.InvalidTokenException;
 import github.oldLab.oldLab.exception.NotImplementedException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
+import github.oldLab.oldLab.repository.PhotoRepository;
+import github.oldLab.oldLab.service.PhotoStorage;
 import github.oldLab.oldLab.service.ActivateService;
 import github.oldLab.oldLab.service.PersonService;
 import github.oldLab.oldLab.service.RefreshTokenService;
@@ -38,6 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository repository;
+    private final PhotoRepository photoRepository;
+    private final PhotoStorage photoStorage;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
@@ -127,6 +131,16 @@ public class PersonServiceImpl implements PersonService {
         log.info("deleting person with id: {}", id);
         Person person = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
+        photoRepository.findByPersonId(id).ifPresent(photo -> {
+            try {
+                photoStorage.delete(photo.getObjectKey());
+            } catch (Exception e) {
+                log.warn("failed to delete photo object '{}' from storage: {}", photo.getObjectKey(), e.getMessage());
+                throw e;
+            }
+            photoRepository.delete(photo);
+        });
+
         repository.delete(person);
         log.info("deleted person with id: {}", id);
     }
