@@ -3,6 +3,8 @@ package github.oldLab.oldLab.serviceImpl;
 import java.io.IOException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import github.oldLab.oldLab.entity.Person;
@@ -12,7 +14,6 @@ import github.oldLab.oldLab.repository.PhotoRepository;
 import github.oldLab.oldLab.service.ImageProcessingService;
 import github.oldLab.oldLab.service.PhotoService;
 import github.oldLab.oldLab.service.PhotoStorage;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -76,9 +77,11 @@ public class PhotoServiceImpl implements PhotoService {
         return storage.load(ph.getObjectKey());
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     private void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey());
         repository.delete(ph);
+        repository.flush();
     }
 }
 
