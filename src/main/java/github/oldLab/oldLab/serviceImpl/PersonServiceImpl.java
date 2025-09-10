@@ -230,9 +230,9 @@ public class PersonServiceImpl implements PersonService {
 
         Person person = request.isEmail()
                 ? repository.findByEmail(request.getContact())
-                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                .orElseThrow(() -> new UserNotFoundException("user not found with email: " + request.getContact()))
                 : repository.findByPhoneNumber(request.getContact())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("user not found with phone: " + request.getContact()));
 
         person.setPassword(passwordEncoder.encode(request.getNewPassword()));
         person.setUpdatedAt(Instant.now());
