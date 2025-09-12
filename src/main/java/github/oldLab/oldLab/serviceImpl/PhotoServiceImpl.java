@@ -34,7 +34,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
+        String key = storage.save(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -59,7 +59,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
+        String key = storage.save(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)

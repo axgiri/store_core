@@ -21,17 +21,17 @@ public class MinioPhotoStorage implements PhotoStorage {
     @Value("${minio.bucket}") private String bucket;
 
     @Override
-    public String save(byte[] bytes, String filename, String contentType) {
-        String key = UUID.randomUUID() + "-" + filename;
+    public String save(byte[] bytes, String contentType) {
+        String key = UUID.randomUUID().toString();
 
-    s3.putObject(
-    PutObjectRequest.builder()
-        .bucket(bucket)
-        .key(key)
-        .contentType(contentType)
-        .build(),
-        RequestBody.fromBytes(bytes));
-        return key;
+        s3.putObject(
+        PutObjectRequest.builder()
+            .bucket(bucket)
+            .key(key)
+            .contentType(contentType)
+            .build(),
+            RequestBody.fromBytes(bytes));
+            return key;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class PhotoFactory implements DataFactory<Photo> {
 
     public Photo create(Person person) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, randomFilename("person-" + person.getId()), "image/webp");
+        String key = photoStorage.save(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -44,7 +44,7 @@ public class PhotoFactory implements DataFactory<Photo> {
 
     public Photo create(Shop shop) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, randomFilename("shop-" + shop.getId()), "image/webp");
+        String key = photoStorage.save(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -56,7 +56,7 @@ public class PhotoFactory implements DataFactory<Photo> {
     @Override
     public Photo create() {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, randomFilename("generic"), "image/webp");
+        String key = photoStorage.save(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -106,9 +106,5 @@ public class PhotoFactory implements DataFactory<Photo> {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(img, "png", baos);
         return baos.toByteArray();
-    }
-
-    private String randomFilename(String prefix) {
-        return prefix + "-" + faker.number().digits(8) + ".webp";
     }
 }
