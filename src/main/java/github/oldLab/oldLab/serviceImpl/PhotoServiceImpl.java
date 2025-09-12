@@ -52,6 +52,11 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Transactional
+    public void deleteForPerson(Long personId) {
+        repository.findByPersonId(personId).ifPresent(this::removePhoto);
+    }
+
+    @Transactional
     public void uploadForShop(Long shopId, MultipartFile file) throws IOException {
         Shop shop = shopService.findEntityById(shopId);
 
@@ -75,6 +80,11 @@ public class PhotoServiceImpl implements PhotoService {
                          .orElseThrow(() -> new RuntimeException("Photo not set"));
 
         return storage.load(ph.getObjectKey());
+    }
+
+    @Transactional
+    public void deleteForShop(Long shopId) {
+        repository.findByShopId(shopId).ifPresent(this::removePhoto);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
