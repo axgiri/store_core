@@ -14,6 +14,8 @@ import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.repository.*;
+import github.oldLab.oldLab.search.ProductDocumentRequest;
+import github.oldLab.oldLab.search.ProductSearchRepository;
 import github.oldLab.oldLab.seeder.factory.ActivateFactory;
 import github.oldLab.oldLab.seeder.factory.PersonFactory;
 import github.oldLab.oldLab.seeder.factory.PhotoFactory;
@@ -47,6 +49,7 @@ public class SeederService {
     private final ReportRepository reportRepository;
     private final PhotoRepository photoRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ProductSearchRepository productSearchRepository;
 
     @Transactional
     public long seedAll(int count) {
@@ -85,6 +88,7 @@ public class SeederService {
             }
         }
         products = productRepository.saveAll(products);
+        products.forEach(product -> productSearchRepository.save(ProductDocumentRequest.fromEntity(product)));
 
         // Photos for subset of persons and shops
         persons.stream().limit(Math.max(1, count / 2)).forEach(p -> photoRepository.save(photoFactory.create(p)));

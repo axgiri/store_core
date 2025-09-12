@@ -74,7 +74,8 @@ public class ShopServiceImpl implements ShopService {
             if (!repository.existsById(id)) {
                 throw new ShopNotFoundException("shop not found with id: " + id);
             }
-            Shop shop = repository.getReferenceById(id);
+            Shop shop = repository.findById(id)
+                .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
             BeanUtils.copyProperties(dto, shop, "id", "version");
             repository.save(shop);
             log.info("updated shop with id: {}", id);
