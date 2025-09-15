@@ -106,4 +106,16 @@ public class ProductServiceImpl implements ProductService {
         return productSearchRepository.searchByShopAndText(shopId, query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
+
+    public Product findEntityById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("product not found with id: " + id));
+    }
+
+    public Product getReferenceIfExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ProductNotFoundException("product not found with id: " + id);
+        }
+        return repository.getReferenceById(id);
+    }
 }

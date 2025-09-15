@@ -79,7 +79,8 @@ public class SecurityConfiguration {
                 // Photos
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/photos/persons/**",
-                        "/api/v1/photos/shops/**")
+                        "/api/v1/photos/shops/**",
+                        "/api/v1/photos/products/**")
                     .permitAll()
 
                 // Everything else requires auth
