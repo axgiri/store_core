@@ -125,14 +125,13 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<ProductPhotoResponse> loadForProduct(Long productId) {
-        productService.getReferenceIfExists(productId); // to check existence
+        productService.getReferenceIfExists(productId);
 
         List<Photo> photos = repository.findAllByProductId(productId);
         
         return photos.stream()
                 .map(photo -> {
                     ProductPhotoResponse dto = new ProductPhotoResponse();
-                    dto.setId(photo.getId());
                     dto.setObjectKey(photo.getObjectKey());
                     byte[] fileBytes = storage.load(photo.getObjectKey());
                     dto.setFile(fileBytes);

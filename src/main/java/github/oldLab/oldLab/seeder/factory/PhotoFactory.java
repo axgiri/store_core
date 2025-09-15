@@ -2,7 +2,9 @@ package github.oldLab.oldLab.seeder.factory;
 
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import com.github.javafaker.Faker;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
 import github.oldLab.oldLab.entity.Shop;
+import github.oldLab.oldLab.entity.Product;
 import lombok.RequiredArgsConstructor;
 import github.oldLab.oldLab.service.ImageProcessingService;
 import github.oldLab.oldLab.service.PhotoStorage;
@@ -50,6 +53,17 @@ public class PhotoFactory implements DataFactory<Photo> {
                 .contentType("image/webp")
                 .size((long) processed.length)
                 .shop(shop)
+                .build();
+    }
+
+    public Photo create(Product product) {
+        byte[] processed = generateAndProcess();
+        String key = photoStorage.save(processed, "image/webp");
+        return Photo.builder()
+                .objectKey(key)
+                .contentType("image/webp")
+                .size((long) processed.length)
+                .product(product)
                 .build();
     }
 

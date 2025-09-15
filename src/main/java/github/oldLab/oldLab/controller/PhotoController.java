@@ -114,17 +114,17 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
-    
-    @PostMapping(path = "/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> uploadProductPhotos(@PathVariable Long id,
+
+    @PostMapping(path = "/products/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
+    public ResponseEntity<Void> uploadProductPhotos(@PathVariable Long productId,
                                    @RequestPart("file") MultipartFile file,
                                    HttpServletRequest httpRequest) throws Exception {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("upload product photos id: {}", id);
-            service.uploadForProduct(id, file);
+            log.debug("upload product photos id: {}", productId);
+            service.uploadForProduct(productId, file);
             return ResponseEntity.ok().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
@@ -133,8 +133,8 @@ public class PhotoController {
     }
 
 
-    @DeleteMapping("/products/{productId}/{objectKey}") // проверка с photoRepository.existsByIdAndProductId(photoId, id)
-    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    @DeleteMapping("/products/{productId}/{objectKey}")
+    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long productId,
                                    @PathVariable String objectKey,
                                    HttpServletRequest httpRequest) throws Exception {

@@ -25,6 +25,7 @@ import github.oldLab.oldLab.seeder.factory.ReportFactory;
 import github.oldLab.oldLab.seeder.factory.ReviewFactory;
 import github.oldLab.oldLab.seeder.factory.ShopFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,9 @@ public class SeederService {
     private final PhotoRepository photoRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final ProductSearchRepository productSearchRepository;
+
+    @Value("${max.photo.per.product}")
+    private int maxPhotoPerProduct;
 
     @Transactional
     public long seedAll(int count) {
@@ -89,6 +93,16 @@ public class SeederService {
         }
         products = productRepository.saveAll(products);
         products.forEach(product -> productSearchRepository.save(ProductDocumentRequest.fromEntity(product)));
+
+        // Photos for products (random count per product up to configured max)
+        if (maxPhotoPerProduct > 0) {
+            products.forEach(prod -> {
+                int toCreate = ThreadLocalRandom.current().nextInt(maxPhotoPerProduct + 1); // 0..max
+                for (int i = 0; i < toCreate; i++) {
+                    photoRepository.save(photoFactory.create(prod));
+                }
+            });
+        }
 
         // Photos for subset of persons and shops
         persons.stream().limit(Math.max(1, count / 2)).forEach(p -> photoRepository.save(photoFactory.create(p)));
