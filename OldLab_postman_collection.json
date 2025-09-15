@@ -1,1690 +1,1731 @@
 {
-	"info": {
-		"_postman_id": "a998a013-be40-4e32-a4a8-859cf3b489fa",
-		"name": "OldLab API Collection",
-		"description": "Postman collection for OldLab API endpoints",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "36832826"
-	},
-	"item": [
-		{
-			"name": "Person",
-			"item": [
-				{
-					"name": "Find by ID",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findById/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"findById",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Find by Phone Number",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+20405359620",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"findByPhoneNumber",
-								"+20405359620"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODM5NzcsImV4cCI6MTc1NzM4NTQ3N30.Mvx55IkjTtMVVEv_Z0imy9xGWf_ATc9HKEKddntH6J8",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"Huesos\",\n    \"last_name\": \"Pidorskii\",\n    \"phone_number\": \"+20405359620\",\n    \"password\": \"+20405359620\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/update/3",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"update",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczODYyNjUsImV4cCI6MTc1NzM4Nzc2NX0.yCxZB__bYmmnFAeocHO8jEYUQgELd2haRVoOngFF-E0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/delete/21",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"delete",
-								"21"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get my colleagues",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrNDM0NzU0MTk4MTEiLCJpYXQiOjE3NTc0MzAzMTksImV4cCI6MTc1NzQzMTgxOX0.OJ433k5lAO1xyLlnZTRzG3VUm9cCne9I6dcASloiQgo",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/getMyColleagues",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getMyColleagues"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Password",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0MzI0NTcsImV4cCI6MTc1NzQzMzk1N30.WwTb0rAQFmN7H81Rp_y3ByrOqkc5-vttndZFUJWaWxY",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"NewPassword\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/updatePassword?oldPassword=oldPassword",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"updatePassword"
-							],
-							"query": [
-								{
-									"key": "oldPassword",
-									"value": "oldPassword"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Request Password Reset",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"contact\":\"+77780071230\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/requestPasswordReset",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"requestPasswordReset"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset Password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"contact\": \"+77780071230\",\n    \"is_email\":\"false\",\n    \"new_password\": \"newSecurePassword123\",\n    \"otp_reset\": \"3495\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/resetPassword",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"resetPassword"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "JWT",
-			"item": [
-				{
-					"name": "Async Signup",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\":\"activate\",\n    \"last_name\":\"test3\",\n    \"phone_number\":\"+77780071233\",\n    \"password\":\"activate\",\n    \"role\":\"USER\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/async/signup",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"async",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login by phone and password",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/login",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "refresh",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"refresh_token\":\"W0ikv7jhHL6GDTPOUWmkfK_nHqtOqAfDxthgOjIIXgLgqPl8rdeTfQlnOMNKMXYyV5o9wztBdWI9W2wkW7wFyQ\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/refresh",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"refresh"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "revoke",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk1Njg4LCJleHAiOjE3NTY0OTcxODh9.De31Mu4vzby2uWZvZ0IUY8I0RT1tt9KVUc16P6LwO0M",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"refresh_token\":\"VbAt02jCgSV8-DDQu-jXLzOldU-p-Tx9PMC3EBLXGH8i7cUA27lqBQj13GQIHmQGV5onvom5rtX2nDNaJoIyNw\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/revoke",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"revoke"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "revoke all",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU3MzkyLCJleHAiOjE3NTY1NTg4OTJ9.J2yinOrdzv-rl08p2znefbK93XrZrSCeIcIYXH8jRJk",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"refresh_token\":\"wwL254odNmUfwTWihwtg_oiNuILq86TFXThL_6QEoZ2pjIgKWDJFqm01E_fMghbVD-goM-3Gmu_H6aj5YgDBGQ\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/revokeAll",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"revokeAll"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Validate Token",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczNzg5NjEsImV4cCI6MTc1NzM4MDQ2MX0.9fZK6VUc6aUXRuNPxKXnd1kIhZ_VTPHk5z941fzamqg",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/validate",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"validate"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Activate",
-			"item": [
-				{
-					"name": "Activate account",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+77780071233\",\n    \"otp\": \"4471\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/activate",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"activate",
-								"activate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Send OTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/send/activate/+77780071233",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"activate",
-								"send",
-								"activate",
-								"+77780071233"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Resend OTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/activate/resend/activate/+1234567890",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"activate",
-								"resend",
-								"activate",
-								"+1234567890"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login by OTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+77780071233\",\n    \"otp\": \"4348\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/login",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"activate",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Send login OTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/send/login/+77780071233",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"activate",
-								"send",
-								"login",
-								"+77780071233"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Photo",
-			"item": [
-				{
-					"name": "Upload Person Photo",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNjgzNjU4NDIxMDMiLCJpYXQiOjE3NTc0MzAxNTAsImV4cCI6MTc1NzQzMTY1MH0.jl9HSn8aHm2vR3zhIvtB4aGy3tgMT8KSwjhP_ikN-4o",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/home/axgiri/Pictures/Screenshots/Screenshot From 2025-07-31 21-37-21.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/22",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"persons",
-								"22"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Person Photo",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNjgzNjU4NDIxMDMiLCJpYXQiOjE3NTc0MzAxNTAsImV4cCI6MTc1NzQzMTY1MH0.jl9HSn8aHm2vR3zhIvtB4aGy3tgMT8KSwjhP_ikN-4o",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/24",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"persons",
-								"24"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Upload Shop Photo",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/path/to/your/shop_image.jpg"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/shops/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shop Photo",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/shops/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Review",
-			"item": [
-				{
-					"name": "Create Review to person",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"author_id\": 2,\n    \"person_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"lalal\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/reviews/person",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"person"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Review to shop",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"author_id\": 2,\n    \"shop_id\": 2,\n    \"rating\": 5,\n    \"comment\": \"хуйня магаз\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/reviews/shop",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"shop"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Reviews by Shop ID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/shop/1?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"shop",
-								"1"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Reviews by Person ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/person/1?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"person",
-								"1"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Reviews",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/reviews?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Review",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/reviews/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Report",
-			"item": [
-				{
-					"name": "Create Report",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzgyMywiZXhwIjoxNzU2NjU1MzIzfQ.WEDxJh1KBAvmsjfRP6AcQ3k6oU5oLgl85Dv5U2x_giI",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"reporter_id\": 2,\n    \"target_id\": 3,\n    \"type\": \"SHOP\",\n    \"reason\": \"SCAM\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/reports/create",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reports",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Report Async",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"reporter_id\": 4,\n    \"target_id\": 34,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/reports/async/create",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reports",
-								"async",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Reports",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/reports?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reports"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Reports by Status",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/reports/status/PENDING",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reports",
-								"status",
-								"PENDING"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Report Status",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2MTI3NDQ2LCJleHAiOjE3NTYxMjg5NDZ9.BOeM_dSq9C4BKmAq1ICLo94CZwSiR0ne34t3eJo2QLY",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "X-Moderator-Id",
-								"value": "1"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/v1/reports/1/status?status=PENDING",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reports",
-								"1",
-								"status"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "PENDING"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Shop",
-			"item": [
-				{
-					"name": "Async Create Shop",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Best Shop\",\n    \"description\": \"The best shop in town\",\n    \"category\": [\"TABLETS\", \"SMARTPHONES\", \"LAPTOPS\"],\n    \"phone_number\":\"+7777777773\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/async/create",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shop",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/204",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"204"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Shops",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops?page=0&size=20",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Async Update Shop",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Updated Shop Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"STORE\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/async/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Shop",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shops by Category",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/category?category=LAPTOPS",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"category"
-							],
-							"query": [
-								{
-									"key": "category",
-									"value": "LAPTOPS"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Products",
-			"item": [
-				{
-					"name": "Create Product",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"New device\",\n  \"price\": 999.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"black\", \"storage\": \"128GB\"}\n}"
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Product",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/301",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"301"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Products",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/list?page=1&size=100",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"list"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "size",
-									"value": "100"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTMzNDEsImV4cCI6MTc1NzQ1NDg0MX0.DJ_JuUeJfi1ZuAOlt_TgY_L2_EaBCEHjKGR4riR6T5w",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"iPhone 17 Pro\",\n  \"description\": \"Updated desc\",\n  \"price\": 1099.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\", \"pro\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"blue\", \"storage\": \"256GB\"}\n}"
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/10201",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"10201"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/201",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"201"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Search Products",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/search?q=iPhone&page=0&size=10",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"search"
-							],
-							"query": [
-								{
-									"key": "q",
-									"value": "iPhone"
-								},
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get products by shop id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/shop/121",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"shop",
-								"121"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "search by shop",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/products/shop/121/search?query=iPhone&page=1&size=20",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"products",
-								"shop",
-								"121",
-								"search"
-							],
-							"query": [
-								{
-									"key": "query",
-									"value": "iPhone"
-								},
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Seeder",
-			"item": [
-				{
-					"name": "seed",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0Mjk4MzksImV4cCI6MTc1NzQzMTMzOX0.c-sCtqJLUfQ7OwT5BJ5gkZQK2SvhquuGj3a--QuhW7A",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/seeder/seed?count=100",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"seeder",
-								"seed"
-							],
-							"query": [
-								{
-									"key": "count",
-									"value": "100"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "OldLab",
-			"value": "",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "192caa27-1e6c-4266-8044-63e2372dbfce",
+    "name": "OldLab API Collection Copy 2",
+    "description": "Postman collection for OldLab API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46679422",
+    "_collection_link": "https://scheldie.postman.co/workspace/Scheldie's-Workspace~7454fa17-088a-45e1-84d8-4291c454aa30/collection/46679422-192caa27-1e6c-4266-8044-63e2372dbfce?action=share&source=collection_link&creator=46679422"
+  },
+  "item": [
+    {
+      "name": "Person",
+      "item": [
+        {
+          "name": "Find by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/findById/1",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "findById",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find by Phone Number",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+20405359620",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "findByPhoneNumber",
+                "+20405359620"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODM5NzcsImV4cCI6MTc1NzM4NTQ3N30.Mvx55IkjTtMVVEv_Z0imy9xGWf_ATc9HKEKddntH6J8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\": \"Huesos\",\n    \"last_name\": \"Pidorskii\",\n    \"phone_number\": \"+20405359620\",\n    \"password\": \"+20405359620\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/update/3",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "update",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczODYyNjUsImV4cCI6MTc1NzM4Nzc2NX0.yCxZB__bYmmnFAeocHO8jEYUQgELd2haRVoOngFF-E0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/delete/21",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "delete",
+                "21"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get my colleagues",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrNDM0NzU0MTk4MTEiLCJpYXQiOjE3NTc0MzAzMTksImV4cCI6MTc1NzQzMTgxOX0.OJ433k5lAO1xyLlnZTRzG3VUm9cCne9I6dcASloiQgo",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/getMyColleagues",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "getMyColleagues"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0MzI0NTcsImV4cCI6MTc1NzQzMzk1N30.WwTb0rAQFmN7H81Rp_y3ByrOqkc5-vttndZFUJWaWxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"NewPassword\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/updatePassword?oldPassword=oldPassword",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "updatePassword"
+              ],
+              "query": [
+                {
+                  "key": "oldPassword",
+                  "value": "oldPassword"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"contact\":\"+77780071230\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/requestPasswordReset",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "requestPasswordReset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"contact\": \"+77780071230\",\n    \"is_email\":\"false\",\n    \"new_password\": \"newSecurePassword123\",\n    \"otp_reset\": \"3495\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/resetPassword",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "resetPassword"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "JWT",
+      "item": [
+        {
+          "name": "Async Signup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\":\"activate\",\n    \"last_name\":\"test3\",\n    \"phone_number\":\"+77780071233\",\n    \"password\":\"activate\",\n    \"role\":\"USER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/async/signup",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "async",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login by phone and password",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/login",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\":\"W0ikv7jhHL6GDTPOUWmkfK_nHqtOqAfDxthgOjIIXgLgqPl8rdeTfQlnOMNKMXYyV5o9wztBdWI9W2wkW7wFyQ\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/refresh",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "revoke",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk1Njg4LCJleHAiOjE3NTY0OTcxODh9.De31Mu4vzby2uWZvZ0IUY8I0RT1tt9KVUc16P6LwO0M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\":\"VbAt02jCgSV8-DDQu-jXLzOldU-p-Tx9PMC3EBLXGH8i7cUA27lqBQj13GQIHmQGV5onvom5rtX2nDNaJoIyNw\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/revoke",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "revoke"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "revoke all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU3MzkyLCJleHAiOjE3NTY1NTg4OTJ9.J2yinOrdzv-rl08p2znefbK93XrZrSCeIcIYXH8jRJk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\":\"wwL254odNmUfwTWihwtg_oiNuILq86TFXThL_6QEoZ2pjIgKWDJFqm01E_fMghbVD-goM-3Gmu_H6aj5YgDBGQ\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/revokeAll",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "revokeAll"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczNzg5NjEsImV4cCI6MTc1NzM4MDQ2MX0.9fZK6VUc6aUXRuNPxKXnd1kIhZ_VTPHk5z941fzamqg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer your_token_here"
+              }
+            ],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/persons/validate",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "persons",
+                "validate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Activate",
+      "item": [
+        {
+          "name": "Activate account",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone_number\": \"+77780071233\",\n    \"otp\": \"4471\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/activate/activate",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activate",
+                "activate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/activate/send/activate/+77780071233",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activate",
+                "send",
+                "activate",
+                "+77780071233"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/activate/resend/activate/+1234567890",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activate",
+                "resend",
+                "activate",
+                "+1234567890"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login by OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone_number\": \"+77780071233\",\n    \"otp\": \"4348\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/activate/login",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activate",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send login OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/activate/send/login/+77780071233",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "activate",
+                "send",
+                "login",
+                "+77780071233"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Photo",
+      "item": [
+        {
+          "name": "Upload Person Photo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNjgzNjU4NDIxMDMiLCJpYXQiOjE3NTc0MzAxNTAsImV4cCI6MTc1NzQzMTY1MH0.jl9HSn8aHm2vR3zhIvtB4aGy3tgMT8KSwjhP_ikN-4o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/home/axgiri/Pictures/Screenshots/Screenshot From 2025-07-31 21-37-21.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/photos/persons/22",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "photos",
+                "persons",
+                "22"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Person Photo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNjgzNjU4NDIxMDMiLCJpYXQiOjE3NTc0MzAxNTAsImV4cCI6MTc1NzQzMTY1MH0.jl9HSn8aHm2vR3zhIvtB4aGy3tgMT8KSwjhP_ikN-4o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/photos/persons/24",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "photos",
+                "persons",
+                "24"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Shop Photo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/your/shop_image.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/photos/shops/1",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "photos",
+                "shops",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shop Photo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/photos/shops/1",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "photos",
+                "shops",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Photo",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Product Photo",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product Photo",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Person Photo",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shop Photo",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Review",
+      "item": [
+        {
+          "name": "Create Review to person",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"author_id\": 2,\n    \"person_id\": 1,\n    \"rating\": 5,\n    \"comment\": \"lalal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/reviews/person",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "person"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Review to shop",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"author_id\": 2,\n    \"shop_id\": 2,\n    \"rating\": 5,\n    \"comment\": \"хуйня магаз\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/reviews/shop",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "shop"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reviews by Shop ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/shop/1?page=0&size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "shop",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reviews by Person ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews/person/1?page=0&size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "person",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reviews?page=0&size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/reviews/1",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reviews",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Report",
+      "item": [
+        {
+          "name": "Create Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzgyMywiZXhwIjoxNzU2NjU1MzIzfQ.WEDxJh1KBAvmsjfRP6AcQ3k6oU5oLgl85Dv5U2x_giI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reporter_id\": 2,\n    \"target_id\": 3,\n    \"type\": \"SHOP\",\n    \"reason\": \"SCAM\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/reports/create",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report Async",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis4Nzc4MDA3MTIzMDAiLCJpYXQiOjE3NTQyMzQyMjQsImV4cCI6MTc1NDIzNTcyNH0.pGihlK2JzYOF6RGXaAEGzE42fATu92YiEUC6z46onXM",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reporter_id\": 4,\n    \"target_id\": 34,\n    \"type\": \"USER\",\n    \"reason\": \"SPAM\",\n    \"description\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reports/async/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "async",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reports?page=0&size=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reports/status/PENDING",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "status",
+                "PENDING"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Report Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2MTI3NDQ2LCJleHAiOjE3NTYxMjg5NDZ9.BOeM_dSq9C4BKmAq1ICLo94CZwSiR0ne34t3eJo2QLY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-Moderator-Id",
+                "value": "1"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reports/1/status?status=PENDING",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "1",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shop",
+      "item": [
+        {
+          "name": "Async Create Shop",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Best Shop\",\n    \"description\": \"The best shop in town\",\n    \"category\": [\"TABLETS\", \"SMARTPHONES\", \"LAPTOPS\"],\n    \"phone_number\":\"+7777777773\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/shops/async/create",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops",
+                "async",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shop",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/shops/204",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops",
+                "204"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Shops",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/shops?page=0&size=20",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Async Update Shop",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Shop Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"STORE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/shops/async/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops",
+                "async",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shop",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/shops/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shops by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/shops/category?category=LAPTOPS",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shops",
+                "category"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "LAPTOPS"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"New device\",\n  \"price\": 999.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"black\", \"storage\": \"128GB\"}\n}"
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/301",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "301"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/list?page=1&size=100",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "100"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTMzNDEsImV4cCI6MTc1NzQ1NDg0MX0.DJ_JuUeJfi1ZuAOlt_TgY_L2_EaBCEHjKGR4riR6T5w",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 17 Pro\",\n  \"description\": \"Updated desc\",\n  \"price\": 1099.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\", \"pro\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"blue\", \"storage\": \"256GB\"}\n}"
+            },
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/10201",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "10201"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/201",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "201"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/search?q=iPhone&page=0&size=10",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "iPhone"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get products by shop id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/shop/121",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "shop",
+                "121"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search by shop",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/products/shop/121/search?query=iPhone&page=1&size=20",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "products",
+                "shop",
+                "121",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "iPhone"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Seeder",
+      "item": [
+        {
+          "name": "seed",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0Mjk4MzksImV4cCI6MTc1NzQzMTMzOX0.c-sCtqJLUfQ7OwT5BJ5gkZQK2SvhquuGj3a--QuhW7A",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{OldLab}}/api/v1/seeder/seed?count=100",
+              "host": [
+                "{{OldLab}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "seeder",
+                "seed"
+              ],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "100"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "OldLab",
+      "value": "",
+      "type": "string"
+    }
+  ]
 }
