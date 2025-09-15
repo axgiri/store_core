@@ -133,7 +133,7 @@ public class PhotoController {
     }
 
 
-    @DeleteMapping("/products/{productId}/photos/{Id}") // проверка с photoRepository.existsByIdAndProductId(photoId, id)
+    @DeleteMapping("/products/{productId}/{objectKey}") // проверка с photoRepository.existsByIdAndProductId(photoId, id)
     @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long productId,
                                    @PathVariable String objectKey,
