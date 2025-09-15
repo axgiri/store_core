@@ -21,6 +21,6 @@ ALTER TABLE photos
   ON DELETE CASCADE;
 
 ALTER TABLE photos
-  ADD CONSTRAINT fk_photos_product
-  FOREIGN KEY (product_id) REFERENCES products(id)
-  ON DELETE CASCADE;
+    ADD CONSTRAINT fk_photos_product
+        FOREIGN KEY (product_id) REFERENCES products(id)
+            ON DELETE CASCADE;

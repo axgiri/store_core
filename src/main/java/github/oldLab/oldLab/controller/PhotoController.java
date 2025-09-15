@@ -131,18 +131,18 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
-    
-    
-    @DeleteMapping("/products/{id}/{objectKey}") // проверка с photoRepository.existsByIdAndProductId(photoId, id)
+
+
+    @DeleteMapping("/products/{productId}/photos/{Id}") // проверка с photoRepository.existsByIdAndProductId(photoId, id)
     @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long id,
+    public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long productId,
                                    @PathVariable String objectKey,
                                    HttpServletRequest httpRequest) throws Exception {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("delete product photo id: {}, objectKey: {}", id, objectKey);
-            service.deleteForProduct(id, objectKey);
+            log.debug("delete product photo product id: {}, object key: {}", productId, objectKey);
+            service.deleteForProduct(productId, objectKey);
             return ResponseEntity.noContent().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);

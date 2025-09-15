@@ -42,3 +42,4 @@ CREATE TABLE IF NOT EXISTS product_attributes (
     FOREIGN KEY (product_id) REFERENCES products(id)
     ON DELETE CASCADE
 );
+

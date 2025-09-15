@@ -102,6 +102,7 @@ public class PhotoServiceImpl implements PhotoService {
         if (stats == null || !stats.isExists()) {
             throw new RuntimeException("product not found: " + productId);
         }
+
         
         if (stats.getCount() >= maxPhotosPerProduct) {
             throw new RuntimeException("max photos per product reached");
@@ -144,9 +145,9 @@ public class PhotoServiceImpl implements PhotoService {
     public void deleteForProduct(Long productId, String objectKey) {
         List<Photo> photos = repository.findAllByProductId(productId);
         photos.stream()
-            .filter(photo -> photo.getObjectKey().equals(objectKey))
-            .findFirst()
-            .ifPresent(this::removePhoto);
+                .filter(photo -> photo.getObjectKey().equals(objectKey))
+                .findFirst()
+                .ifPresent(this::removePhoto);
     }
 
     @Override
