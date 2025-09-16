@@ -271,4 +271,11 @@ public class PersonServiceImpl implements PersonService {
         log.info("getting reference for person with id: {}", id);
         return repository.getReferenceById(id);
     }
+
+    public Person getReferenceByIdIfExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException("user not found with id: " + id);
+        }
+        return repository.getReferenceById(id);
+    }
 }

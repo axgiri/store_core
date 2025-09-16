@@ -7,7 +7,7 @@ import github.oldLab.oldLab.dto.response.ProductResponse;
 
 public interface ProductService {
     ProductResponse create(ProductRequest request, String bearerToken);
-    ProductResponse get(Long id);
+    ProductResponse getById(Long id);
     List<ProductResponse> list(int page, int size);
     List<ProductResponse> listByShop(Long shopId, int page, int size);
     ProductResponse update(Long id, ProductRequest request);

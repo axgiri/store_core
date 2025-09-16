@@ -48,7 +48,7 @@ public class ProductController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
             log.debug("getting product with id: {}", id);
-            return ResponseEntity.ok(productService.get(id));
+            return ResponseEntity.ok(productService.getById(id));
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

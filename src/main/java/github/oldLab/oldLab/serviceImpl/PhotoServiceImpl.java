@@ -35,7 +35,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Transactional
     public void uploadForPerson(Long personId, MultipartFile file) throws IOException {
-        Person person = personService.findEntityById(personId);
+        Person person = personService.getReferenceByIdIfExists(personId);
 
         repository.findByPersonId(personId).ifPresent(this::removePhoto);
 
@@ -65,7 +65,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Transactional
     public void uploadForShop(Long shopId, MultipartFile file) throws IOException {
-        Shop shop = shopService.findEntityById(shopId);
+        Shop shop = shopService.getReferenceByIdIfExists(shopId);
 
         repository.findByShopId(shopId).ifPresent(this::removePhoto);
 
@@ -108,7 +108,7 @@ public class PhotoServiceImpl implements PhotoService {
             throw new RuntimeException("max photos per product reached");
         }
 
-        Product product = productService.getReferenceIfExists(productId);
+        Product product = productService.getReferenceByIdIfExists(productId);
 
         byte[] processedImage = imageProcessor.processImage(file);
 
@@ -125,7 +125,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<ProductPhotoResponse> loadForProduct(Long productId) {
-        productService.getReferenceIfExists(productId);
+        productService.getReferenceByIdIfExists(productId);
 
         List<Photo> photos = repository.findAllByProductId(productId);
         
@@ -142,7 +142,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public void deleteForProduct(Long productId, String objectKey) {
-        List<Photo> photos = repository.findAllByProductId(productId);
+        List<Photo> photos = repository.findAllByProductId(productId); //get photoByKey
         photos.stream()
                 .filter(photo -> photo.getObjectKey().equals(objectKey))
                 .findFirst()

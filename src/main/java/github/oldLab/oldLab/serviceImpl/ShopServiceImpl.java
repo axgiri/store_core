@@ -109,4 +109,11 @@ public class ShopServiceImpl implements ShopService {
     public boolean existsById(Long id) {
         return repository.existsById(id);
     }
+
+    public Shop getReferenceByIdIfExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ShopNotFoundException("shop not found with id: " + id);
+        }
+        return repository.getReferenceById(id);
+    }
 }

@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse get(Long id) {
+    public ProductResponse getById(Long id) {
         Product p = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return ProductResponse.fromEntityToDto(p);
     }
@@ -112,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("product not found with id: " + id));
     }
 
-    public Product getReferenceIfExists(Long id) {
+    public Product getReferenceByIdIfExists(Long id) {
         if (!repository.existsById(id)) {
             throw new ProductNotFoundException("product not found with id: " + id);
         }
