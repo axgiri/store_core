@@ -1,18 +1,24 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import github.oldLab.oldLab.dto.response.ProductPhotoResponse;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
+import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.entity.Shop;
+import github.oldLab.oldLab.exception.PhotoNotFoundException;
+import github.oldLab.oldLab.exception.ProductNotFoundException;
 import github.oldLab.oldLab.repository.PhotoRepository;
 import github.oldLab.oldLab.service.ImageProcessingService;
 import github.oldLab.oldLab.service.PhotoService;
 import github.oldLab.oldLab.service.PhotoStorage;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,18 +28,22 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository repository;
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
+private final ProductServiceImpl productService;
     private final PhotoStorage storage;
     private final ImageProcessingService imageProcessor;
 
+    @Value("${max.photo.per.product}")
+    private int maxPhotosPerProduct;
+
     @Transactional
     public void uploadForPerson(Long personId, MultipartFile file) throws IOException {
-        Person person = personService.findEntityById(personId);
+        Person person = personService.getReferenceByIdIfExists(personId);
 
         repository.findByPersonId(personId).ifPresent(this::removePhoto);
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
+        String key = storage.save(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -46,19 +56,24 @@ public class PhotoServiceImpl implements PhotoService {
 
     public byte[] loadForPerson(Long personId) {
         Photo photo = repository.findByPersonId(personId)
-                         .orElseThrow(() -> new RuntimeException("avatar not set"));
+                         .orElseThrow(() -> new PhotoNotFoundException("avatar not set"));
         return storage.load(photo.getObjectKey());
     }
 
     @Transactional
+    public void deleteForPerson(Long personId) {
+        repository.findByPersonId(personId).ifPresent(this::removePhoto);
+    }
+
+    @Transactional
     public void uploadForShop(Long shopId, MultipartFile file) throws IOException {
-        Shop shop = shopService.findEntityById(shopId);
+        Shop shop = shopService.getReferenceByIdIfExists(shopId);
 
         repository.findByShopId(shopId).ifPresent(this::removePhoto);
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, file.getOriginalFilename(), "image/webp");
+        String key = storage.save(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -71,14 +86,75 @@ public class PhotoServiceImpl implements PhotoService {
 
     public byte[] loadForShop(Long shopId) {
         Photo ph = repository.findByShopId(shopId)
-                         .orElseThrow(() -> new RuntimeException("Photo not set"));
+                         .orElseThrow(() -> new ProductNotFoundException("Photo not set"));
 
         return storage.load(ph.getObjectKey());
     }
 
-    private void removePhoto(Photo ph) {
+    @Transactional
+    public void deleteForShop(Long shopId) {
+        repository.findByShopId(shopId).ifPresent(this::removePhoto);
+    }
+
+    @Transactional
+    public void uploadForProduct(Long productId, MultipartFile file) throws IOException {
+
+        var stats = repository.findProductExistsAndPhotoCount(productId);
+
+        if (stats == null || !stats.isExists()) {
+            throw new ProductNotFoundException("product not found: " + productId);
+        }
+
+        
+        if (stats.getCount() >= maxPhotosPerProduct) {
+            throw new ProductNotFoundException("max photos per product reached");
+        }
+
+        Product product = productService.getReferenceByIdIfExists(productId);
+
+        byte[] processedImage = imageProcessor.processImage(file);
+
+        String key = storage.save(processedImage, "image/webp");
+
+        Photo photo = Photo.builder()
+                        .objectKey(key)
+                        .contentType("image/webp") 
+                        .size((long) processedImage.length)
+                        .product(product)
+                        .build();
+        repository.save(photo);
+    }
+
+    @Override
+    public List<ProductPhotoResponse> loadForProduct(Long productId) {
+        productService.getReferenceByIdIfExists(productId);
+
+        List<Photo> photos = repository.findAllByProductId(productId);
+        
+        return photos.stream()
+                .map(photo -> {
+                    ProductPhotoResponse dto = new ProductPhotoResponse();
+                    dto.setObjectKey(photo.getObjectKey());
+                    byte[] fileBytes = storage.load(photo.getObjectKey());
+                    dto.setFile(fileBytes);
+                    return dto;
+                })
+                .toList();
+    }
+
+    @Override
+    public void deleteForProduct(Long productId, String objectKey) {
+        List<Photo> photos = repository.findAllByProductId(productId); //get photoByKey
+        photos.stream()
+                .filter(photo -> photo.getObjectKey().equals(objectKey))
+                .findFirst()
+                .ifPresent(this::removePhoto);
+    }
+
+    public void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey());
         repository.delete(ph);
+        repository.flush();
     }
 }
 

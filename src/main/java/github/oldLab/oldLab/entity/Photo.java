@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -47,4 +48,8 @@ public class Photo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", unique = true)
     private Shop shop;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", unique = false)
+    private Product product;
 }

@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -13,6 +14,8 @@ import lombok.Data;
 public class ResetPasswordRequest {
 
     private String contact;
+
+    @JsonProperty("is_email")
     private boolean isEmail;
 
     @NotNull(message = "otp cannot be null")

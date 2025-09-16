@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.exception.handler;
 
 import java.time.Instant;
-import java.util.stream.Collectors;
 
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -20,49 +19,44 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    record ApiError(Instant timestamp, String code, String message, Object details) {}
+    record ApiError(Instant timestamp, String code, String message) {}
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> onNotFound(UserNotFoundException ex) {
         ApiError err = new ApiError(
             Instant.now(),
             "USER_NOT_FOUND",
-            ex.getMessage(),
-            null
+            ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ApiError> onProductNotFound(ProductNotFoundException ex) {
         ApiError err = new ApiError(
                 Instant.now(),
                 "PRODUCT_NOT_FOUND",
-                ex.getMessage(),
-                null
+                ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiError> onExists(UserAlreadyExistsException ex) {
         ApiError err = new ApiError(
                 Instant.now(),
                 "USER_ALREADY_EXISTS",
-                ex.getMessage(),
-                null
+                ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> onValidation(MethodArgumentNotValidException ex) {
-        var errors = ex.getBindingResult().getFieldErrors().stream()
-            .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
-            .collect(Collectors.toList());
         ApiError err = new ApiError(
             Instant.now(),
             "VALIDATION_ERROR",
-            "invalid request data",
-            errors
+            "invalid request data"
         );
         return ResponseEntity.badRequest().body(err);
     }
@@ -72,8 +66,7 @@ public class GlobalExceptionHandler {
         ApiError err = new ApiError(
             Instant.now(),
             "INVALID_TOKEN",
-            ex.getMessage(),
-            null
+            ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
     }
@@ -83,8 +76,7 @@ public class GlobalExceptionHandler {
         ApiError err = new ApiError(
             Instant.now(),
             "INVALID_PASSWORD",
-            ex.getMessage(),
-            null
+            ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
@@ -95,10 +87,8 @@ public class GlobalExceptionHandler {
         ApiError err = new ApiError(
             Instant.now(),
             "SERVER_ERROR",
-            "unexpected error",
-            null
+            "unexpected error"
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 }
-

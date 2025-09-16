@@ -4,16 +4,22 @@ import java.util.List;
 
 import github.oldLab.oldLab.Enum.CategoryEnum;
 
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Version;
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,6 +57,10 @@ public class Shop {
 
     private String description;
 
+    @ElementCollection
+    @CollectionTable(name = "shop_categories", joinColumns = @JoinColumn(name = "shop_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
     private List<CategoryEnum> category;
 
     @NotNull(message = "owner cannot be null")

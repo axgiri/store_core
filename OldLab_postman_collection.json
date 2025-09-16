@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a998a013-be40-4e32-a4a8-859cf3b489fa",
+		"_postman_id": "c398de06-778b-406d-a2a1-e915e835bae0",
 		"name": "OldLab API Collection",
 		"description": "Postman collection for OldLab API endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMTMzOTk3MjY1NjgiLCJpYXQiOjE3NTc5NzY1NjAsImV4cCI6MTc1Nzk3ODA2MH0.CiSFLl0X17xreCXOqkBymUDTt0Wb5g6gHr1emeLezHQ",
 									"type": "string"
 								}
 							]
@@ -26,7 +26,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findById/1",
+							"raw": "{{OldLab}}/api/v1/persons/findById/102",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -35,7 +35,7 @@
 								"v1",
 								"persons",
 								"findById",
-								"1"
+								"102"
 							]
 						}
 					},
@@ -49,7 +49,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
 									"type": "string"
 								}
 							]
@@ -57,7 +57,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+12345567890",
+							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+20405359620",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -66,100 +66,30 @@
 								"v1",
 								"persons",
 								"findByPhoneNumber",
-								"+12345567890"
+								"+20405359620"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Role Name",
+					"name": "Update",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODM5NzcsImV4cCI6MTc1NzM4NTQ3N30.Mvx55IkjTtMVVEv_Z0imy9xGWf_ATc9HKEKddntH6J8",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/getRoleName",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getRoleName"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Colleagues",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer your_token_here"
-							}
-						],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/getMyColleagues?page=0&size=20",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getMyColleagues"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Async Update",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
+							"raw": "{\n    \"first_name\": \"Huesos\",\n    \"last_name\": \"Pidorskii\",\n    \"phone_number\": \"+20405359620\",\n    \"password\": \"+20405359620\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -167,7 +97,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/async/update/1",
+							"raw": "{{OldLab}}/api/v1/persons/update/3",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -175,9 +105,8 @@
 								"api",
 								"v1",
 								"persons",
-								"async",
 								"update",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -191,7 +120,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk5NTgyLCJleHAiOjE3NTY1MDEwODJ9.tJgzxCCtaPwQNZ6HiUmBjgDsHWccVY_pjBh7PMR0bzk",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczODYyNjUsImV4cCI6MTc1NzM4Nzc2NX0.yCxZB__bYmmnFAeocHO8jEYUQgELd2haRVoOngFF-E0",
 									"type": "string"
 								}
 							]
@@ -199,7 +128,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/delete/4",
+							"raw": "{{OldLab}}/api/v1/persons/delete/21",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -208,7 +137,37 @@
 								"v1",
 								"persons",
 								"delete",
-								"4"
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my colleagues",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrNDM0NzU0MTk4MTEiLCJpYXQiOjE3NTc0MzAzMTksImV4cCI6MTc1NzQzMTgxOX0.OJ433k5lAO1xyLlnZTRzG3VUm9cCne9I6dcASloiQgo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/persons/getMyColleagues",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"persons",
+								"getMyColleagues"
 							]
 						}
 					},
@@ -217,11 +176,21 @@
 				{
 					"name": "Update Password",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0MzI0NTcsImV4cCI6MTc1NzQzMzk1N30.WwTb0rAQFmN7H81Rp_y3ByrOqkc5-vttndZFUJWaWxY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"password\": \"newSecurePassword123\"\n}",
+							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"NewPassword\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -229,7 +198,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/updatePassword?oldPassword=oldSecurePassword123",
+							"raw": "{{OldLab}}/api/v1/persons/updatePassword?oldPassword=oldPassword",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -242,7 +211,7 @@
 							"query": [
 								{
 									"key": "oldPassword",
-									"value": "oldSecurePassword123"
+									"value": "oldPassword"
 								}
 							]
 						}
@@ -256,7 +225,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "\"+1234567890\"",
+							"raw": "{\n    \"contact\":\"+77780071233\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -285,7 +254,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"contact\": \"+1234567890\",\n    \"new_password\": \"newSecurePassword123\",\n    \"otp\": \"123456\"\n}",
+							"raw": "{\n    \"contact\": \"+77780071233\",\n    \"is_email\": false,\n    \"new_password\": \"activate\",\n    \"otp_reset\": \"4562\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -319,7 +288,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"axgiri\",\n    \"last_name\": \"axgiri\",\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
+							"raw": "{\n    \"first_name\":\"axgiri\",\n    \"last_name\":\"axgiri\",\n    \"phone_number\":\"+7778007123\",\n    \"password\":\"activate\",\n    \"role\":\"ADMIN\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -352,7 +321,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+77780071230\",\n    \"password\": \"axgiri\"\n}",
+							"raw": "{\n    \"phone_number\": \"+22080021299\",\n    \"password\": \"+22080021299\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,7 +464,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU3MzkyLCJleHAiOjE3NTY1NTg4OTJ9.J2yinOrdzv-rl08p2znefbK93XrZrSCeIcIYXH8jRJk",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczNzg5NjEsImV4cCI6MTc1NzM4MDQ2MX0.9fZK6VUc6aUXRuNPxKXnd1kIhZ_VTPHk5z941fzamqg",
 									"type": "string"
 								}
 							]
@@ -534,7 +503,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"otp\": \"1234\"\n}",
+							"raw": "{\n    \"phone_number\": \"+7778007123\",\n    \"otp\": \"8149\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -542,9 +511,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/activate/activate",
+							"raw": "{{OldLab}}/api/v1/activate/activate",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -562,9 +531,9 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/activate/send/activate/+1234567890",
+							"raw": "{{OldLab}}/api/v1/activate/send/activate/+03715465982",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -572,7 +541,7 @@
 								"activate",
 								"send",
 								"activate",
-								"+1234567890"
+								"+03715465982"
 							]
 						}
 					},
@@ -584,9 +553,9 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/activate/resend/activate/+1234567890",
+							"raw": "{{OldLab}}/api/v1/activate/resend/activate/+35744837749",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -594,7 +563,7 @@
 								"activate",
 								"resend",
 								"activate",
-								"+1234567890"
+								"+35744837749"
 							]
 						}
 					},
@@ -607,7 +576,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+1234567890\",\n    \"otp\": \"1234\"\n}",
+							"raw": "{\n    \"phone_number\": \"+35744837749\",\n    \"otp\": \"7701\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -615,9 +584,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/activate/login",
+							"raw": "{{OldLab}}/api/v1/activate/login",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -635,9 +604,9 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/activate/send/login/+1234567890",
+							"raw": "{{OldLab}}/api/v1/activate/send/login/+35744837749",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -645,7 +614,7 @@
 								"activate",
 								"send",
 								"login",
-								"+1234567890"
+								"+35744837749"
 							]
 						}
 					},
@@ -664,7 +633,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU5MDg5LCJleHAiOjE3NTY1NjA1ODl9.LZDDzVHOnpMfbyU0PEngacRcrq10h6lWBcqvLFrZKl0",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMyIsImlhdCI6MTc1NzQ2NDI4OSwiZXhwIjoxNzU3NDY1Nzg5fQ.vF7gY5Mx0AeINJuLBcP2czRfjpbZbJLwNrKNB0V7kRM",
 									"type": "string"
 								}
 							]
@@ -677,12 +646,12 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/home/axgiri/Pictures/Screenshots/Screenshot From 2025-08-30 14-38-44.png"
+									"src": "/home/axgiri/Pictures/robot.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/1",
+							"raw": "{{OldLab}}/api/v1/photos/persons/124",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -691,7 +660,7 @@
 								"v1",
 								"photos",
 								"persons",
-								"1"
+								"124"
 							]
 						}
 					},
@@ -705,7 +674,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTU5MDg5LCJleHAiOjE3NTY1NjA1ODl9.LZDDzVHOnpMfbyU0PEngacRcrq10h6lWBcqvLFrZKl0",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMyIsImlhdCI6MTc1Nzk3NTg1MCwiZXhwIjoxNzU3OTc3MzUwfQ.NLXHm5suUyWoD50OY3L3l1FkoaViN_r7A_I9ZWzhI2Q",
 									"type": "string"
 								}
 							]
@@ -713,7 +682,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/1",
+							"raw": "{{OldLab}}/api/v1/photos/persons/102",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -722,7 +691,28 @@
 								"v1",
 								"photos",
 								"persons",
-								"1"
+								"102"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user's photo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/photos/persons/{id}",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"photos",
+								"persons",
+								"{id}"
 							]
 						}
 					},
@@ -775,6 +765,121 @@
 								"photos",
 								"shops",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete shop's photo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/photos/shops/{id}",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"photos",
+								"shops",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product's Photos As Array (base64)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/photos/products/5",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"photos",
+								"products",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrMTMzOTk3MjY1NjgiLCJpYXQiOjE3NTc5NzcyODksImV4cCI6MTc1Nzk3ODc4OX0.KnzGOQXS3rh3TA7VrsspWw-63pi00kcs5ccXBr-plts",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/axgiri/Pictures/robot.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{OldLab}}/api/v1/photos/products/10001",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"photos",
+								"products",
+								"10001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product's photo by productId and key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjIwODAwMjEyOTkiLCJpYXQiOjE3NTc5ODA4NjEsImV4cCI6MTc1Nzk4MjM2MX0.91hdgfWAsnZ38rTU0ZSuQ3jwG8PWNnS2ofSWe4n56Tw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/photos/products/5/cac3f704-87b5-4337-a195-f35fa7755619",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"photos",
+								"products",
+								"5",
+								"cac3f704-87b5-4337-a195-f35fa7755619"
 							]
 						}
 					},
@@ -1185,7 +1290,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
 									"type": "string"
 								}
 							]
@@ -1221,19 +1326,12 @@
 					"name": "Get Shop",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYwNjc2LCJleHAiOjE3NTY1NjIxNzZ9.2UZX3z35Dku2KvGAOPED03hAMSvlof4P2lh4G_pjgV8",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/1",
+							"raw": "{{OldLab}}/api/v1/shops/204",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1241,7 +1339,7 @@
 								"api",
 								"v1",
 								"shops",
-								"1"
+								"204"
 							]
 						}
 					},
@@ -1251,14 +1349,7 @@
 					"name": "Get All Shops",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYwNjc2LCJleHAiOjE3NTY1NjIxNzZ9.2UZX3z35Dku2KvGAOPED03hAMSvlof4P2lh4G_pjgV8",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
@@ -1342,9 +1433,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/shops/category?category=RESTAURANT",
+							"raw": "{{OldLab}}/api/v1/shops/category?category=LAPTOPS",
 							"host": [
-								"{{base_url}}"
+								"{{OldLab}}"
 							],
 							"path": [
 								"api",
@@ -1355,7 +1446,7 @@
 							"query": [
 								{
 									"key": "category",
-									"value": "RESTAURANT"
+									"value": "LAPTOPS"
 								}
 							]
 						}
@@ -1397,7 +1488,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
 									"type": "string"
 								}
 							]
@@ -1435,24 +1526,12 @@
 					"name": "Get Product",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/1",
+							"raw": "{{OldLab}}/api/v1/products/301",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1460,7 +1539,7 @@
 								"api",
 								"v1",
 								"products",
-								"1"
+								"301"
 							]
 						}
 					},
@@ -1470,40 +1549,29 @@
 					"name": "List Products",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products?page=0&size=10",
+							"raw": "{{OldLab}}/api/v1/products/list?page=1&size=100",
 							"host": [
 								"{{OldLab}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"products"
+								"products",
+								"list"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "size",
-									"value": "10"
+									"value": "100"
 								}
 							]
 						}
@@ -1518,7 +1586,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTYyMzUzLCJleHAiOjE3NTY1NjM4NTN9.vAI6p4b0ke5sa1oIyIHROGBNoQODqGNBcIoqawuEz4k",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTMzNDEsImV4cCI6MTc1NzQ1NDg0MX0.DJ_JuUeJfi1ZuAOlt_TgY_L2_EaBCEHjKGR4riR6T5w",
 									"type": "string"
 								}
 							]
@@ -1536,10 +1604,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"description\": \"Updated desc\",\n  \"price\": 1099.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\", \"pro\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"blue\", \"storage\": \"256GB\"}\n}"
+							"raw": "{\n  \"name\": \"iPhone 17 Pro\",\n  \"description\": \"Updated desc\",\n  \"price\": 1099.99,\n  \"category\": \"SMARTPHONES\",\n  \"tags\": [\"apple\", \"phone\", \"pro\"],\n  \"hidden_labels\": [\"internal\"],\n  \"attributes\": {\"color\": \"blue\", \"storage\": \"256GB\"}\n}"
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/1",
+							"raw": "{{OldLab}}/api/v1/products/10201",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1547,7 +1615,7 @@
 								"api",
 								"v1",
 								"products",
-								"1"
+								"10201"
 							]
 						}
 					},
@@ -1561,7 +1629,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
 									"type": "string"
 								}
 							]
@@ -1574,7 +1642,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/2",
+							"raw": "{{OldLab}}/api/v1/products/201",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1582,7 +1650,7 @@
 								"api",
 								"v1",
 								"products",
-								"2"
+								"201"
 							]
 						}
 					},
@@ -1592,24 +1660,12 @@
 					"name": "Search Products",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NTY0MjQwLCJleHAiOjE3NTY1NjU3NDB9.fBnkbZNhkYAsgQ58RotsiKWfsQNzS6GU5KDiICT5Mow",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{authToken}}"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/search?q=iphone&page=0&size=5",
+							"raw": "{{OldLab}}/api/v1/products/search?q=iPhone&page=0&size=10",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1622,7 +1678,7 @@
 							"query": [
 								{
 									"key": "q",
-									"value": "iphone"
+									"value": "iPhone"
 								},
 								{
 									"key": "page",
@@ -1630,7 +1686,105 @@
 								},
 								{
 									"key": "size",
-									"value": "5"
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get products by shop id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/shop/121",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"shop",
+								"121"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search by shop",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/products/shop/121/search?query=iPhone&page=1&size=20",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"shop",
+								"121",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "iPhone"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Seeder",
+			"item": [
+				{
+					"name": "seed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMyIsImlhdCI6MTc1Nzk4MDA2MywiZXhwIjoxNzU3OTgxNTYzfQ.3oVSS177crTSDUhmkejQbVutXpdsXgL92RKzZ79Z3Lg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{OldLab}}/api/v1/seeder/seed?count=50",
+							"host": [
+								"{{OldLab}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"seeder",
+								"seed"
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "50"
 								}
 							]
 						}

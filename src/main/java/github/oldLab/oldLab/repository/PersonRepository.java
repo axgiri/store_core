@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 
 import github.oldLab.oldLab.entity.Person;
@@ -29,4 +31,10 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     @Query("select p.companyId from Person p where p.id = :personId")
     Optional<Long> findCompanyIdById(@Param("personId") Long personId);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Transactional
+    @Query("UPDATE Person p SET p.isActive = :isActive WHERE p.phoneNumber = :phoneNumber")
+    int setActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber,
+                               @Param("isActive") boolean isActive);
 }

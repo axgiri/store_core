@@ -74,7 +74,8 @@ public class ShopServiceImpl implements ShopService {
             if (!repository.existsById(id)) {
                 throw new ShopNotFoundException("shop not found with id: " + id);
             }
-            Shop shop = repository.getReferenceById(id);
+            Shop shop = repository.findById(id)
+                .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
             BeanUtils.copyProperties(dto, shop, "id", "version");
             repository.save(shop);
             log.info("updated shop with id: {}", id);
@@ -89,7 +90,7 @@ public class ShopServiceImpl implements ShopService {
         if (category == null || category.isEmpty()) {
             throw new ShopNotFoundException("Category list is empty or null.");
         }
-        log.info("fetching shops by category: {}", category.get(0));
+        log.info("fetching shops by category: {}", category);
         List<Shop> shops = repository.findByCategoryIn(category);
         
         if (shops.isEmpty()) {
@@ -107,5 +108,12 @@ public class ShopServiceImpl implements ShopService {
 
     public boolean existsById(Long id) {
         return repository.existsById(id);
+    }
+
+    public Shop getReferenceByIdIfExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ShopNotFoundException("shop not found with id: " + id);
+        }
+        return repository.getReferenceById(id);
     }
 }

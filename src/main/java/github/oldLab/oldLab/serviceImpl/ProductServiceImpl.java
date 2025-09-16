@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse get(Long id) {
+    public ProductResponse getById(Long id) {
         Product p = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return ProductResponse.fromEntityToDto(p);
     }
@@ -105,5 +105,17 @@ public class ProductServiceImpl implements ProductService {
 
         return productSearchRepository.searchByShopAndText(shopId, query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
+    }
+
+    public Product findEntityById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("product not found with id: " + id));
+    }
+
+    public Product getReferenceByIdIfExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ProductNotFoundException("product not found with id: " + id);
+        }
+        return repository.getReferenceById(id);
     }
 }

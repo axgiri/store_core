@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS photos (
   content_type VARCHAR(255) NOT NULL,
   size BIGINT NOT NULL,
   person_id BIGINT UNIQUE,
-  shop_id BIGINT UNIQUE
+  shop_id BIGINT UNIQUE,
+  product_id BIGINT
 );
 
 ALTER TABLE photos
@@ -18,3 +19,8 @@ ALTER TABLE photos
   ADD CONSTRAINT fk_photos_shop
   FOREIGN KEY (shop_id) REFERENCES shops(id)
   ON DELETE CASCADE;
+
+ALTER TABLE photos
+    ADD CONSTRAINT fk_photos_product
+        FOREIGN KEY (product_id) REFERENCES products(id)
+            ON DELETE CASCADE;

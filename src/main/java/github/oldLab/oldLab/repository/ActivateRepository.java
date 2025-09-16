@@ -14,16 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ActivateRepository extends JpaRepository<Activate, Long>{
-    
-    Optional<Activate> findByPhoneNumber(String phoneNumber);
 
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
-    @Transactional
-    @Query("UPDATE Activate a SET a.isActive = :isActive WHERE a.phoneNumber = :phoneNumber")
-    int setActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber,
-                               @Param("isActive") boolean isActive);
+    Optional<Activate> findTopByPhoneNumberOrderByCreatedAtDesc(String phoneNumber);
 
-    Optional<Activate> findByPhoneNumberAndIsLogin(String phoneNumber, boolean isLogin);
+    Optional<Activate> findTopByPhoneNumberAndIsLoginOrderByCreatedAtDesc(String phoneNumber, boolean isLogin);
 
     @Transactional
     Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);

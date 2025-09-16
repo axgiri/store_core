@@ -3,7 +3,6 @@ package github.oldLab.oldLab.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
@@ -22,15 +21,13 @@ public interface PersonService {
 
     public PersonResponse findByPhoneNumber(String phoneNumber);
 
-    public CompletableFuture<PersonResponse> update(Long id, PersonRequest personRequest);
+    public PersonResponse update(Long id, PersonRequest personRequest);
 
     public void delete(Long id);
 
     public void validateToken(String token);
 
-    public RoleEnum getRole(String token);
-
-    public void updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
+    public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
 
     public List<PersonResponse> getColleaguesAsync(String token, int page, int size);
 

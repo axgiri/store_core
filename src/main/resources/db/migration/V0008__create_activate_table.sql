@@ -1,7 +1,7 @@
 -- Activate table
 CREATE TABLE IF NOT EXISTS active (
   id BIGSERIAL PRIMARY KEY,
-  phone_number VARCHAR(255) NOT NULL UNIQUE,
+  phone_number VARCHAR(255) NOT NULL,
   otp INT NOT NULL,
   is_active BOOLEAN NOT NULL,
   is_login_attempted BOOLEAN,
