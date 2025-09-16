@@ -1,7 +1,6 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class AccessControlService {
 		if (hasRole(authentication, RoleEnum.ADMIN)) {
 			return true;
 		} else {
-			throw new AccessDeniedException("access denied");
+			return false;
 		}
 	}
 
@@ -35,7 +34,7 @@ public class AccessControlService {
 		if( hasRole(authentication, RoleEnum.MODERATOR)) {
 			return true;
 		} else {
-			throw new AccessDeniedException("access denied");
+			return false;
 		}
 	}
 

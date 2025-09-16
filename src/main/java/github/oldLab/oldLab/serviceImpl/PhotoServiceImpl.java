@@ -13,6 +13,8 @@ import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
 import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.entity.Shop;
+import github.oldLab.oldLab.exception.PhotoNotFoundException;
+import github.oldLab.oldLab.exception.ProductNotFoundException;
 import github.oldLab.oldLab.repository.PhotoRepository;
 import github.oldLab.oldLab.service.ImageProcessingService;
 import github.oldLab.oldLab.service.PhotoService;
@@ -26,7 +28,7 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository repository;
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
-    private final ProductServiceImpl productService;
+private final ProductServiceImpl productService;
     private final PhotoStorage storage;
     private final ImageProcessingService imageProcessor;
 
@@ -54,7 +56,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     public byte[] loadForPerson(Long personId) {
         Photo photo = repository.findByPersonId(personId)
-                         .orElseThrow(() -> new RuntimeException("avatar not set"));
+                         .orElseThrow(() -> new PhotoNotFoundException("avatar not set"));
         return storage.load(photo.getObjectKey());
     }
 
@@ -84,7 +86,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     public byte[] loadForShop(Long shopId) {
         Photo ph = repository.findByShopId(shopId)
-                         .orElseThrow(() -> new RuntimeException("Photo not set"));
+                         .orElseThrow(() -> new ProductNotFoundException("Photo not set"));
 
         return storage.load(ph.getObjectKey());
     }
@@ -100,12 +102,12 @@ public class PhotoServiceImpl implements PhotoService {
         var stats = repository.findProductExistsAndPhotoCount(productId);
 
         if (stats == null || !stats.isExists()) {
-            throw new RuntimeException("product not found: " + productId);
+            throw new ProductNotFoundException("product not found: " + productId);
         }
 
         
         if (stats.getCount() >= maxPhotosPerProduct) {
-            throw new RuntimeException("max photos per product reached");
+            throw new ProductNotFoundException("max photos per product reached");
         }
 
         Product product = productService.getReferenceByIdIfExists(productId);
@@ -149,14 +151,10 @@ public class PhotoServiceImpl implements PhotoService {
                 .ifPresent(this::removePhoto);
     }
 
-    @Override
-    public PhotoStorage getStorage() {
-        return storage;
-    }
-
-    @Override
-    public PhotoRepository getRepository() {
-        return repository;
+    public void removePhoto(Photo ph) {
+        storage.delete(ph.getObjectKey());
+        repository.delete(ph);
+        repository.flush();
     }
 }
 
