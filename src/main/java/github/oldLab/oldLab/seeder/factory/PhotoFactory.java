@@ -1,5 +1,6 @@
 package github.oldLab.oldLab.seeder.factory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.awt.Color;
@@ -30,51 +31,71 @@ public class PhotoFactory implements DataFactory<Photo> {
     private final Faker faker;
     private final ImageProcessingService imageProcessingService;
     private final PhotoStorage photoStorage;
+    
+    @Value("${minio.bucket.default}")
+    private String bucketDefault;
+    
+    @Value("${minio.bucket.persons}")
+    private String bucketPersons;
+
+    @Value("${minio.bucket.shops}")
+    private String bucketShops;
+    
+    @Value("${minio.bucket.products}")
+    private String bucketProducts;
 
     private static final int WIDTH = 320;
     private static final int HEIGHT = 320;
 
     public Photo create(Person person) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, "image/webp");
+        String key = photoStorage.savePerson(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
                 .size((long) processed.length)
                 .person(person)
+                .bucket(bucketPersons)
+                .createdAt(java.time.Instant.now())
                 .build();
     }
 
     public Photo create(Shop shop) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, "image/webp");
+        String key = photoStorage.saveShop(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
                 .size((long) processed.length)
                 .shop(shop)
+                .bucket(bucketShops)
+                .createdAt(java.time.Instant.now())
                 .build();
     }
 
     public Photo create(Product product) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, "image/webp");
+        String key = photoStorage.saveProduct(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
                 .size((long) processed.length)
                 .product(product)
+                .bucket(bucketProducts)
+                .createdAt(java.time.Instant.now())
                 .build();
     }
 
     @Override
     public Photo create() {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, "image/webp");
+        String key = photoStorage.saveDefault(processed, "image/webp");
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
                 .size((long) processed.length)
+                .bucket(bucketDefault)
+                .createdAt(java.time.Instant.now())
                 .build();
     }
 

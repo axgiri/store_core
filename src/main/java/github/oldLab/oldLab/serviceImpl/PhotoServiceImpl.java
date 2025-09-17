@@ -1,6 +1,7 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +29,21 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository repository;
     private final PersonServiceImpl personService;
     private final ShopServiceImpl shopService;
-private final ProductServiceImpl productService;
+    private final ProductServiceImpl productService;
     private final PhotoStorage storage;
     private final ImageProcessingService imageProcessor;
 
     @Value("${max.photo.per.product}")
     private int maxPhotosPerProduct;
+
+    @Value("${minio.bucket.persons}")
+    private String bucketPersons;
+
+    @Value("${minio.bucket.shops}")
+    private String bucketShops;
+
+    @Value("${minio.bucket.products}")
+    private String bucketProducts;
 
     @Transactional
     public void uploadForPerson(Long personId, MultipartFile file) throws IOException {
@@ -43,13 +53,15 @@ private final ProductServiceImpl productService;
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, "image/webp");
+        String key = storage.savePerson(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
                         .contentType("image/webp")
                         .size((long) processedImage.length)
                         .person(person)
+                        .bucket(bucketPersons)
+                        .createdAt(Instant.now())
                         .build();
         repository.save(photo);
     }
@@ -57,7 +69,7 @@ private final ProductServiceImpl productService;
     public byte[] loadForPerson(Long personId) {
         Photo photo = repository.findByPersonId(personId)
                          .orElseThrow(() -> new PhotoNotFoundException("avatar not set"));
-        return storage.load(photo.getObjectKey());
+        return storage.loadPerson(photo.getObjectKey());
     }
 
     @Transactional
@@ -73,22 +85,23 @@ private final ProductServiceImpl productService;
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, "image/webp");
+        String key = storage.saveShop(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
                         .contentType("image/webp") 
                         .size((long) processedImage.length)
                         .shop(shop)
+                        .bucket(bucketShops)
+                        .createdAt(Instant.now())
                         .build();
         repository.save(photo);
     }
 
     public byte[] loadForShop(Long shopId) {
         Photo ph = repository.findByShopId(shopId)
-                         .orElseThrow(() -> new ProductNotFoundException("Photo not set"));
-
-        return storage.load(ph.getObjectKey());
+                .orElseThrow(() -> new PhotoNotFoundException("photo not set"));
+        return storage.loadShop(ph.getObjectKey());
     }
 
     @Transactional
@@ -114,13 +127,15 @@ private final ProductServiceImpl productService;
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.save(processedImage, "image/webp");
+        String key = storage.saveProduct(processedImage, "image/webp");
 
         Photo photo = Photo.builder()
                         .objectKey(key)
                         .contentType("image/webp") 
                         .size((long) processedImage.length)
                         .product(product)
+                        .bucket(bucketProducts)
+                        .createdAt(Instant.now())
                         .build();
         repository.save(photo);
     }
@@ -135,7 +150,7 @@ private final ProductServiceImpl productService;
                 .map(photo -> {
                     ProductPhotoResponse dto = new ProductPhotoResponse();
                     dto.setObjectKey(photo.getObjectKey());
-                    byte[] fileBytes = storage.load(photo.getObjectKey());
+                    byte[] fileBytes = storage.loadProduct(photo.getObjectKey());
                     dto.setFile(fileBytes);
                     return dto;
                 })
@@ -152,7 +167,7 @@ private final ProductServiceImpl productService;
     }
 
     public void removePhoto(Photo ph) {
-        storage.delete(ph.getObjectKey());
+        storage.delete(ph.getObjectKey(), ph.getBucket());
         repository.delete(ph);
         repository.flush();
     }
