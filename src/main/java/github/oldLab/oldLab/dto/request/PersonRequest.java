@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.entity.Person;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -24,9 +25,12 @@ public class PersonRequest {
     @Size(min = 2, max = 32, message = "last name must be between 2 and 32 characters")
     private String lastName;
 
-    @NotNull(message = "phone number cannot be null")
     @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "phone number must be valid")
     private String phoneNumber;
+
+    @NotNull(message = "email cannot be null")
+    @Email(message = "email must be valid")
+    private String email;
 
     @NotNull(message = "password cannot be null")
     @Size(min = 6, max = 32, message = "password must be between 6 and 32 characters")
@@ -39,6 +43,7 @@ public class PersonRequest {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPhoneNumber(phoneNumber)
+                .setEmail(email)
                 .setPassword(password)
                 .setIsActive(false)
                 .setRoleEnum(this.role != null ? role : RoleEnum.USER)

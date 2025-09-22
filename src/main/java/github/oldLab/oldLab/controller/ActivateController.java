@@ -33,7 +33,7 @@ public class ActivateController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         
         if (bucket.tryConsume(1)) {
-            log.debug("activating account with phone number: {}", request.getPhoneNumber());
+            log.debug("activating account with email: {}", request.getEmail());
             service.setActive(request);
             return ResponseEntity.ok().build();
         } else {
@@ -42,13 +42,13 @@ public class ActivateController {
         }
     }
 
-    @PostMapping("/send/activate/{phoneNumber}")
-    public ResponseEntity<Void> sendOtp(@PathVariable String phoneNumber, HttpServletRequest httpRequest){
+    @PostMapping("/send/activate/{email}")
+    public ResponseEntity<Void> sendOtp(@PathVariable String email, HttpServletRequest httpRequest){
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("sending OTP to phone number: {}", phoneNumber);
-            service.sendOtp(phoneNumber);
+            log.debug("sending OTP to email: {}", email);
+            service.sendOtp(email);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
@@ -56,13 +56,13 @@ public class ActivateController {
         }
     }
 
-    @PostMapping("/resend/activate/{phoneNumber}")
-    public ResponseEntity<Void> resendOtp(@PathVariable String phoneNumber, HttpServletRequest httpRequest){
+    @PostMapping("/resend/activate/{email}")
+    public ResponseEntity<Void> resendOtp(@PathVariable String email, HttpServletRequest httpRequest){
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("resending OTP to phone number: {}", phoneNumber);
-            service.resendOtp(phoneNumber);
+            log.debug("resending OTP to email: {}", email);
+            service.resendOtp(email);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
@@ -76,8 +76,8 @@ public class ActivateController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         
         if (bucket.tryConsume(1)) {
-            log.debug("logging in user with phone number: {}", request.getPhoneNumber());
-            AuthResponse response = service.login(request.getPhoneNumber(), request.getOtp());
+            log.debug("logging in user with email: {}", request.getEmail());
+            AuthResponse response = service.login(request.getEmail(), request.getOtp());
             return ResponseEntity.ok(response);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
@@ -85,13 +85,13 @@ public class ActivateController {
         }
     }
 
-    @PostMapping("/send/login/{phoneNumber}")
-    public ResponseEntity<Void> sendLoginOtp(@PathVariable String phoneNumber, HttpServletRequest httpRequest) {
+    @PostMapping("/send/login/{email}")
+    public ResponseEntity<Void> sendLoginOtp(@PathVariable String email, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("sending login OTP to phone number: {}", phoneNumber);
-            service.sendLoginOtp(phoneNumber);
+            log.debug("sending login OTP to email: {}", email);
+            service.sendLoginOtp(email);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);

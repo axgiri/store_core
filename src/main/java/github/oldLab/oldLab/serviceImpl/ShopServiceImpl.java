@@ -38,8 +38,8 @@ public class ShopServiceImpl implements ShopService {
         log.info("creating shop with name: {}", shopRequest.getName());
         taskExecutor.execute(() -> {
             
-            String phoneNumber = tokenService.extractUsername(token);
-            Long personId = personService.getIdFromPhoneNumber(phoneNumber);
+            String email = tokenService.extractUsername(token);
+            Long personId = personService.getIdFromEmail(email);
             var personReference = personService.getReferenceById(personId);
 
             Shop shop = shopRequest.toEntity()
@@ -76,7 +76,7 @@ public class ShopServiceImpl implements ShopService {
             }
             Shop shop = repository.findById(id)
                 .orElseThrow(() -> new ShopNotFoundException("shop not found with id: " + id));
-            BeanUtils.copyProperties(dto, shop, "id", "version");
+            BeanUtils.copyProperties(dto, shop, "id");
             repository.save(shop);
             log.info("updated shop with id: {}", id);
         });

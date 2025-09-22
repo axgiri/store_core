@@ -197,12 +197,12 @@ public class PersonController {
     }
 
     @PutMapping("/updatePassword")
-    @PreAuthorize("@accessControlService.isSelfByPhoneNumber(authentication, #loginRequest.phoneNumber)")
+    @PreAuthorize("@accessControlService.isSelfByEmail(authentication, #loginRequest.email)")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("updating password for phone number: {}", loginRequest.getPhoneNumber());
+            log.debug("updating password for email: {}", loginRequest.getEmail());
             try {
                 service.updatePasswordAsync(loginRequest, oldPassword).join();
             } catch (java.util.concurrent.CompletionException e) {

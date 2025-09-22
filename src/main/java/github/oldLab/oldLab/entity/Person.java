@@ -55,10 +55,10 @@ public class Person implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @NotNull(message = "phone number cannot be null")
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", unique = true, nullable = true)
     private String phoneNumber;
 
+    @NotNull(message = "email cannot be null")
     @Column(name = "email", unique = true)
     private String email;
 
@@ -89,7 +89,7 @@ public class Person implements UserDetails {
 
     @Override
     public String getUsername() {
-        return phoneNumber;
+        return email;
     }
 
     @Override

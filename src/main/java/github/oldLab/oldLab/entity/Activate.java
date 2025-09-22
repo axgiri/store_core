@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,8 +28,9 @@ public class Activate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "phone_number", unique = true, nullable = false)
-    private String phoneNumber;
+    @Column(name = "email", unique = true, nullable = false)
+    @Email(message = "email must be valid")
+    private String email;
 
     @Column(name = "otp", nullable = false)
     private int otp;

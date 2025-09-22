@@ -28,6 +28,9 @@ public class ShopResponse {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("description")
     private String description;
 
@@ -41,6 +44,7 @@ public class ShopResponse {
             .setName(shop.getName())
             .setAddress(shop.getAddress())
             .setPhoneNumber(shop.getPhoneNumber())
+            .setEmail(shop.getEmail())
             .setDescription(shop.getDescription())
             .setCategory(shop.getCategory());
     }
