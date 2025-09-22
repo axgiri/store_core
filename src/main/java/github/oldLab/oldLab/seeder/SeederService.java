@@ -69,7 +69,7 @@ public class SeederService {
         }
         persons = personRepository.saveAll(persons);
 
-        // Activate (independent of persons but could match phone numbers randomly)
+    // Activate (independent of persons; uses emails in the new flow)
     var activates = new ArrayList<github.oldLab.oldLab.entity.Activate>(count);
         for (int i = 0; i < count; i++) {
             activates.add(activateFactory.create());
