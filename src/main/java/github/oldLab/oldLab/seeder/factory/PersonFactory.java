@@ -21,18 +21,28 @@ public class PersonFactory implements DataFactory<Person> {
 
     @Override
     public Person create() {
-    int firstDigit = ThreadLocalRandom.current().nextInt(1, 10);
-    var phone = "+" + firstDigit + faker.number().digits(10);
-        return new Person()
-                .setFirstName(faker.name().firstName())
-                .setLastName(faker.name().lastName())
-                .setPhoneNumber(phone)
-                .setEmail(phone + "@example.com")
-                .setPassword(passwordEncoder.encode(phone))
-                .setRoleEnum(RoleEnum.values()[ThreadLocalRandom.current().nextInt(RoleEnum.values().length)])
-                .setCompanyId(ThreadLocalRandom.current().nextBoolean() ? faker.number().numberBetween(1L, 1000L) : null)
-                .setIsActive(true)
-                .setCreatedAt(Instant.now())
-                .setUpdatedAt(Instant.now());
+    // Prioritize email: generate a unique email; phone is optional (can be null)
+    String firstName = faker.name().firstName();
+    String lastName = faker.name().lastName();
+    String unique = Long.toString(Math.abs(ThreadLocalRandom.current().nextLong()), 36);
+    String email = (firstName + "." + lastName + "." + unique + "@example.com").toLowerCase();
+
+    // 50% chance to set a phone number, otherwise leave null (phone is not primary)
+    String phone = ThreadLocalRandom.current().nextBoolean()
+        ? "+" + ThreadLocalRandom.current().nextInt(1, 10) + faker.number().digits(10)
+        : null;
+
+    return new Person()
+        .setFirstName(firstName)
+        .setLastName(lastName)
+        .setPhoneNumber(phone)
+        .setEmail(email)
+        // Set password based on email to align with email-first auth
+        .setPassword(passwordEncoder.encode(email))
+        .setRoleEnum(RoleEnum.values()[ThreadLocalRandom.current().nextInt(RoleEnum.values().length)])
+        .setCompanyId(ThreadLocalRandom.current().nextBoolean() ? faker.number().numberBetween(1L, 1000L) : null)
+        .setIsActive(true)
+        .setCreatedAt(Instant.now())
+        .setUpdatedAt(Instant.now());
     }
 }

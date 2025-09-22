@@ -49,7 +49,7 @@ public class PhotoFactory implements DataFactory<Photo> {
 
     public Photo create(Person person) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.savePerson(processed, "image/webp");
+        String key = photoStorage.save(processed, "image/webp", bucketPersons);
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -62,7 +62,7 @@ public class PhotoFactory implements DataFactory<Photo> {
 
     public Photo create(Shop shop) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.saveShop(processed, "image/webp");
+        String key = photoStorage.save(processed, "image/webp", bucketShops);
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -75,7 +75,7 @@ public class PhotoFactory implements DataFactory<Photo> {
 
     public Photo create(Product product) {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.saveProduct(processed, "image/webp");
+        String key = photoStorage.save(processed, "image/webp", bucketProducts);
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
@@ -89,7 +89,7 @@ public class PhotoFactory implements DataFactory<Photo> {
     @Override
     public Photo create() {
         byte[] processed = generateAndProcess();
-        String key = photoStorage.saveDefault(processed, "image/webp");
+        String key = photoStorage.save(processed, "image/webp", bucketDefault);
         return Photo.builder()
                 .objectKey(key)
                 .contentType("image/webp")
