@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import github.oldLab.oldLab.Enum.CategoryEnum;
 import github.oldLab.oldLab.entity.Shop;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class ShopRequest {
     private String address;
 
     @NotNull(message = "email cannot be null")
+    @Email(message = "email should be valid")
     private String email;
 
     @NotNull(message = "photo header cannot be null")
