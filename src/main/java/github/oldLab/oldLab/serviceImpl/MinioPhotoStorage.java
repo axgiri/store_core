@@ -2,7 +2,6 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.service.PhotoStorage;
@@ -18,26 +17,14 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class MinioPhotoStorage implements PhotoStorage {
 
     private final S3Client s3;
-    
-    @Value("${minio.bucket.default}")
-    private String bucketDefault;
-
-    @Value("${minio.bucket.persons}")
-    private String bucketPersons;
-
-    @Value("${minio.bucket.shops}")
-    private String bucketShops;
-
-    @Value("${minio.bucket.products}")
-    private String bucketProducts;
 
     @Override
-    public String saveDefault(byte[] bytes, String contentType) {
+    public String save(byte[] bytes, String contentType, String bucket) {
         String key = generateKey();   
 
         s3.putObject(
         PutObjectRequest.builder()
-            .bucket(bucketDefault)
+            .bucket(bucket)
             .key(key)
             .contentType(contentType)
             .build(),
@@ -46,81 +33,12 @@ public class MinioPhotoStorage implements PhotoStorage {
     }
 
     @Override
-    public byte[] loadDefault(String objectKey) {
+    public byte[] load(String objectKey, String bucket) {
         return s3.getObjectAsBytes(GetObjectRequest
-                .builder()
-                .bucket(bucketDefault)
-                .key(objectKey)
-                .build()).asByteArray();
-    }
-
-    @Override
-    public String savePerson(byte[] bytes, String contentType) {
-        String key = generateKey();   
-
-        s3.putObject(
-        PutObjectRequest.builder()
-            .bucket(bucketPersons)
-            .key(key)
-            .contentType(contentType)
-            .build(),
-            RequestBody.fromBytes(bytes));
-            return key;
-    }
-
-    @Override
-    public byte[] loadPerson(String objectKey) {
-        return s3.getObjectAsBytes(GetObjectRequest
-                .builder()
-                .bucket(bucketPersons)
-                .key(objectKey)
-                .build()).asByteArray();
-    }
-
-    @Override
-    public String saveShop(byte[] bytes, String contentType) {
-        String key = generateKey();   
-
-        s3.putObject(
-        PutObjectRequest.builder()
-            .bucket(bucketShops)
-            .key(key)
-            .contentType(contentType)
-            .build(),
-            RequestBody.fromBytes(bytes));
-            return key;
-    }
-
-    @Override
-    public byte[] loadShop(String objectKey) {
-        return s3.getObjectAsBytes(GetObjectRequest
-                .builder()
-                .bucket(bucketShops)
-                .key(objectKey)
-                .build()).asByteArray();
-    }
-
-    @Override
-    public String saveProduct(byte[] bytes, String contentType) {
-        String key = generateKey();   
-
-        s3.putObject(
-        PutObjectRequest.builder()
-            .bucket(bucketProducts)
-            .key(key)
-            .contentType(contentType)
-            .build(),
-            RequestBody.fromBytes(bytes));
-            return key;
-    }
-
-    @Override
-    public byte[] loadProduct(String objectKey) {
-        return s3.getObjectAsBytes(GetObjectRequest
-                .builder()
-                .bucket(bucketProducts)
-                .key(objectKey)
-                .build()).asByteArray();
+            .builder()
+            .bucket(bucket)
+            .key(objectKey)
+            .build()).asByteArray();
     }
 
     @Override

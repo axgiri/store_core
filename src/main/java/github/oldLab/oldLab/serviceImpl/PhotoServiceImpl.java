@@ -53,7 +53,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.savePerson(processedImage, "image/webp");
+        String key = storage.save(processedImage, "image/webp", bucketPersons);
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -69,7 +69,7 @@ public class PhotoServiceImpl implements PhotoService {
     public byte[] loadForPerson(Long personId) {
         Photo photo = repository.findByPersonId(personId)
                          .orElseThrow(() -> new PhotoNotFoundException("avatar not set"));
-        return storage.loadPerson(photo.getObjectKey());
+        return storage.load(photo.getObjectKey(), bucketPersons);
     }
 
     @Transactional
@@ -85,7 +85,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.saveShop(processedImage, "image/webp");
+        String key = storage.save(processedImage, "image/webp", bucketShops);
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -101,7 +101,7 @@ public class PhotoServiceImpl implements PhotoService {
     public byte[] loadForShop(Long shopId) {
         Photo ph = repository.findByShopId(shopId)
                 .orElseThrow(() -> new PhotoNotFoundException("photo not set"));
-        return storage.loadShop(ph.getObjectKey());
+        return storage.load(ph.getObjectKey(), bucketShops);
     }
 
     @Transactional
@@ -127,7 +127,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         byte[] processedImage = imageProcessor.processImage(file);
 
-        String key = storage.saveProduct(processedImage, "image/webp");
+        String key = storage.save(processedImage, "image/webp", bucketProducts);
 
         Photo photo = Photo.builder()
                         .objectKey(key)
@@ -150,7 +150,7 @@ public class PhotoServiceImpl implements PhotoService {
                 .map(photo -> {
                     ProductPhotoResponse dto = new ProductPhotoResponse();
                     dto.setObjectKey(photo.getObjectKey());
-                    byte[] fileBytes = storage.loadProduct(photo.getObjectKey());
+                    byte[] fileBytes = storage.load(photo.getObjectKey(), bucketProducts);
                     dto.setFile(fileBytes);
                     return dto;
                 })
@@ -159,12 +159,11 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public void deleteForProduct(Long productId, String objectKey) {
-        List<Photo> photos = repository.findAllByProductId(productId); //get photoByKey
-        photos.stream()
-                .filter(photo -> photo.getObjectKey().equals(objectKey))
-                .findFirst()
-                .ifPresent(this::removePhoto);
+        Photo photo = repository.findByProductIdAndObjectKey(productId, objectKey)
+                .orElseThrow(() -> new PhotoNotFoundException("photo not found for product: " + productId + " and key: " + objectKey));
+        removePhoto(photo);
     }
+
 
     public void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey(), ph.getBucket());
