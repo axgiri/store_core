@@ -23,8 +23,8 @@ public class ShopRequest {
     @NotNull(message = "address cannot be null")
     private String address;
 
-    @NotNull(message = "phone number cannot be null")
-    private String phoneNumber;
+    @NotNull(message = "email cannot be null")
+    private String email;
 
     @NotNull(message = "photo header cannot be null")
     private String photoHeader;
@@ -39,7 +39,7 @@ public class ShopRequest {
         return new Shop()
                 .setName(name)
                 .setAddress(address)
-                .setPhoneNumber(phoneNumber)
+                .setEmail(email)
                 .setPhotoHeader(photoHeader)
                 .setDescription(description)
                 .setCategory(category);

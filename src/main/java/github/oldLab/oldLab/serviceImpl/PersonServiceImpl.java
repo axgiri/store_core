@@ -53,11 +53,11 @@ public class PersonServiceImpl implements PersonService {
 
     public void createAsync(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
-        if (repository.existsByPhoneNumber(personRequest.getPhoneNumber())) {
-            throw new UserAlreadyExistsException("Phone number " + personRequest.getPhoneNumber() + " already exists");
+        if (repository.existsByEmail(personRequest.getEmail())) {
+            throw new UserAlreadyExistsException("email " + personRequest.getEmail() + " already exists");
         }
         taskExecutor.execute(() -> {
-            activateService.saveForRegister(personRequest.getPhoneNumber());
+            activateService.saveForRegister(personRequest.getEmail());
             personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
             repository.save(personRequest.toEntity());
             log.info("created person with first name: {}", personRequest.getFirstName());
@@ -65,9 +65,9 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public AuthResponse authenticate(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(), request.getPassword()));
-        var person = repository.findByPhoneNumber(request.getPhoneNumber())
-                .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + request.getPhoneNumber()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        var person = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("user not found with email: " + request.getEmail()));
         CompletableFuture<String> token = tokenService.generateToken(person);
         String refreshToken = refreshTokenService.issue(person);
         return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
@@ -107,12 +107,6 @@ public class PersonServiceImpl implements PersonService {
         );
     }
 
-    public Person findEntityByPhoneNumber(String phoneNumber) {
-        log.info("finding person with phone number: {}", phoneNumber);
-        return repository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
-    }
-
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public PersonResponse update(Long id, PersonRequest personRequest) {
         log.info("updating person with id: {}", id);
@@ -122,6 +116,7 @@ public class PersonServiceImpl implements PersonService {
             person.setFirstName(personRequest.getFirstName());
             person.setLastName(personRequest.getLastName());
             person.setPhoneNumber(personRequest.getPhoneNumber());
+            person.setEmail(personRequest.getEmail());
             person.setUpdatedAt(Instant.now());
             return PersonResponse.fromEntityToDto(repository.save(person));
     }
@@ -152,24 +147,24 @@ public class PersonServiceImpl implements PersonService {
         }
 
         if (!tokenService.isTokenValid(token,
-                repository.findByPhoneNumber(tokenService.extractUsername(token)).orElseThrow(
+                repository.findByEmail(tokenService.extractUsername(token)).orElseThrow(
                         () -> new UserNotFoundException("person not found")))) {
             throw new InvalidTokenException("token is invalid");
         }
     }
 
     public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword) {
-        log.info("updating password for phone number: {}", loginRequest.getPhoneNumber());
+        log.info("updating password for email: {}", loginRequest.getEmail());
         return CompletableFuture.runAsync(() -> {
-            Person person = repository.findByPhoneNumber(loginRequest.getPhoneNumber())
-                    .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + loginRequest.getPhoneNumber()));
+            Person person = repository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("person not found with email: " + loginRequest.getEmail()));
             if (!passwordEncoder.matches(oldPassword, person.getPassword())) {
-                throw new UserNotFoundException("incorrect current password for phone number: " + loginRequest.getPhoneNumber());
+                throw new UserNotFoundException("incorrect current password for email: " + loginRequest.getEmail());
             }
 
             person.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
             repository.save(person);
-            log.info("updated password for phone number: {}", loginRequest.getPhoneNumber());
+            log.info("updated password for email: {}", loginRequest.getEmail());
         }, taskExecutor);
     }
 
@@ -180,7 +175,7 @@ public class PersonServiceImpl implements PersonService {
         }
 
         final String actualToken = token.substring(7);
-        Person person = repository.findByPhoneNumber(tokenService.extractUsername(actualToken))
+        Person person = repository.findByEmail(tokenService.extractUsername(actualToken))
                 .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
 
         return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).getContent().stream()
@@ -241,10 +236,10 @@ public class PersonServiceImpl implements PersonService {
         log.info("Password reset successfully for: {}", request.getContact());
     }
 
-    public Long getIdFromPhoneNumber(String phoneNumber) {
-        log.info("getting id for user with phone number: {}", phoneNumber);
-        return repository.findIdByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UserNotFoundException("user not found with phone number: " + phoneNumber));
+    public Long getIdFromEmail(String email) {
+        log.info("getting id for user with email: {}", email);
+        return repository.findIdByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("user not found with email: " + email));
     }
 
     public Long getCompanyIdByPersonId(Long personId) {

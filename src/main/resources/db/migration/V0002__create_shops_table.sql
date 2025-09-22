@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS shops (
   version BIGINT,
   name VARCHAR(255) NOT NULL,
   address VARCHAR(255),
-  phone_number VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(255),
+  email VARCHAR(255) NOT NULL UNIQUE,
   photo_header VARCHAR(255),
   description TEXT,
   -- category is currently modeled as a simple column by JPA (List without @ElementCollection)

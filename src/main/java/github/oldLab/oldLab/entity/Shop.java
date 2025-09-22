@@ -49,9 +49,12 @@ public class Shop {
 
     private String address;
 
-    @NotNull(message = "phone number cannot be null")
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true, nullable = true)
     private String phoneNumber;
+
+    @Column(name = "email", unique = true, nullable = false)
+    @NotNull(message = "email cannot be null")
+    private String email;
 
     private String photoHeader;
 

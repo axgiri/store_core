@@ -38,8 +38,8 @@ public class ShopServiceImpl implements ShopService {
         log.info("creating shop with name: {}", shopRequest.getName());
         taskExecutor.execute(() -> {
             
-            String phoneNumber = tokenService.extractUsername(token);
-            Long personId = personService.getIdFromPhoneNumber(phoneNumber);
+            String email = tokenService.extractUsername(token);
+            Long personId = personService.getIdFromEmail(email);
             var personReference = personService.getReferenceById(personId);
 
             Shop shop = shopRequest.toEntity()

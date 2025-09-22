@@ -26,15 +26,14 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     Optional<Person> findByEmail(String email);
 
-    @Query("SELECT p.id FROM Person p WHERE p.phoneNumber = :phoneNumber")
-    Optional<Long> findIdByPhoneNumber(String phoneNumber);
+    @Query("SELECT p.id FROM Person p WHERE p.email = :email")
+    Optional<Long> findIdByEmail(@Param("email") String email);
 
     @Query("select p.companyId from Person p where p.id = :personId")
     Optional<Long> findCompanyIdById(@Param("personId") Long personId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Transactional
-    @Query("UPDATE Person p SET p.isActive = :isActive WHERE p.phoneNumber = :phoneNumber")
-    int setActiveByPhoneNumber(@Param("phoneNumber") String phoneNumber,
-                               @Param("isActive") boolean isActive);
+    @Query("UPDATE Person p SET p.isActive = :isActive WHERE p.email = :email")
+    int setActiveByEmail(@Param("email") String email, @Param("isActive") boolean isActive);
 }

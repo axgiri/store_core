@@ -38,8 +38,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse create(ProductRequest request, String bearerToken) {
         String token = bearerToken.startsWith("Bearer ") ? bearerToken.substring(7) : bearerToken;
-        String phone = tokenService.extractUsername(token);
-        Long personId = personService.getIdFromPhoneNumber(phone);
+        String email = tokenService.extractUsername(token);
+        Long personId = personService.getIdFromEmail(email);
         Long companyId = personService.getCompanyIdByPersonId(personId);
         if (companyId == null) {
             throw new ShopNotFoundException("User has no companyId; create a shop first");

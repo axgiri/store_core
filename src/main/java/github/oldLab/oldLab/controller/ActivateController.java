@@ -33,7 +33,7 @@ public class ActivateController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         
         if (bucket.tryConsume(1)) {
-            log.debug("activating account with phone number: {}", request.getPhoneNumber());
+            log.debug("activating account with email: {}", request.getEmail());
             service.setActive(request);
             return ResponseEntity.ok().build();
         } else {
@@ -76,8 +76,8 @@ public class ActivateController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         
         if (bucket.tryConsume(1)) {
-            log.debug("logging in user with phone number: {}", request.getPhoneNumber());
-            AuthResponse response = service.login(request.getPhoneNumber(), request.getOtp());
+            log.debug("logging in user with phone number: {}", request.getEmail());
+            AuthResponse response = service.login(request.getEmail(), request.getOtp());
             return ResponseEntity.ok(response);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);

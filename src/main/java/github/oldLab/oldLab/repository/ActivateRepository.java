@@ -15,14 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface ActivateRepository extends JpaRepository<Activate, Long>{
 
-    Optional<Activate> findTopByPhoneNumberOrderByCreatedAtDesc(String phoneNumber);
+    Optional<Activate> findTopByEmailOrderByCreatedAtDesc(String email);
 
-    Optional<Activate> findTopByPhoneNumberAndIsLoginOrderByCreatedAtDesc(String phoneNumber, boolean isLogin);
+    Optional<Activate> findTopByEmailAndIsLoginOrderByCreatedAtDesc(String email, boolean isLogin);
 
     @Transactional
-    Optional<Activate> findByPhoneNumberAndOtpResetAndIsActive(String phoneNumber, int otp, boolean isActive);
+    Optional<Activate> findByEmailAndOtpResetAndIsActive(String email, int otp, boolean isActive);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
 
     @Modifying
     @Query("DELETE FROM Activate a WHERE a.createdAt < :cutoffDate")

@@ -18,7 +18,7 @@ public class ActivateFactory implements DataFactory<Activate> {
     @Override
     public Activate create() {
         return Activate.builder()
-                .phoneNumber("+" + faker.number().digits(11))
+                .email(faker.internet().emailAddress())
                 .otp(faker.number().numberBetween(100000, 999999))
                 .otpReset(faker.number().numberBetween(100000, 999999))
                 .isActive(true)

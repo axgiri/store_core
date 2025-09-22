@@ -11,28 +11,28 @@ public interface ActivateService {
 
     public int setOtp();
 
-    public void saveForRegister(String phoneNumber);
+    public void saveForRegister(String email);
 
-    public void save(String phoneNumber, Optional<Boolean> isLogin);
+    public void save(String email, Optional<Boolean> isLogin);
 
-    public void saveForLogin(String phoneNumber);
+    public void saveForLogin(String email);
 
-    public int getOtp(String phoneNumber);
+    public int getOtp(String email);
 
-    public void sendOtp(String phoneNumber);
+    public void sendOtp(String email);
 
 
-    public void resendOtp(String phoneNumber);
+    public void resendOtp(String email);
 
-    public AuthResponse login(String phoneNumber, int OTP);
-    public void delete(String phoneNumber);
+    public AuthResponse login(String email, int OTP);
+    public void delete(String email);
 
-    public void sendLoginOtp(String phoneNumber);
+    public void sendLoginOtp(String email);
 
     // Methods for reset password
-    public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin);
+    public void saveOtpReset(String email, int otp, boolean isForLogin);
 
-    public void validateOtpReset(String phoneNumber, int otp);
+    public void validateOtpReset(String email, int otp);
     // End
     public void cleanupOldRecords();
 }

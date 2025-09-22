@@ -39,44 +39,45 @@ public class ActivateServiceImpl implements ActivateService {
 
     @Transactional
     public void setActive(ActivateRequest request) {
-        log.debug("saving to activate with phone number: {}", request.getPhoneNumber());
-    Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(request.getPhoneNumber())
-            .orElseThrow(() -> new UserNotFoundException("no OTP found for phone number: " + request.getPhoneNumber()));
+        log.debug("saving to activate with email: {}", request.getEmail());
+        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(request.getEmail())
+            .orElseThrow(() -> new UserNotFoundException("no OTP found for email: " + request.getEmail()));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
         if (Instant.now().isAfter(expiration)) {
             throw new UserNotFoundException(
-                    "OTP expired for phone number: " + request.getPhoneNumber()
+                    "OTP expired for email: " + request.getEmail()
             );
         }
 
         if (activation.getOtp() != request.getOtp()) {
-            throw new UserNotFoundException("invalid OTP for phone number: " + request.getPhoneNumber());
+            throw new UserNotFoundException("invalid OTP for email: " + request.getEmail());
         }
 
         if (activation.isActive() == true) {
-            throw new UserNotFoundException("user with phone number: " + request.getPhoneNumber() + " already activated");
+            throw new UserNotFoundException("user with email: " + request.getEmail() + " already activated");
         }
 
-        delete(request.getPhoneNumber());
+        delete(request.getEmail());
 
-        personRepository.setActiveByPhoneNumber(request.getPhoneNumber(), true);
+        personRepository.setActiveByEmail(request.getEmail(), true);
     }
 
     public int setOtp() {
         log.debug("generating otp");
         return 1000 + new Random().nextInt(9000);
     }
-    public void sendOtp(String phoneNumber) {
-        messageSender.sendOtp(MessageChannelEnum.SMS, phoneNumber, getOtp(phoneNumber));
+    
+    public void sendOtp(String email) {
+        messageSender.sendOtp(MessageChannelEnum.EMAIL, email, getOtp(email));
     }
 
-    public void save(String phoneNumber, Optional<Boolean> isLogin) {
-        log.debug("saving to activate with phone number: {}, loginAttempted={}", phoneNumber, isLogin);
+    public void save(String email, Optional<Boolean> isLogin) {
+        log.debug("saving to activate with email: {}, loginAttempted={}", email, isLogin);
         int otp = setOtp();
         Instant createdAt = Instant.now();
         Activate activation = Activate.builder()
-            .phoneNumber(phoneNumber)
+            .email(email)
             .otp(otp)
             .isActive(false)
                 .isLogin(isLogin.orElse(false))
@@ -85,76 +86,76 @@ public class ActivateServiceImpl implements ActivateService {
         repository.save(activation);
     }
 
-    public void saveForRegister(String phoneNumber) {
-        save(phoneNumber, Optional.ofNullable(null));
+    public void saveForRegister(String email) {
+        save(email, Optional.ofNullable(null));
     }
 
-    public void saveForLogin(String phoneNumber) {
-        save(phoneNumber, Optional.of(true));
+    public void saveForLogin(String email) {
+        save(email, Optional.of(true));
     }
 
-    public int getOtp(String phoneNumber) {
+    public int getOtp(String email) {
         log.debug("getting otp");
-        return repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
-            .orElseThrow(() -> new UserNotFoundException("no OTP found for phone number: " + phoneNumber))
+        return repository.findTopByEmailOrderByCreatedAtDesc(email)
+            .orElseThrow(() -> new UserNotFoundException("no OTP found for email: " + email))
             .getOtp();
     }
 
 
 
-    public void resendOtp(String phoneNumber) {
-        log.debug("resending OTP to phone number: {}", phoneNumber);
-        Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
-            .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please register first"));
+    public void resendOtp(String email) {
+        log.debug("resending OTP to email: {}", email);
+        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
+            .orElseThrow(() -> new UserNotFoundException("users with email: " + email + " not found, please register first"));
 
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
         if (Instant.now().isAfter(expiration)) {
-            saveForRegister(phoneNumber);
+            saveForRegister(email);
         }
-        messageSender.sendOtp(MessageChannelEnum.SMS,phoneNumber, getOtp(phoneNumber)); //here
+        messageSender.sendOtp(MessageChannelEnum.EMAIL,email, getOtp(email));
     }
 
-    public AuthResponse login(String phoneNumber, int OTP) {
-        log.debug("logging by otp in user with phone number: {}", phoneNumber);
-        Activate activation = repository.findTopByPhoneNumberAndIsLoginOrderByCreatedAtDesc(phoneNumber, true)
-            .orElseThrow(() -> new UserNotFoundException("users with phone number: " + phoneNumber + " not found, please send OTP first"));
+    public AuthResponse login(String email, int OTP) {
+        log.debug("logging by otp in user with email: {}", email);
+        Activate activation = repository.findTopByEmailAndIsLoginOrderByCreatedAtDesc(email, true)
+            .orElseThrow(() -> new UserNotFoundException("users with email: " + email + " not found, please send OTP first"));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
         if (Instant.now().isAfter(expiration)) {
-            throw new UserNotFoundException("OTP expired for phone number: " + phoneNumber);
+            throw new UserNotFoundException("OTP expired for email: " + email);
         }
         if (activation.getOtp() != OTP) {
-            throw new UserNotFoundException("invalid OTP for phone number: " + phoneNumber);
+            throw new UserNotFoundException("invalid OTP for email: " + email);
         }
 
-        delete(phoneNumber);
+        delete(email);
 
-        var person = personRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new UserNotFoundException("person not found with phone number: " + phoneNumber));
+        var person = personRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("person not found with email: " + email));
         CompletableFuture<String> token = tokenService.generateToken(person);
         String refreshToken = refreshTokenService.issue(person);
         return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
     }
 
-    public void delete(String phoneNumber) {
-        log.debug("deleting activation with phone number: {}", phoneNumber);
-        Activate activation = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
-            .orElseThrow(() -> new UserNotFoundException("activation with phone number: " + phoneNumber + " not found"));
+    public void delete(String email) {
+        log.debug("deleting activation with email: {}", email);
+        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
+            .orElseThrow(() -> new UserNotFoundException("activation with email: " + email + " not found"));
         repository.delete(activation);
     }
 
-    public void sendLoginOtp(String phoneNumber) { 
-        log.debug("sending login OTP to phone number: {}", phoneNumber);
-        saveForLogin(phoneNumber);
-        messageSender.sendOtp(MessageChannelEnum.SMS,phoneNumber, getOtp(phoneNumber));
+    public void sendLoginOtp(String email) {
+        log.debug("sending login OTP to email: {}", email);
+        saveForLogin(email);
+        messageSender.sendOtp(MessageChannelEnum.EMAIL,email, getOtp(email));
     }
 
     // Methods for reset password
-    public void saveOtpReset(String phoneNumber, int otp, boolean isForLogin) {
-    Activate activate = repository.findTopByPhoneNumberOrderByCreatedAtDesc(phoneNumber)
+    public void saveOtpReset(String email, int otp, boolean isForLogin) {
+    Activate activate = repository.findTopByEmailOrderByCreatedAtDesc(email)
         .orElse(new Activate());
-        activate.setPhoneNumber(phoneNumber);
+        activate.setEmail(email);
         activate.setOtpReset(otp);
         activate.setActive(true);
         activate.setLogin(isForLogin);
@@ -164,8 +165,8 @@ public class ActivateServiceImpl implements ActivateService {
     }
 
     @Transactional
-    public void validateOtpReset(String phoneNumber, int otp) {
-        Activate activate = repository.findByPhoneNumberAndOtpResetAndIsActive(phoneNumber, otp, true)
+    public void validateOtpReset(String email, int otp) {
+        Activate activate = repository.findByEmailAndOtpResetAndIsActive(email, otp, true)
                 .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
 
         Instant createdAt = activate.getCreatedAt();

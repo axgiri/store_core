@@ -55,18 +55,18 @@ public class AccessControlService {
 		if (authentication == null || personId == null) {
 			throw new IllegalArgumentException("authentication or personId is null");
 		}
-		
-		Person current = getPersonByPhoneNumber(authentication.getName());
+
+		Person current = getPersonByEmail(authentication.getName());
 		boolean self = current.getId().equals(personId);
 		return self || isAdmin(authentication) || isModerator(authentication);
 	}
 
-	public boolean isSelfByPhoneNumber(Authentication authentication, String phoneNumber) {
-		if (authentication == null || phoneNumber == null) {
-			throw new IllegalArgumentException("authentication or phoneNumber is null");
+	public boolean isSelfByEmail(Authentication authentication, String email) {
+		if (authentication == null || email == null) {
+			throw new IllegalArgumentException("authentication or email is null");
 		}
 
-		boolean self = authentication.getName().equals(phoneNumber);
+		boolean self = authentication.getName().equals(email);
 		return self || isAdmin(authentication) || isModerator(authentication);
 	}
 
@@ -75,7 +75,7 @@ public class AccessControlService {
 			throw new IllegalArgumentException("authentication or companyId is null");
 		}
 
-		Person current = getPersonByPhoneNumber(authentication.getName());
+		Person current = getPersonByEmail(authentication.getName());
 		Long myCompany = current.getCompanyId();
 		boolean match = myCompany != null && myCompany.equals(companyId);
 		return match || isAdmin(authentication) || isModerator(authentication);
@@ -86,7 +86,7 @@ public class AccessControlService {
 			throw new IllegalArgumentException("authentication or productId is null");
 		}
 
-		Person current = getPersonByPhoneNumber(authentication.getName());
+		Person current = getPersonByEmail(authentication.getName());
 		Long myCompany = current.getCompanyId();
 		
 		if (myCompany == null) {
@@ -102,7 +102,7 @@ public class AccessControlService {
 		if (authentication == null) {
 			throw new IllegalArgumentException("authentication is null");
 		}
-		Person current = getPersonByPhoneNumber(authentication.getName());
+		Person current = getPersonByEmail(authentication.getName());
 		return current != null && current.getCompanyId() != null;
 	}
 
@@ -111,7 +111,7 @@ public class AccessControlService {
 			throw new IllegalArgumentException("authentication or reviewId is null");
 		}
 
-		Person current = getPersonByPhoneNumber(authentication.getName());
+		Person current = getPersonByEmail(authentication.getName());
 		if (current == null){
 			throw new IllegalArgumentException("current user not found");
 		}
@@ -122,11 +122,11 @@ public class AccessControlService {
 			.orElse(false);
 	}
 
-	@Cacheable(value = "personByPhoneNumber", key = "#phone", unless = "#result == null")
+	@Cacheable(value = "personByEmail", key = "#email", unless = "#result == null")
 	@Transactional(readOnly = true)
-	public Person getPersonByPhoneNumber(String phone) {
-		log.debug("loading person by phone (cached): {}", phone);
-		return personRepository.findByPhoneNumber(phone).orElse(null);
+	public Person getPersonByEmail(String email) {
+		log.debug("loading person by email (cached): {}", email);
+		return personRepository.findByEmail(email).orElse(null);
 	}
 
 	@Cacheable(value = "personById", key = "#id", unless = "#result == null")
