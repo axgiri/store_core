@@ -128,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
         photoRepository.findByPersonId(id).ifPresent(photo -> {
             try {
-                photoStorage.delete(photo.getObjectKey());
+                photoStorage.delete(photo.getObjectKey(), photo.getBucket());
             } catch (Exception e) {
                 log.warn("failed to delete photo object '{}' from storage: {}", photo.getObjectKey(), e.getMessage());
                 throw e;

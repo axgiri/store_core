@@ -25,7 +25,10 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
         nativeQuery = true)
     ProductExistCountProjection findProductExistsAndPhotoCount(@Param("productId") Long productId);
 
+
     List<Photo> findAllByProductId(Long productId);
+
+    Optional<Photo> findByProductIdAndObjectKey(Long productId, String objectKey);
 
     Optional<Photo> findByProductIdAndId(Long productId, Long Id);
 }

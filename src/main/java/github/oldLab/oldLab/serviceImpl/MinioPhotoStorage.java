@@ -2,7 +2,6 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.service.PhotoStorage;
@@ -18,11 +17,10 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class MinioPhotoStorage implements PhotoStorage {
 
     private final S3Client s3;
-    @Value("${minio.bucket}") private String bucket;
 
     @Override
-    public String save(byte[] bytes, String contentType) {
-        String key = UUID.randomUUID().toString();
+    public String save(byte[] bytes, String contentType, String bucket) {
+        String key = generateKey();   
 
         s3.putObject(
         PutObjectRequest.builder()
@@ -35,20 +33,24 @@ public class MinioPhotoStorage implements PhotoStorage {
     }
 
     @Override
-    public byte[] load(String objectKey) {
+    public byte[] load(String objectKey, String bucket) {
         return s3.getObjectAsBytes(GetObjectRequest
-                .builder()
-                .bucket(bucket)
-                .key(objectKey)
-                .build()).asByteArray();
+            .builder()
+            .bucket(bucket)
+            .key(objectKey)
+            .build()).asByteArray();
     }
 
     @Override
-    public void delete(String objectKey) {
-        s3.deleteObject(DeleteObjectRequest.
-        builder()
-        .bucket(bucket)
-        .key(objectKey)
-        .build());
+    public void delete(String objectKey, String bucket) {
+        s3.deleteObject(DeleteObjectRequest
+            .builder()
+            .bucket(bucket)
+            .key(objectKey)
+            .build());
+    }
+
+    private String generateKey() {
+        return UUID.randomUUID().toString();
     }
 }

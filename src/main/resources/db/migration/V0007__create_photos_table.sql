@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS photos (
   object_key VARCHAR(512) NOT NULL UNIQUE,
   content_type VARCHAR(255) NOT NULL,
   size BIGINT NOT NULL,
+  bucket VARCHAR(255) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
   person_id BIGINT UNIQUE,
   shop_id BIGINT UNIQUE,
   product_id BIGINT

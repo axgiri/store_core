@@ -17,7 +17,19 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.S3Configuration;
 
 @Configuration
-class MinioConfig {
+public class MinioConfig {
+
+    @Value("${minio.bucket.default}")
+    private String bucketDefault;
+
+    @Value("${minio.bucket.persons}")
+    private String bucketPersons;
+
+    @Value("${minio.bucket.shops}")
+    private String bucketShops;
+
+    @Value("${minio.bucket.products}")
+    private String bucketProducts;
 
     @Bean
     S3Client s3(@Value("${minio.url}") String url,
@@ -37,17 +49,24 @@ class MinioConfig {
     }
 
     @Bean
-    ApplicationRunner ensureBucket(S3Client s3, @Value("${minio.bucket}") String bucket) {
+    ApplicationRunner ensureBuckets(S3Client s3) {
         return args -> {
-            try {
-                s3.headBucket(HeadBucketRequest.builder().bucket(bucket).build());
-            } catch (S3Exception e) {
-                if (e.statusCode() == 404) {
-                    s3.createBucket(CreateBucketRequest.builder().bucket(bucket).build());
-                } else {
-                    throw e;
-                }
-            }
+            ensureBucketExists(s3, bucketDefault);
+            ensureBucketExists(s3, bucketPersons);
+            ensureBucketExists(s3, bucketShops);
+            ensureBucketExists(s3, bucketProducts);
         };
+    }
+
+    private void ensureBucketExists(S3Client s3, String bucket) {
+        try {
+            s3.headBucket(HeadBucketRequest.builder().bucket(bucket).build());
+        } catch (S3Exception e) {
+            if (e.statusCode() == 404) { // Not found -> create
+                s3.createBucket(CreateBucketRequest.builder().bucket(bucket).build());
+            } else {
+                throw e;
+            }
+        }
     }
 }
