@@ -92,7 +92,7 @@ public class SeederService {
             }
         }
         products = productRepository.saveAll(products);
-        products.forEach(product -> productSearchRepository.save(ProductDocumentRequest.fromEntity(product)));
+        productSearchRepository.saveAll(products.stream().map(ProductDocumentRequest::fromEntity).toList());
 
         // Photos for products (random count per product up to configured max)
         if (maxPhotoPerProduct > 0) {
