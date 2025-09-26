@@ -22,7 +22,7 @@ public class ShopFactory implements DataFactory<Shop> {
         return new Shop()
                 .setName(faker.company().name())
                 .setAddress(faker.address().streetAddress())
-                .setPhoneNumber("+" + faker.number().digits(11))
+                .setEmail(faker.internet().emailAddress())
                 .setPhotoHeader(faker.internet().avatar())
                 .setDescription(faker.lorem().sentence())
                 .setCategory(List.of(CategoryEnum.values()[ThreadLocalRandom.current().nextInt(CategoryEnum.values().length)]))
@@ -34,7 +34,7 @@ public class ShopFactory implements DataFactory<Shop> {
         return new Shop()
                 .setName(faker.company().name())
                 .setAddress(faker.address().streetAddress())
-                .setPhoneNumber("+" + faker.number().digits(11))
+                .setEmail(faker.internet().emailAddress())
                 .setPhotoHeader(faker.internet().avatar())
                 .setDescription(faker.lorem().sentence())
                 .setCategory(List.of(CategoryEnum.TABLETS));

@@ -25,7 +25,7 @@ public class PersonFactory implements DataFactory<Person> {
     String firstName = faker.name().firstName();
     String lastName = faker.name().lastName();
     String unique = Long.toString(Math.abs(ThreadLocalRandom.current().nextLong()), 36);
-    String email = (firstName + "." + lastName + "." + unique + "@example.com").toLowerCase();
+    String email = (firstName + "." + lastName + "." + unique + "@oldlab.cis").toLowerCase();
 
     // 50% chance to set a phone number, otherwise leave null (phone is not primary)
     String phone = ThreadLocalRandom.current().nextBoolean()
