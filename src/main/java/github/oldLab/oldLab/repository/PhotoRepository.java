@@ -14,8 +14,6 @@ import github.oldLab.oldLab.service.ProductExistCountProjection;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
     Optional<Photo> findByPersonId(Long personId);
-    
-    Optional<Photo> findByShopId(Long shopId);
 
     @Query("select count(p) from Photo p where p.product.id = :productId")
     long countByProductId(@Param("productId") Long productId);

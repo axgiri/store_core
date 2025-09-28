@@ -1,7 +1,5 @@
 package github.oldLab.oldLab.controller;
 
-import java.util.List;
-
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -170,26 +168,6 @@ public class PersonController {
         if (bucket.tryConsume(1)) {
             service.validateToken(token);
             return ResponseEntity.ok("validation successful");
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
-    @GetMapping("/getMyColleagues")
-    @PreAuthorize("@accessControlService.hasCompany(authentication)")
-    public ResponseEntity<List<PersonResponse>> getColleagues(
-            @RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("getting colleagues for token: {}", token);
-            service.validateToken(token);
-            List<PersonResponse> colleagues = service.getColleaguesAsync(token, page, size);
-            return ResponseEntity.ok(colleagues);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

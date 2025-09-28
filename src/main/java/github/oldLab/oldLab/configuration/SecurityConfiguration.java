@@ -59,27 +59,18 @@ public class SecurityConfiguration {
                         "/api/v1/products/list",
                         "/api/v1/products/search/**",
                         "/api/v1/products/*",
-                        "/api/v1/products/shop/*",
-                        "/api/v1/products/shop/*/search")
+            "/api/v1/products/persons/*",
+            "/api/v1/products/persons/*/search")
                     .permitAll()
 
                 // Reviews
                 .requestMatchers(HttpMethod.GET,
-                        "/api/v1/reviews/shop/*",
                         "/api/v1/reviews/person/*")
-                    .permitAll()
-
-                // Shops
-                .requestMatchers(HttpMethod.GET,
-                        "/api/v1/shops",
-                        "/api/v1/shops/category",
-                        "/api/v1/shops/*")
                     .permitAll()
 
                 // Photos
                 .requestMatchers(HttpMethod.GET,
                         "/api/v1/photos/persons/**",
-                        "/api/v1/photos/shops/**",
                         "/api/v1/photos/products/**")
                     .permitAll()
 

@@ -1,6 +1,5 @@
 package github.oldLab.oldLab.service;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
@@ -27,8 +26,6 @@ public interface PersonService {
     public void validateToken(String token);
 
     public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
-
-    public List<PersonResponse> getColleaguesAsync(String token, int page, int size);
 
     public void sendOtp(String email) throws NotImplementedException;
 

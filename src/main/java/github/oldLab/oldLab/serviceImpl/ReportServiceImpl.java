@@ -5,7 +5,6 @@ import github.oldLab.oldLab.dto.events.ReportMessage;
 import github.oldLab.oldLab.dto.request.ReportRequest;
 import github.oldLab.oldLab.dto.response.ReportResponse;
 import github.oldLab.oldLab.dto.response.ReviewResponse;
-import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,6 @@ public class ReportServiceImpl implements ReportService {
     private final KafkaTemplate<String, ReportMessage> kafkaTemplate;
     private final PersonServiceImpl personService;
     private final NotificationReportsServiceImpl notificationReportsService;
-    private final ShopServiceImpl shopService;
 
     @Override
     public void createReport(ReportRequest request) {
@@ -47,13 +45,6 @@ public class ReportServiceImpl implements ReportService {
             case USER: {
                 if (!personService.existsById(request.getTargetId())) {
                     throw new RuntimeException("target user not found");
-                }
-                break;
-            }
-
-            case SHOP: {
-                if (!shopService.existsById(request.getTargetId())) {
-                    throw new ShopNotFoundException("target shop not found");
                 }
                 break;
             }

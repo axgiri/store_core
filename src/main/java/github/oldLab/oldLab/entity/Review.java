@@ -41,9 +41,5 @@ public class Review {
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
-
     private String comment;
 }

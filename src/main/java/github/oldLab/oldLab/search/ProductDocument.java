@@ -32,7 +32,7 @@ public class ProductDocument {
     private CategoryEnum category;
 
     @Field(type = FieldType.Long)
-    private Long shopId;
+    private Long personId;
 
     @Field(type = FieldType.Keyword)
     private List<String> tags;

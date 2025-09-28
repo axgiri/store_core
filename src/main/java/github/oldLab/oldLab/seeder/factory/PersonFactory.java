@@ -40,7 +40,6 @@ public class PersonFactory implements DataFactory<Person> {
         // Set password based on email to align with email-first auth
         .setPassword(passwordEncoder.encode(email))
         .setRoleEnum(RoleEnum.values()[ThreadLocalRandom.current().nextInt(RoleEnum.values().length)])
-        .setCompanyId(ThreadLocalRandom.current().nextBoolean() ? faker.number().numberBetween(1L, 1000L) : null)
         .setIsActive(true)
         .setCreatedAt(Instant.now())
         .setUpdatedAt(Instant.now());

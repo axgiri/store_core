@@ -27,7 +27,6 @@ public class ProductController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping
-    @PreAuthorize("@accessControlService.hasCompany(authentication)")
     public ResponseEntity<ProductResponse> create(@RequestBody @Validated ProductRequest request,
                                                   @RequestHeader("Authorization") String header,
                                                   HttpServletRequest httpRequest) {
@@ -70,16 +69,16 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<ProductResponse>> listByShop(@PathVariable Long shopId,
+    @GetMapping("/persons/{personId}")
+    public ResponseEntity<List<ProductResponse>> listByPersonId(@PathVariable Long personId,
                                                             @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "20") int size,
                                                             HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("listing products by shopId: {}, page: {}, size: {}", shopId, page, size);
-            return ResponseEntity.ok(productService.listByShop(shopId, page, size));
+            log.debug("listing products by personId: {}, page: {}, size: {}", personId, page, size);
+            return ResponseEntity.ok(productService.listByPersonId(personId, page, size));
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
@@ -87,7 +86,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id,
                                                   @RequestBody ProductRequest request,
                                                   HttpServletRequest httpRequest) {
@@ -103,7 +102,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -133,8 +132,8 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/shop/{shopId}/search")
-    public ResponseEntity<List<ProductResponse>> searchByShop(@PathVariable Long shopId,
+    @GetMapping("/persons/{personId}/search")
+    public ResponseEntity<List<ProductResponse>> searchByPerson(@PathVariable Long personId,
                                                               @RequestParam("q") String query,
                                                               @RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "20") int size,
@@ -142,8 +141,8 @@ public class ProductController {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("searching products by shopId: {}, q: {}, page: {}, size: {}", shopId, query, page, size);
-            return ResponseEntity.ok(productService.searchByShop(shopId, query, page, size));
+            log.debug("searching products by personId: {}, q: {}, page: {}, size: {}", personId, query, page, size);
+            return ResponseEntity.ok(productService.searchByPerson(personId, query, page, size));
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

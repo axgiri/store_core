@@ -69,9 +69,6 @@ public class Person implements UserDetails {
     @Column(name = "role_enum", nullable = true)
     private RoleEnum roleEnum;
 
-    @Column(name = "company_id", nullable = true)
-    private Long companyId;
-
     @NotNull(message = "is active cannot be null")
     @Column(name = "is_active")
     private Boolean isActive;

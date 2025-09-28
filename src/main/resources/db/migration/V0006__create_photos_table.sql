@@ -8,18 +8,12 @@ CREATE TABLE IF NOT EXISTS photos (
   bucket VARCHAR(255) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   person_id BIGINT UNIQUE,
-  shop_id BIGINT UNIQUE,
   product_id BIGINT
 );
 
 ALTER TABLE photos
   ADD CONSTRAINT fk_photos_person
   FOREIGN KEY (person_id) REFERENCES persons(id)
-  ON DELETE CASCADE;
-
-ALTER TABLE photos
-  ADD CONSTRAINT fk_photos_shop
-  FOREIGN KEY (shop_id) REFERENCES shops(id)
   ON DELETE CASCADE;
 
 ALTER TABLE photos

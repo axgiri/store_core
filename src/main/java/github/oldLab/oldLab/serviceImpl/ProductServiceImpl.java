@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import github.oldLab.oldLab.dto.request.ProductRequest;
 import github.oldLab.oldLab.dto.response.ProductResponse;
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
-import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.exception.ProductNotFoundException;
-import github.oldLab.oldLab.exception.ShopNotFoundException;
+import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.ProductRepository;
 import github.oldLab.oldLab.service.ProductService;
 import github.oldLab.oldLab.search.ProductSearchRepository;
@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
-    private final ShopServiceImpl shopService;
     private final TokenServiceImpl tokenService;
     private final PersonServiceImpl personService;
 
@@ -40,12 +39,8 @@ public class ProductServiceImpl implements ProductService {
         String token = bearerToken.startsWith("Bearer ") ? bearerToken.substring(7) : bearerToken;
         String email = tokenService.extractUsername(token);
         Long personId = personService.getIdFromEmail(email);
-        Long companyId = personService.getCompanyIdByPersonId(personId);
-        if (companyId == null) {
-            throw new ShopNotFoundException("User has no companyId; create a shop first");
-        }
-        Shop shopRef = shopService.getReferenceById(companyId);
-        Product saved = repository.save(request.toEntity(shopRef));
+        Person personReference = personService.getReferenceById(personId);
+        Product saved = repository.save(request.toEntity(personReference));
         productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
         return ProductResponse.fromEntityToDto(saved);
     }
@@ -64,11 +59,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> listByShop(Long shopId, int page, int size) {
-        if (!shopService.existsById(shopId)) {
-            throw new ShopNotFoundException("Shop not found: " + shopId);
+    public List<ProductResponse> listByPersonId(Long personId, int page, int size) {
+        if (!personService.existsById(personId)) {
+            throw new UserNotFoundException("Person not found: " + personId);
         }
-        return repository.findByShopId(shopId, PageRequest.of(page, size))
+        return repository.findByPersonId(personId, PageRequest.of(page, size))
                 .map(ProductResponse::fromEntityToDto)
                 .getContent();
     }
@@ -77,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
         Product existing = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
-        BeanUtils.copyProperties(request, existing, "id", "version", "shop");
+        BeanUtils.copyProperties(request, existing, "id", "version");
         Product saved = repository.save(existing);
     productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
         return ProductResponse.fromEntityToDto(saved);
@@ -97,13 +92,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> searchByShop(Long shopId, String query, int page, int size) {
-        
-        if (!shopService.existsById(shopId)) {
-            throw new ShopNotFoundException("Shop not found: " + shopId);
+    public List<ProductResponse> searchByPerson(Long personId, String query, int page, int size) {
+
+        if (!personService.existsById(personId)) {
+            throw new UserNotFoundException("User not found: " + personId);
         }
 
-        return productSearchRepository.searchByShopAndText(shopId, query, PageRequest.of(page, size))
+        return productSearchRepository.searchByPersonAndText(personId, query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 

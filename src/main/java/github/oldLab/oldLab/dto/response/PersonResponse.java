@@ -30,9 +30,6 @@ public class PersonResponse {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("company_id")
-    private Long companyId;
-
     @JsonProperty("created_at")
     private Instant createdAt;
 
@@ -47,7 +44,6 @@ public class PersonResponse {
             .setLastName(person.getLastName())
             .setPhoneNumber(person.getPhoneNumber())
             .setEmail(person.getEmail())
-            .setCompanyId(person.getCompanyId())
             .setCreatedAt(person.getCreatedAt())
             .setUpdatedAt(person.getUpdatedAt());
     }

@@ -46,11 +46,7 @@ public class Photo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", unique = true)
     private Person person;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id", unique = true)
-    private Shop shop;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", unique = false)
     private Product product;

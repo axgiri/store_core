@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import github.oldLab.oldLab.dto.events.ReviewMessage;
 import github.oldLab.oldLab.exception.DuplicateReviewException;
-import github.oldLab.oldLab.exception.ShopNotFoundException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,6 @@ public class ReviewServiceImpl implements ReviewService {
     private String reviewPartitionDelete;
 
     private final PersonServiceImpl personService;
-    private final ShopServiceImpl shopService;
     private final KafkaTemplate<String, ReviewMessage> kafkaTemplate;
     private final NotificationReportsServiceImpl notificationReportsService;
 
@@ -66,41 +64,6 @@ public class ReviewServiceImpl implements ReviewService {
             message.setPayload(reviewRequest);
 
         kafkaTemplate.send(reviewTopic, reviewPartitionCreate, message);
-    }
-
-    @Override
-    public void createReviewToShop(ReviewRequest reviewRequest) {
-        log.info("creating review to shop: shopId={}, authorId={}", reviewRequest.getShopId(), reviewRequest.getAuthorId());
-
-        if (!personService.existsById(reviewRequest.getAuthorId())) {
-            throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " not found");
-        }
-
-        if (!shopService.existsById(reviewRequest.getShopId())){
-            throw new ShopNotFoundException("shopId " + reviewRequest.getShopId() + " not found");
-        }
-
-        ResponseEntity<List<ReviewResponse>> response = notificationReportsService.getReviewsOfShopsByAuthorId(reviewRequest.getAuthorId());
-        boolean hasDuplicate = Optional.ofNullable(response.getBody())
-            .orElseThrow(() -> new DuplicateReviewException("author has already reviewed this shop")).stream()
-                .anyMatch(r ->
-                                (reviewRequest.getShopId() != null && r.getShopId() != null &&
-                                        r.getShopId().equals(reviewRequest.getShopId())));
-            if (hasDuplicate) {
-                throw new DuplicateReviewException("author has already reviewed this shop");
-            }
-        
-
-        ReviewMessage message = new ReviewMessage();
-            message.setTimestamp(Instant.now());
-            message.setPayload(reviewRequest);
-
-        kafkaTemplate.send(reviewTopic, reviewPartitionCreate, message);
-    }
-
-    @Override
-    public List<ReviewResponse> getReviewsByShopId(Long id, int page, int size) {
-        return notificationReportsService.getReviewsByShopId(id, page, size).getBody();
     }
 
     @Override

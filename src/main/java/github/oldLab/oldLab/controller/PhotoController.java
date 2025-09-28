@@ -67,39 +67,6 @@ public class PhotoController {
         }
     }
 
-    @PutMapping(path = "/shops/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> uploadShopPhoto(@PathVariable Long id,
-                                @RequestPart("file") MultipartFile file,
-                                HttpServletRequest httpRequest) throws Exception {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("upload shop photo id: {}", id);
-            service.uploadForShop(id, file);
-            return ResponseEntity.ok().build();
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
-    @GetMapping("/shops/{id}")
-    public ResponseEntity<byte[]> getShopPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            byte[] bytes = service.loadForShop(id);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType("image/webp"))
-                    .cacheControl(CacheControl.noCache())
-                    .body(bytes);
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
     @GetMapping("/products/{id}")
     public ResponseEntity<List<ProductPhotoResponse>> getProductPhoto(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
@@ -116,7 +83,7 @@ public class PhotoController {
     }
 
     @PostMapping(path = "/products/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> uploadProductPhotos(@PathVariable Long productId,
                                    @RequestPart("file") MultipartFile file,
                                    HttpServletRequest httpRequest) throws Exception {
@@ -134,7 +101,7 @@ public class PhotoController {
 
 
     @DeleteMapping("/products/{productId}/{objectKey}")
-    @PreAuthorize("@accessControlService.isCompanyWorkerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long productId,
                                    @PathVariable String objectKey,
                                    HttpServletRequest httpRequest) throws Exception {
@@ -159,22 +126,6 @@ public class PhotoController {
         if (bucket.tryConsume(1)) {
             log.debug("delete person photo id: {}", id);
             service.deleteForPerson(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
-    @DeleteMapping("/shops/{id}")
-    @PreAuthorize("@accessControlService.isCompanyWorker(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> deleteShopPhoto(@PathVariable Long id,
-                            HttpServletRequest httpRequest) throws Exception {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("delete shop photo id: {}", id);
-            service.deleteForShop(id);
             return ResponseEntity.noContent().build();
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);

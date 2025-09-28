@@ -15,12 +15,6 @@ public interface PhotoService {
 
     void deleteForPerson(Long personId);
 
-    void uploadForShop(Long shopId, MultipartFile file) throws IOException;
-
-    byte[] loadForShop(Long shopId);
-
-    void deleteForShop(Long shopId);
-
     void uploadForProduct(Long productId, MultipartFile file) throws IOException;
 
     List<ProductPhotoResponse> loadForProduct(Long productId);

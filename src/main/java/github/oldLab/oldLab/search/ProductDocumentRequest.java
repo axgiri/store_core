@@ -12,7 +12,7 @@ public final class ProductDocumentRequest {
         productDocument.setDescription(product.getDescription());
         productDocument.setPrice(product.getPrice());
         productDocument.setCategory(product.getCategory());
-        productDocument.setShopId(product.getShop() != null ? product.getShop().getId() : null);
+        productDocument.setPersonId(product.getPerson() != null ? product.getPerson().getId() : null);
         productDocument.setTags(product.getTags());
         productDocument.setHiddenLabels(product.getHiddenLabels());
         productDocument.setAttributes(product.getAttributes());

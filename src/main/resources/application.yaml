@@ -51,7 +51,6 @@
 # 	bucket:
 # 		default: default-bucket
 # 		persons: persons-bucket
-# 		shops: shops-bucket
 # 		products: products-bucket
 
 # # Flyway

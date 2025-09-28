@@ -25,9 +25,6 @@ public class MinioConfig {
     @Value("${minio.bucket.persons}")
     private String bucketPersons;
 
-    @Value("${minio.bucket.shops}")
-    private String bucketShops;
-
     @Value("${minio.bucket.products}")
     private String bucketProducts;
 
@@ -53,7 +50,6 @@ public class MinioConfig {
         return args -> {
             ensureBucketExists(s3, bucketDefault);
             ensureBucketExists(s3, bucketPersons);
-            ensureBucketExists(s3, bucketShops);
             ensureBucketExists(s3, bucketProducts);
         };
     }

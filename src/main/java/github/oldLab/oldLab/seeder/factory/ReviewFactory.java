@@ -8,7 +8,6 @@ import com.github.javafaker.Faker;
 
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Review;
-import github.oldLab.oldLab.entity.Shop;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -17,11 +16,10 @@ public class ReviewFactory implements DataFactory<Review> {
 
     private final Faker faker;
 
-    public Review create(Person author, Person targetPerson, Shop shop) {
+    public Review create(Person author, Person targetPerson) {
         return new Review()
                 .setAuthor(author)
                 .setPerson(targetPerson)
-                .setShop(shop)
                 .setRating((long) ThreadLocalRandom.current().nextInt(1, 6))
                 .setComment(faker.lorem().sentence());
     }
