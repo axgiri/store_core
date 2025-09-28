@@ -59,8 +59,8 @@ public class SecurityConfiguration {
                         "/api/v1/products/list",
                         "/api/v1/products/search/**",
                         "/api/v1/products/*",
-            "/api/v1/products/persons/*",
-            "/api/v1/products/persons/*/search")
+                        "/api/v1/products/persons/*",
+                        "/api/v1/products/persons/*/search")
                     .permitAll()
 
                 // Reviews

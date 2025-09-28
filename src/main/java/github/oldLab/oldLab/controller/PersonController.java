@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.RefreshRequest;
+import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
@@ -118,7 +119,7 @@ public class PersonController {
     }
 
     @GetMapping("/findByPhoneNumber/{phoneNumber}")
-    @PreAuthorize("@accessControlService.isSelfByPhoneNumber(authentication, #phoneNumber) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> findByPhoneNumber(@PathVariable String phoneNumber, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -198,11 +199,11 @@ public class PersonController {
 
     @PostMapping("/requestPasswordReset")
     public ResponseEntity<Void> requestPasswordReset(
-            @Valid @RequestBody String contact, HttpServletRequest httpRequest) {
+            @Valid @RequestBody ContactRequest contact, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("waiting request for reset password from contact: {}", contact);
+            log.debug("waiting request for reset password from email: {}", contact);
             service.requestPasswordReset(contact);
             return ResponseEntity.accepted().build();
         } else {

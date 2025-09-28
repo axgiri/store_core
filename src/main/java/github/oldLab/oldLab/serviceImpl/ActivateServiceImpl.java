@@ -72,6 +72,10 @@ public class ActivateServiceImpl implements ActivateService {
         messageSender.sendOtp(MessageChannelEnum.EMAIL, email, getOtp(email));
     }
 
+    public void sendOtpReset(String email) {
+        messageSender.sendOtp(MessageChannelEnum.EMAIL, email, getOtpReset(email));
+    }
+
     public void save(String email, Optional<Boolean> isLogin) {
         log.debug("saving to activate with email: {}, loginAttempted={}", email, isLogin);
         int otp = setOtp();
@@ -80,7 +84,7 @@ public class ActivateServiceImpl implements ActivateService {
             .email(email)
             .otp(otp)
             .isActive(false)
-                .isLogin(isLogin.orElse(false))
+            .isLogin(isLogin.orElse(false))
             .createdAt(createdAt)
             .build();
         repository.save(activation);
@@ -101,7 +105,12 @@ public class ActivateServiceImpl implements ActivateService {
             .getOtp();
     }
 
-
+    public int getOtpReset(String email) {
+        log.debug("getting otp for reset");
+        return repository.findTopByEmailOrderByCreatedAtDesc(email)
+            .orElseThrow(() -> new UserNotFoundException("no OTP found for email: " + email))
+            .getOtpReset();
+    }
 
     public void resendOtp(String email) {
         log.debug("resending OTP to email: {}", email);

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.InvalidTokenException;
-import github.oldLab.oldLab.exception.NotImplementedException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.PhotoRepository;
@@ -166,37 +166,16 @@ public class PersonServiceImpl implements PersonService {
         }, taskExecutor);
     }
 
-    public void sendOtp(String email){
-        throw new NotImplementedException("sendOtp method by email is not implemented yet");
-    }
-
     @Override
-    public void requestPasswordReset(String contact) {
-        boolean isEmail = contact.contains("@") && contact.contains("."); // Check is Email
+    public void requestPasswordReset(ContactRequest contactRequest) {
 
-        String normalizedContact = isEmail ? contact : normalizePhoneNumber(contact);
-
-        Person person = isEmail
-                ? repository.findByEmail(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contact))
-                : repository.findByPhoneNumber(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with phone: " + contact));
+        Person person = repository.findByEmail(contactRequest.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contactRequest.getEmail()));
 
         int otp = activateService.setOtp();
-
-        activateService.saveOtpReset(person.getPhoneNumber(), otp, false);
-
-        if (isEmail) {
-            sendOtp(person.getEmail());
-        } else {
-            activateService.sendOtp(person.getPhoneNumber());
-        }
-
-        log.info("OTP sent to {}: {}", contact, otp);
-    }
-    private String normalizePhoneNumber(String phoneNumber) {
-        // Remove all non-numeric characters and add '+' at the beginning
-        return "+" + phoneNumber.replaceAll("[^0-9]", "");
+        activateService.saveOtpReset(person.getEmail(), otp, false);
+        activateService.sendOtpReset(person.getEmail());
+        log.info("OTP sent to {}: {}", contactRequest.getEmail(), otp);
     }
 
     @Override
