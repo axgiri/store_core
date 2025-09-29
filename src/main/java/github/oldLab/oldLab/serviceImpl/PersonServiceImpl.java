@@ -2,9 +2,12 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
@@ -20,7 +23,6 @@ import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
-import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.InvalidTokenException;
 import github.oldLab.oldLab.exception.NotImplementedException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
@@ -272,5 +274,42 @@ public class PersonServiceImpl implements PersonService {
             throw new UserNotFoundException("user not found with id: " + id);
         }
         return repository.getReferenceById(id);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Person upsertFromOAuth(String email, String firstName, String lastName) {
+        final String safeFirst = firstName != null ? firstName : "";
+        final String safeLast = lastName != null ? lastName : "";
+
+        Person person = repository.findByEmail(email).orElse(null);
+        if (person == null) {
+            Person newPerson = new Person();
+            newPerson.setEmail(email);
+            newPerson.setFirstName(safeFirst);
+            newPerson.setLastName(safeLast);
+            newPerson.setIsActive(true);
+            newPerson.setRoleEnum(RoleEnum.USER);
+            newPerson.setCreatedAt(Instant.now());
+            newPerson.setUpdatedAt(Instant.now());
+            newPerson.setPassword(UUID.randomUUID().toString());
+            return repository.save(newPerson);
+        } else {
+            switch (firstName) {
+                case null -> {}
+                case String s when s.isBlank() -> {}
+                default -> person.setFirstName(firstName);
+            }
+
+            switch (lastName) {
+                case null -> {} //killer feature of jre 21 xd. no NPE here
+                case String s when s.isBlank() -> {}
+                default -> person.setLastName(lastName);
+            }
+
+            person.setUpdatedAt(Instant.now());
+            
+            return repository.save(person);
+        }
     }
 }

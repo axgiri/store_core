@@ -1,7 +1,7 @@
 package github.oldLab.oldLab.dto.handler;
 
 import github.oldLab.oldLab.entity.Person;
-import github.oldLab.oldLab.repository.PersonRepository;
+import github.oldLab.oldLab.service.PersonService;
 import github.oldLab.oldLab.service.RefreshTokenService;
 import github.oldLab.oldLab.serviceImpl.TokenServiceImpl;
 import io.jsonwebtoken.io.IOException;
@@ -23,7 +23,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final TokenServiceImpl jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
-    private final PersonRepository persons;
+    private final PersonService personService;
 
     @Value("${frontend.redirect.url}")
     private String frontendRedirectUrl;
@@ -42,15 +42,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String firstName = (String) attributes.get("given_name");
         String lastName = (String) attributes.get("family_name");
 
-        Person person = persons.findByEmail(email)
-                .orElseGet(() -> {
-                    Person p = new Person();
-                    p.setEmail(email);
-                    p.setFirstName(firstName);
-                    p.setLastName(lastName);
-                    p.setIsActive(true);
-                    return persons.save(p);
-                });
+        Person person = personService.upsertFromOAuth(email, firstName, lastName);
 
         String jwt = jwtTokenProvider.generateToken(person).join();
         String refreshToken = refreshTokenService.issue(person);
