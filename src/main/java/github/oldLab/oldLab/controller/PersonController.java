@@ -1,9 +1,12 @@
 package github.oldLab.oldLab.controller;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
+import github.oldLab.oldLab.entity.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +39,21 @@ public class PersonController {
 
     private final PersonServiceImpl service;
     private final RateLimiterServiceImpl rateLimiterService;
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+        }
+        Person person = (Person) authentication.getPrincipal();
+        return ResponseEntity.ok(Map.of(
+                "id", person.getId(),
+                "email", person.getEmail(),
+                "firstName", person.getFirstName(),
+                "lastName", person.getLastName(),
+                "role", person.getRoleEnum().name()
+        ));
+    }
 
     @PostMapping("/async/signup")
     public ResponseEntity<Void> createAsync(@Valid @RequestBody PersonRequest personRequest, HttpServletRequest httpRequest) {

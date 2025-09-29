@@ -1,5 +1,7 @@
 package github.oldLab.oldLab.configuration;
 
+import github.oldLab.oldLab.dto.handler.OAuth2SuccessHandler;
+import github.oldLab.oldLab.serviceImpl.OAuth2ServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,6 +26,8 @@ public class SecurityConfiguration {
 
     private final AsyncJwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final OAuth2SuccessHandler oAuthSuccessHandler;
+    private final OAuth2ServiceImpl oAuth2Service;
 
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -78,6 +82,10 @@ public class SecurityConfiguration {
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider)
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                .successHandler(oAuthSuccessHandler)
+            )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

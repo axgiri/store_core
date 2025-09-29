@@ -32,4 +32,7 @@ public interface PersonService {
 
     public void resetPassword(ResetPasswordRequest request);
     // End of Section
+
+    // Centralized OAuth upsert to avoid duplication
+    Person upsertFromOAuth(String email, String firstName, String lastName);
 }
