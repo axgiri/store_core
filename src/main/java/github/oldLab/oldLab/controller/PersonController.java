@@ -1,6 +1,5 @@
 package github.oldLab.oldLab.controller;
 
-
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
 import org.springframework.http.HttpStatus;
