@@ -1,7 +1,5 @@
 package github.oldLab.oldLab.controller;
 
-import java.util.List;
-import java.util.Map;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
