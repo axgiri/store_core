@@ -13,7 +13,6 @@ import github.oldLab.oldLab.dto.response.ProductPhotoResponse;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
 import github.oldLab.oldLab.entity.Product;
-import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.exception.PhotoNotFoundException;
 import github.oldLab.oldLab.exception.ProductNotFoundException;
 import github.oldLab.oldLab.repository.PhotoRepository;
@@ -28,7 +27,6 @@ public class PhotoServiceImpl implements PhotoService {
 
     private final PhotoRepository repository;
     private final PersonServiceImpl personService;
-    private final ShopServiceImpl shopService;
     private final ProductServiceImpl productService;
     private final PhotoStorage storage;
     private final ImageProcessingService imageProcessor;
@@ -38,9 +36,6 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Value("${minio.bucket.persons}")
     private String bucketPersons;
-
-    @Value("${minio.bucket.shops}")
-    private String bucketShops;
 
     @Value("${minio.bucket.products}")
     private String bucketProducts;
@@ -75,38 +70,6 @@ public class PhotoServiceImpl implements PhotoService {
     @Transactional
     public void deleteForPerson(Long personId) {
         repository.findByPersonId(personId).ifPresent(this::removePhoto);
-    }
-
-    @Transactional
-    public void uploadForShop(Long shopId, MultipartFile file) throws IOException {
-        Shop shop = shopService.getReferenceByIdIfExists(shopId);
-
-        repository.findByShopId(shopId).ifPresent(this::removePhoto);
-
-        byte[] processedImage = imageProcessor.processImage(file);
-
-        String key = storage.save(processedImage, "image/webp", bucketShops);
-
-        Photo photo = Photo.builder()
-                        .objectKey(key)
-                        .contentType("image/webp") 
-                        .size((long) processedImage.length)
-                        .shop(shop)
-                        .bucket(bucketShops)
-                        .createdAt(Instant.now())
-                        .build();
-        repository.save(photo);
-    }
-
-    public byte[] loadForShop(Long shopId) {
-        Photo ph = repository.findByShopId(shopId)
-                .orElseThrow(() -> new PhotoNotFoundException("photo not set"));
-        return storage.load(ph.getObjectKey(), bucketShops);
-    }
-
-    @Transactional
-    public void deleteForShop(Long shopId) {
-        repository.findByShopId(shopId).ifPresent(this::removePhoto);
     }
 
     @Transactional

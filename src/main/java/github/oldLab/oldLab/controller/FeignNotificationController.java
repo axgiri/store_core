@@ -25,14 +25,6 @@ public interface FeignNotificationController {
                                         @RequestParam int page,
                                         @RequestParam int size);
 
-    @GetMapping("/reviews/shop/{shopId}")
-    ResponseEntity<List<ReviewResponse>> getReviewsByShopId(@PathVariable Long shopId,
-                                                            @RequestParam("page") int page,
-                                                            @RequestParam("size") int size);
-
-    @GetMapping("/reviews/shops/author/{authorId}")
-    ResponseEntity<List<ReviewResponse>> getReviewsOfShopsByAuthorId(@PathVariable Long authorId);
-
     @GetMapping("/reviews/persons/author/{authorId}")
     ResponseEntity<List<ReviewResponse>> getReviewsOfPersonsByAuthorId(@PathVariable Long authorId);
 

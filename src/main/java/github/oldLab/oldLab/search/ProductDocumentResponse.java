@@ -12,7 +12,7 @@ public final class ProductDocumentResponse {
                 .setDescription(productDocument.getDescription())
                 .setPrice(productDocument.getPrice())
                 .setCategory(productDocument.getCategory())
-                .setShopId(productDocument.getShopId())
+                .setPersonId(productDocument.getPersonId())
                 .setTags(productDocument.getTags())
                 .setHiddenLabels(productDocument.getHiddenLabels())
                 .setAttributes(productDocument.getAttributes());

@@ -39,39 +39,6 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("/shop")
-    public ResponseEntity<Void> createReviewToShop(@RequestBody ReviewRequest reviewRequest,
-                                                   HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("create review to shop: {}", reviewRequest);
-            reviewService.createReviewToShop(reviewRequest);
-            return ResponseEntity.ok().build();
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
-    @GetMapping("/shop/{shopId}")
-    public ResponseEntity<List<ReviewResponse>> getReviewsByShopId(
-            @PathVariable Long shopId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("get reviews by shopId: {} page: {}, size: {}", shopId, page, size);
-            List<ReviewResponse> reviews = reviewService.getReviewsByShopId(shopId, page, size);
-            return ResponseEntity.ok(reviews);
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
     @GetMapping("/person/{personId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsByPersonId(
             @PathVariable Long personId,

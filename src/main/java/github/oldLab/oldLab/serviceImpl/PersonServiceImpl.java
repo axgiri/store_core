@@ -1,14 +1,12 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,13 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.InvalidTokenException;
-import github.oldLab.oldLab.exception.NotImplementedException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.repository.PhotoRepository;
@@ -168,52 +166,16 @@ public class PersonServiceImpl implements PersonService {
         }, taskExecutor);
     }
 
-    public List<PersonResponse> getColleaguesAsync(String token, int page, int size) {
-        log.info("getting colleagues for token: {}", token);
-        if (token == null || token.isEmpty()) {
-            throw new InvalidTokenException("token is empty");
-        }
-
-        final String actualToken = token.substring(7);
-        Person person = repository.findByEmail(tokenService.extractUsername(actualToken))
-                .orElseThrow(() -> new UserNotFoundException("invalid token: " + actualToken));
-
-        return repository.findByCompanyId(person.getCompanyId(), PageRequest.of(page, size)).getContent().stream()
-                .map(PersonResponse::fromEntityToDto)
-                .toList();
-    }
-
-    public void sendOtp(String email){
-        throw new NotImplementedException("sendOtp method by email is not implemented yet");
-    }
-
     @Override
-    public void requestPasswordReset(String contact) {
-        boolean isEmail = contact.contains("@") && contact.contains("."); // Check is Email
+    public void requestPasswordReset(ContactRequest contactRequest) {
 
-        String normalizedContact = isEmail ? contact : normalizePhoneNumber(contact);
-
-        Person person = isEmail
-                ? repository.findByEmail(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contact))
-                : repository.findByPhoneNumber(normalizedContact)
-                .orElseThrow(() -> new UserNotFoundException("User not found with phone: " + contact));
+        Person person = repository.findByEmail(contactRequest.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + contactRequest.getEmail()));
 
         int otp = activateService.setOtp();
-
-        activateService.saveOtpReset(person.getPhoneNumber(), otp, false);
-
-        if (isEmail) {
-            sendOtp(person.getEmail());
-        } else {
-            activateService.sendOtp(person.getPhoneNumber());
-        }
-
-        log.info("OTP sent to {}: {}", contact, otp);
-    }
-    private String normalizePhoneNumber(String phoneNumber) {
-        // Remove all non-numeric characters and add '+' at the beginning
-        return "+" + phoneNumber.replaceAll("[^0-9]", "");
+        activateService.saveOtpReset(person.getEmail(), otp, false);
+        activateService.sendOtpReset(person.getEmail());
+        log.info("OTP sent to {}: {}", contactRequest.getEmail(), otp);
     }
 
     @Override
@@ -240,21 +202,6 @@ public class PersonServiceImpl implements PersonService {
         log.info("getting id for user with email: {}", email);
         return repository.findIdByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("user not found with email: " + email));
-    }
-
-    public Long getCompanyIdByPersonId(Long personId) {
-        log.info("getting company id for person with id: {}", personId);
-        return repository.findCompanyIdById(personId)
-                .orElseThrow(() -> new UserNotFoundException("company not found for person with id: " + personId));
-    }
-
-    public void setCompanyIdForExistingPerson(Long personId, Long companyId) {
-        log.info("setting company id for person with id: {}", personId);
-        Person person = repository.findById(personId)
-                .orElseThrow(() -> new UserNotFoundException("user not found with id: " + personId));
-        person.setCompanyId(companyId);
-        person.setUpdatedAt(Instant.now());
-        repository.save(person);
     }
 
     public boolean existsById(Long id) {

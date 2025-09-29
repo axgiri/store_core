@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMTMzOTk3MjY1NjgiLCJpYXQiOjE3NTc5NzY1NjAsImV4cCI6MTc1Nzk3ODA2MH0.CiSFLl0X17xreCXOqkBymUDTt0Wb5g6gHr1emeLezHQ",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Imhxc3plNTlvYjYwakBvbGRsYWIuY2lzIiwiaWF0IjoxNzU5MDk1MzE1LCJleHAiOjE3NTkwOTY4MTV9.MpyGztraQNrF3kjWRY6vrlKjCdCmHVnnvQmqXr976Lk",
 									"type": "string"
 								}
 							]
@@ -26,7 +26,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findById/102",
+							"raw": "{{OldLab}}/api/v1/persons/findById/133",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -35,21 +35,21 @@
 								"v1",
 								"persons",
 								"findById",
-								"102"
+								"133"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Find by Phone Number",
+					"name": "Find by Phone Number (admin/moder only)",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODA2NzAsImV4cCI6MTc1NzM4MjE3MH0.nPyn_Xld3JBegKVBeHuTCTZnpVv75mwiQhc7iPcp2ho",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6IjFwcnFwZ2JpbXUwd3VAb2xkbGFiLmNpcyIsImlhdCI6MTc1OTA5NTM5OCwiZXhwIjoxNzU5MDk2ODk4fQ.H9gM6_0wDaDyCj9aT7oBi-2fTFD11Giby0HxLllx0Iw",
 									"type": "string"
 								}
 							]
@@ -57,7 +57,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+20405359620",
+							"raw": "{{OldLab}}/api/v1/persons/findByPhoneNumber/+59523353985",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -66,7 +66,7 @@
 								"v1",
 								"persons",
 								"findByPhoneNumber",
-								"+20405359620"
+								"+59523353985"
 							]
 						}
 					},
@@ -80,7 +80,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjA0MDUzNTk2MjAiLCJpYXQiOjE3NTczODM5NzcsImV4cCI6MTc1NzM4NTQ3N30.Mvx55IkjTtMVVEv_Z0imy9xGWf_ATc9HKEKddntH6J8",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6IjFwcnFwZ2JpbXUwd3VAb2xkbGFiLmNpcyIsImlhdCI6MTc1OTA5NTM5OCwiZXhwIjoxNzU5MDk2ODk4fQ.H9gM6_0wDaDyCj9aT7oBi-2fTFD11Giby0HxLllx0Iw",
 									"type": "string"
 								}
 							]
@@ -89,7 +89,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"Huesos\",\n    \"last_name\": \"Pidorskii\",\n    \"phone_number\": \"+20405359620\",\n    \"password\": \"+20405359620\"\n}",
+							"raw": "{\n    \"first_name\": \"Shakia\",\n    \"last_name\": \"Lang\",\n    \"phone_number\":\"+77353985\",\n    \"email\": \"1prqpgbimu0wu@oldlab.cis\",\n    \"password\": \"HTMLisAProgrammingLanguage\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -97,7 +97,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/update/3",
+							"raw": "{{OldLab}}/api/v1/persons/update/135",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -106,7 +106,7 @@
 								"v1",
 								"persons",
 								"update",
-								"3"
+								"135"
 							]
 						}
 					},
@@ -120,7 +120,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTczODYyNjUsImV4cCI6MTc1NzM4Nzc2NX0.yCxZB__bYmmnFAeocHO8jEYUQgELd2haRVoOngFF-E0",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6IjFwcnFwZ2JpbXUwd3VAb2xkbGFiLmNpcyIsImlhdCI6MTc1OTA5NTk3MiwiZXhwIjoxNzU5MDk3NDcyfQ.hChtfHJZl0lMH6JbHiY14ka1_x5KnJn93b6jUwXUFdc",
 									"type": "string"
 								}
 							]
@@ -128,7 +128,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/delete/21",
+							"raw": "{{OldLab}}/api/v1/persons/delete/136",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -137,37 +137,7 @@
 								"v1",
 								"persons",
 								"delete",
-								"21"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get my colleagues",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrNDM0NzU0MTk4MTEiLCJpYXQiOjE3NTc0MzAzMTksImV4cCI6MTc1NzQzMTgxOX0.OJ433k5lAO1xyLlnZTRzG3VUm9cCne9I6dcASloiQgo",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/persons/getMyColleagues",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"persons",
-								"getMyColleagues"
+								"136"
 							]
 						}
 					},
@@ -225,7 +195,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"contact\":\"+77780071233\"\n}",
+							"raw": "{\n    \"email\":\"gjv886seuxf6@oldlab.cis\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,7 +224,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"contact\": \"+77780071233\",\n    \"is_email\": false,\n    \"new_password\": \"activate\",\n    \"otp_reset\": \"4562\"\n}",
+							"raw": "{\n    \"contact\": \"gjv886seuxf6@oldlab.cis\",\n    \"is_email\": true,\n    \"new_password\": \"activate\",\n    \"otp_reset\": \"5608\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -288,7 +258,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\":\"axgiri\",\n    \"last_name\":\"axgiri\",\n    \"phone_number\":\"+7778007123\",\n    \"password\":\"activate\",\n    \"role\":\"ADMIN\"\n}",
+							"raw": "{\n    \"first_name\":\"axgiri\",\n    \"last_name\":\"axgiri\",\n    \"phone_number\":\"+7778007123\",\n    \"email\":\"axgiri@axgiri.axgiri\",\n    \"password\":\"activate\",\n    \"role\":\"ADMIN\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -312,7 +282,7 @@
 					"response": []
 				},
 				{
-					"name": "Login by phone and password",
+					"name": "Login by email and password",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {}
 					},
@@ -321,7 +291,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+22080021299\",\n    \"password\": \"+22080021299\"\n}",
+							"raw": "{\n    \"email\": \"gjv886seuxf6@oldlab.cis\",\n    \"password\": \"activate\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -356,7 +326,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refresh_token\":\"W0ikv7jhHL6GDTPOUWmkfK_nHqtOqAfDxthgOjIIXgLgqPl8rdeTfQlnOMNKMXYyV5o9wztBdWI9W2wkW7wFyQ\"\n}",
+							"raw": "{\n    \"refresh_token\":\"WLPqyDQcAt5KvxXNnCHtiILjs73OamIJa078Qga4hiCh0WuIv_NvwaqC8qbZ-v9Q4Ifvbtr-QOfDgNwn9K9bvg\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -386,7 +356,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc3Nzc3NzczIiwiaWF0IjoxNzU2NDk1Njg4LCJleHAiOjE3NTY0OTcxODh9.De31Mu4vzby2uWZvZ0IUY8I0RT1tt9KVUc16P6LwO0M",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJheGdpcmlAYXhnaXJpLmF4Z2lyaSIsImlhdCI6MTc1OTA2MTQxMiwiZXhwIjoxNzU5MDYyOTEyfQ.2H60gd4FabU7ZxeFeFa3HmV9y_BtIrTLAegVTmHYfhI",
 									"type": "string"
 								}
 							]
@@ -395,7 +365,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refresh_token\":\"VbAt02jCgSV8-DDQu-jXLzOldU-p-Tx9PMC3EBLXGH8i7cUA27lqBQj13GQIHmQGV5onvom5rtX2nDNaJoIyNw\"\n}",
+							"raw": "{\n    \"refresh_token\":\"VgfoYk2mkEvYPaxJFCkv6-oX1ea_LCRDKY7L9w3J3e3d6i_UxsG-8mUkwyFSTKY3h8JpSkk6uxrmHIpVOnJwbg\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -503,7 +473,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+7778007123\",\n    \"otp\": \"8149\"\n}",
+							"raw": "{\n    \"email\": \"axgiri@axgiri.axgiri\",\n    \"otp\": \"8889\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -531,7 +501,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/send/activate/+03715465982",
+							"raw": "{{OldLab}}/api/v1/activate/send/activate/axgiri@axgiri.axgiri",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -541,7 +511,7 @@
 								"activate",
 								"send",
 								"activate",
-								"+03715465982"
+								"axgiri@axgiri.axgiri"
 							]
 						}
 					},
@@ -553,7 +523,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/resend/activate/+35744837749",
+							"raw": "{{OldLab}}/api/v1/activate/resend/activate/axgiri@axgiri.axgiri",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -563,7 +533,7 @@
 								"activate",
 								"resend",
 								"activate",
-								"+35744837749"
+								"axgiri@axgiri.axgiri"
 							]
 						}
 					},
@@ -576,7 +546,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phone_number\": \"+35744837749\",\n    \"otp\": \"7701\"\n}",
+							"raw": "{\n    \"email\": \"axgiri@axgiri.axgiri\",\n    \"otp\": \"5373\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -604,7 +574,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/activate/send/login/+35744837749",
+							"raw": "{{OldLab}}/api/v1/activate/send/login/axgiri@axgiri.axgiri",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -614,7 +584,7 @@
 								"activate",
 								"send",
 								"login",
-								"+35744837749"
+								"axgiri@axgiri.axgiri"
 							]
 						}
 					},
@@ -633,7 +603,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMyIsImlhdCI6MTc1NzQ2NDI4OSwiZXhwIjoxNzU3NDY1Nzg5fQ.vF7gY5Mx0AeINJuLBcP2czRfjpbZbJLwNrKNB0V7kRM",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJPV05FUiJdLCJzdWIiOiIrMjIwODAwMjEyOTkiLCJpYXQiOjE3NTgwMzg5NDUsImV4cCI6MTc1ODA0MDQ0NX0.BNonz_GX35ZhAjRTlJ3yTWVJOfGG0OqJQoG9x_GoXBI",
 									"type": "string"
 								}
 							]
@@ -651,7 +621,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/124",
+							"raw": "{{OldLab}}/api/v1/photos/persons/3",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -660,7 +630,7 @@
 								"v1",
 								"photos",
 								"persons",
-								"124"
+								"3"
 							]
 						}
 					},
@@ -674,7 +644,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMyIsImlhdCI6MTc1Nzk3NTg1MCwiZXhwIjoxNzU3OTc3MzUwfQ.NLXHm5suUyWoD50OY3L3l1FkoaViN_r7A_I9ZWzhI2Q",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6ImFzZGdhc2dAc2Rmc2RmLmFmYSIsImlhdCI6MTc1ODkwMDExNCwiZXhwIjoxNzU4OTAxNjE0fQ.0FxyQkyD4IHPPkWXwoKInAeJGO5Ny1B_NDoN36NU2WQ",
 									"type": "string"
 								}
 							]
@@ -682,7 +652,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/persons/102",
+							"raw": "{{OldLab}}/api/v1/photos/persons/2",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -691,7 +661,7 @@
 								"v1",
 								"photos",
 								"persons",
-								"102"
+								"2"
 							]
 						}
 					},
@@ -712,79 +682,6 @@
 								"v1",
 								"photos",
 								"persons",
-								"{id}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Upload Shop Photo",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/path/to/your/shop_image.jpg"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/shops/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shop Photo",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/shops/1",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete shop's photo",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/shops/{id}",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"photos",
-								"shops",
 								"{id}"
 							]
 						}
@@ -820,7 +717,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrMTMzOTk3MjY1NjgiLCJpYXQiOjE3NTc5NzcyODksImV4cCI6MTc1Nzk3ODc4OX0.KnzGOQXS3rh3TA7VrsspWw-63pi00kcs5ccXBr-plts",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJheGdpcmlAYXhnaXJpLmF4Z2lyaSIsImlhdCI6MTc1ODYzMjE5OCwiZXhwIjoxNzU4NjMzNjk4fQ.uD0blq8gcIwaQ0oXFl6SbA4rW4gh8V33YmlIMr76UMk",
 									"type": "string"
 								}
 							]
@@ -838,7 +735,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{OldLab}}/api/v1/photos/products/10001",
+							"raw": "{{OldLab}}/api/v1/photos/products/101",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -847,7 +744,7 @@
 								"v1",
 								"photos",
 								"products",
-								"10001"
+								"101"
 							]
 						}
 					},
@@ -930,89 +827,7 @@
 					"response": []
 				},
 				{
-					"name": "Create Review to shop",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Iis3Nzc4MDA3MTIzMCIsImlhdCI6MTc1NjY1MzA4OCwiZXhwIjoxNzU2NjU0NTg4fQ.kvjiC5JTlNyx7m3s__CbNLs3R-Dxu4clsf1RAj32_y4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"author_id\": 2,\n    \"shop_id\": 2,\n    \"rating\": 5,\n    \"comment\": \"хуйня магаз\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/reviews/shop",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"shop"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Reviews by Shop ID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/shop/1?page=0&size=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"reviews",
-								"shop",
-								"1"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Reviews by Person ID",
+					"name": "Get Reviews by Person ID (who got rating)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1280,182 +1095,6 @@
 			]
 		},
 		{
-			"name": "Shop",
-			"item": [
-				{
-					"name": "Async Create Shop",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Best Shop\",\n    \"description\": \"The best shop in town\",\n    \"category\": [\"TABLETS\", \"SMARTPHONES\", \"LAPTOPS\"],\n    \"phone_number\":\"+7777777773\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/async/create",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shop",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/204",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"204"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Shops",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops?page=0&size=20",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Async Update Shop",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Updated Shop Name\",\n    \"description\": \"Updated description\",\n    \"category\": \"STORE\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/async/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"async",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Shop",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/shops/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Shops by Category",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{OldLab}}/api/v1/shops/category?category=LAPTOPS",
-							"host": [
-								"{{OldLab}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"shops",
-								"category"
-							],
-							"query": [
-								{
-									"key": "category",
-									"value": "LAPTOPS"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Products",
 			"item": [
 				{
@@ -1488,7 +1127,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMzAiLCJpYXQiOjE3NTc0NTE0NDcsImV4cCI6MTc1NzQ1Mjk0N30.U-fwsH57o6Xz4d8XEsadfdXsDJdwEoNSdFz5TP70M2U",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Imdqdjg4NnNldXhmNkBvbGRsYWIuY2lzIiwiaWF0IjoxNzU5MTAxMjQ1LCJleHAiOjE3NTkxMDI3NDV9.6tpbO1-LWTGENhM3N523cm38kG5Xd9z2TrfoP53rxT0",
 									"type": "string"
 								}
 							]
@@ -1531,7 +1170,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/301",
+							"raw": "{{OldLab}}/api/v1/products/1",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1539,7 +1178,7 @@
 								"api",
 								"v1",
 								"products",
-								"301"
+								"1"
 							]
 						}
 					},
@@ -1554,7 +1193,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/list?page=1&size=100",
+							"raw": "{{OldLab}}/api/v1/products/list?page=0&size=20",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1567,11 +1206,11 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "size",
-									"value": "100"
+									"value": "20"
 								}
 							]
 						}
@@ -1694,12 +1333,22 @@
 					"response": []
 				},
 				{
-					"name": "get products by shop id",
+					"name": "list products by person id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sInN1YiI6Imdqdjg4NnNldXhmNkBvbGRsYWIuY2lzIiwiaWF0IjoxNzU5MTAxMjQ1LCJleHAiOjE3NTkxMDI3NDV9.6tpbO1-LWTGENhM3N523cm38kG5Xd9z2TrfoP53rxT0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/shop/121",
+							"raw": "{{OldLab}}/api/v1/products/persons/121",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1707,7 +1356,7 @@
 								"api",
 								"v1",
 								"products",
-								"shop",
+								"persons",
 								"121"
 							]
 						}
@@ -1715,12 +1364,12 @@
 					"response": []
 				},
 				{
-					"name": "search by shop",
+					"name": "search by user's product",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{OldLab}}/api/v1/products/shop/121/search?query=iPhone&page=1&size=20",
+							"raw": "{{OldLab}}/api/v1/products/persons/4/search?q=iPhone&page=0&size=20",
 							"host": [
 								"{{OldLab}}"
 							],
@@ -1728,18 +1377,18 @@
 								"api",
 								"v1",
 								"products",
-								"shop",
-								"121",
+								"persons",
+								"4",
 								"search"
 							],
 							"query": [
 								{
-									"key": "query",
+									"key": "q",
 									"value": "iPhone"
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "size",
@@ -1763,7 +1412,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiIrNzc3ODAwNzEyMyIsImlhdCI6MTc1Nzk4MDA2MywiZXhwIjoxNzU3OTgxNTYzfQ.3oVSS177crTSDUhmkejQbVutXpdsXgL92RKzZ79Z3Lg",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJBRE1JTiJdLCJzdWIiOiJheGdpcmlAYXhnaXJpLmF4Z2lyaSIsImlhdCI6MTc1OTA5Mzg4MCwiZXhwIjoxNzU5MDk1MzgwfQ.w2_nOSTXbXpFbMn9EMacMu9_4TPyfo7velqWCza85w4",
 									"type": "string"
 								}
 							]

@@ -1,7 +1,5 @@
 package github.oldLab.oldLab.controller;
 
-import java.util.List;
-
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.RefreshRequest;
+import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
@@ -120,7 +119,7 @@ public class PersonController {
     }
 
     @GetMapping("/findByPhoneNumber/{phoneNumber}")
-    @PreAuthorize("@accessControlService.isSelfByPhoneNumber(authentication, #phoneNumber) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> findByPhoneNumber(@PathVariable String phoneNumber, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
@@ -176,26 +175,6 @@ public class PersonController {
         }
     }
 
-    @GetMapping("/getMyColleagues")
-    @PreAuthorize("@accessControlService.hasCompany(authentication)")
-    public ResponseEntity<List<PersonResponse>> getColleagues(
-            @RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            HttpServletRequest httpRequest) {
-        String ip = httpRequest.getRemoteAddr();
-        Bucket bucket = rateLimiterService.resolveBucket(ip);
-        if (bucket.tryConsume(1)) {
-            log.debug("getting colleagues for token: {}", token);
-            service.validateToken(token);
-            List<PersonResponse> colleagues = service.getColleaguesAsync(token, page, size);
-            return ResponseEntity.ok(colleagues);
-        } else {
-            log.warn("rate limit exceeded for IP: {}", ip);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-    }
-
     @PutMapping("/updatePassword")
     @PreAuthorize("@accessControlService.isSelfByEmail(authentication, #loginRequest.email)")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword, HttpServletRequest httpRequest) {
@@ -220,11 +199,11 @@ public class PersonController {
 
     @PostMapping("/requestPasswordReset")
     public ResponseEntity<Void> requestPasswordReset(
-            @Valid @RequestBody String contact, HttpServletRequest httpRequest) {
+            @Valid @RequestBody ContactRequest contact, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("waiting request for reset password from contact: {}", contact);
+            log.debug("waiting request for reset password from email: {}", contact);
             service.requestPasswordReset(contact);
             return ResponseEntity.accepted().build();
         } else {

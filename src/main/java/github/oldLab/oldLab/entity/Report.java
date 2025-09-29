@@ -73,7 +73,7 @@ public class Report {
     @NotNull(message = "Report type cannot be null")
     @Enumerated(EnumType.STRING)
     @Column(name = "report_type", nullable = false)
-    private ReportTypeEnum type; // USER, SHOP, REVIEW
+    private ReportTypeEnum type; // USER, REVIEW
 
     @NotNull(message = "Report target id cannot be null")
     @Column(name = "target_id", nullable = false)

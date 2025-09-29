@@ -32,8 +32,8 @@ public class ProductResponse {
     @JsonProperty("category")
     private CategoryEnum category;
 
-    @JsonProperty("shop_id")
-    private Long shopId;
+    @JsonProperty("person_id")
+    private Long personId;
 
     @JsonProperty("tags")
     private List<String> tags;
@@ -52,7 +52,7 @@ public class ProductResponse {
                 .setDescription(product.getDescription())
                 .setPrice(product.getPrice())
                 .setCategory(product.getCategory())
-                .setShopId(product.getShop() != null ? product.getShop().getId() : null)
+                .setPersonId(product.getPerson() != null ? product.getPerson().getId() : null)
                 .setTags(product.getTags())
                 .setHiddenLabels(product.getHiddenLabels())
                 .setAttributes(product.getAttributes());

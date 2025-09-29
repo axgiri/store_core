@@ -6,12 +6,12 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT,
   price NUMERIC(19,2) NOT NULL,
   category VARCHAR(100) NOT NULL,
-  shop_id BIGINT NOT NULL
+  person_id BIGINT NOT NULL
 );
 
 ALTER TABLE products
-  ADD CONSTRAINT fk_products_shop
-  FOREIGN KEY (shop_id) REFERENCES shops(id)
+  ADD CONSTRAINT fk_products_person
+  FOREIGN KEY (person_id) REFERENCES persons(id)
   ON DELETE CASCADE;
 
 -- Element collections for products

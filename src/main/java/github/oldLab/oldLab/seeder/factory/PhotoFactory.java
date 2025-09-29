@@ -16,7 +16,6 @@ import com.github.javafaker.Faker;
 
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Photo;
-import github.oldLab.oldLab.entity.Shop;
 import github.oldLab.oldLab.entity.Product;
 import lombok.RequiredArgsConstructor;
 import github.oldLab.oldLab.service.ImageProcessingService;
@@ -37,9 +36,6 @@ public class PhotoFactory implements DataFactory<Photo> {
     
     @Value("${minio.bucket.persons}")
     private String bucketPersons;
-
-    @Value("${minio.bucket.shops}")
-    private String bucketShops;
     
     @Value("${minio.bucket.products}")
     private String bucketProducts;
@@ -56,19 +52,6 @@ public class PhotoFactory implements DataFactory<Photo> {
                 .size((long) processed.length)
                 .person(person)
                 .bucket(bucketPersons)
-                .createdAt(java.time.Instant.now())
-                .build();
-    }
-
-    public Photo create(Shop shop) {
-        byte[] processed = generateAndProcess();
-        String key = photoStorage.save(processed, "image/webp", bucketShops);
-        return Photo.builder()
-                .objectKey(key)
-                .contentType("image/webp")
-                .size((long) processed.length)
-                .shop(shop)
-                .bucket(bucketShops)
                 .createdAt(java.time.Instant.now())
                 .build();
     }

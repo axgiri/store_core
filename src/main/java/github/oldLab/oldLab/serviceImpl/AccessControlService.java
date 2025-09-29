@@ -23,19 +23,11 @@ public class AccessControlService {
 	private final ReviewRepository reviewRepository;
 
 	public boolean isAdmin(Authentication authentication) {
-		if (hasRole(authentication, RoleEnum.ADMIN)) {
-			return true;
-		} else {
-			return false;
-		}
+		return hasRole(authentication, RoleEnum.ADMIN);
 	}
 
 	public boolean isModerator(Authentication authentication) {
-		if( hasRole(authentication, RoleEnum.MODERATOR)) {
-			return true;
-		} else {
-			return false;
-		}
+		return hasRole(authentication, RoleEnum.MODERATOR);
 	}
 
 	private boolean hasRole(Authentication authentication, RoleEnum role) {
@@ -70,40 +62,20 @@ public class AccessControlService {
 		return self || isAdmin(authentication) || isModerator(authentication);
 	}
 
-	public boolean isCompanyWorker(Authentication authentication, Long companyId) {
-		if (authentication == null || companyId == null) {
-			throw new IllegalArgumentException("authentication or companyId is null");
-		}
-
-		Person current = getPersonByEmail(authentication.getName());
-		Long myCompany = current.getCompanyId();
-		boolean match = myCompany != null && myCompany.equals(companyId);
-		return match || isAdmin(authentication) || isModerator(authentication);
-	}
-
-	public boolean isCompanyWorkerByProduct(Authentication authentication, Long productId) {
+	public boolean isProductOwnerByProduct(Authentication authentication, Long productId) {
 		if (authentication == null || productId == null) {
 			throw new IllegalArgumentException("authentication or productId is null");
 		}
 
 		Person current = getPersonByEmail(authentication.getName());
-		Long myCompany = current.getCompanyId();
-		
-		if (myCompany == null) {
+
+		if (current == null) {
 			return isAdmin(authentication) || isModerator(authentication);
 		}
 
-		Long shopId = getShopByProductId(productId);
-		boolean same = shopId != null && shopId.equals(myCompany);
+		Long personId = getPersonByProductId(productId);
+		boolean same = personId != null && personId.equals(current.getId());
 		return same || isAdmin(authentication) || isModerator(authentication);
-	}
-
-	public boolean hasCompany(Authentication authentication) {
-		if (authentication == null) {
-			throw new IllegalArgumentException("authentication is null");
-		}
-		Person current = getPersonByEmail(authentication.getName());
-		return current != null && current.getCompanyId() != null;
 	}
 
 	public boolean isReviewOwner(Authentication authentication, Long reviewId) {
@@ -136,12 +108,12 @@ public class AccessControlService {
 		return personRepository.findById(id).orElse(null);
 	}
 
-	@Cacheable(value = "shopId", key = "#productId", unless = "#result == null")
+	@Cacheable(value = "personId", key = "#productId", unless = "#result == null")
 	@Transactional(readOnly = true)
-	public Long getShopByProductId(Long productId) {
-		log.debug("loading product shop id (cached): {}", productId);
+	public Long getPersonByProductId(Long productId) {
+		log.debug("loading product person id (cached): {}", productId);
 		return productRepository.findById(productId).map(p -> {
-			return p.getShop() != null ? p.getShop().getId() : null;
+			return p.getPerson() != null ? p.getPerson().getId() : null;
 		}).orElse(null);
 	}
 }

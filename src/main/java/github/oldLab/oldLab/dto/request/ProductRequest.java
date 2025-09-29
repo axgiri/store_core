@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import github.oldLab.oldLab.Enum.CategoryEnum;
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
-import github.oldLab.oldLab.entity.Shop;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -33,13 +33,13 @@ public class ProductRequest {
     
     private Map<String, String> attributes = new HashMap<>();
 
-    public Product toEntity(Shop shop) {
+    public Product toEntity(Person person) {
         return new Product()
                 .setName(name)
                 .setDescription(description)
                 .setPrice(price)
                 .setCategory(category)
-                .setShop(shop)
+                .setPerson(person)
                 .setTags(tags)
                 .setHiddenLabels(hiddenLabels)
                 .setAttributes(attributes);

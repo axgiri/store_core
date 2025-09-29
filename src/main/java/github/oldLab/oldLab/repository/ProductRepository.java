@@ -8,14 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import github.oldLab.oldLab.Enum.CategoryEnum;
+import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
-import github.oldLab.oldLab.entity.Shop;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByShop(Shop shop);
-    Page<Product> findByShopId(Long shopId, Pageable pageable);
+    List<Product> findByPerson(Person person);
+    Page<Product> findByPersonId(Long personId, Pageable pageable);
     
     List<Product> findByCategory(CategoryEnum category);
 }

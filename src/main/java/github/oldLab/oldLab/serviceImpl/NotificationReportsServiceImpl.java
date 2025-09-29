@@ -33,18 +33,6 @@ public class NotificationReportsServiceImpl {
                 feignClient.getReviewById(reviewId));
     }
 
-    public ResponseEntity<List<ReviewResponse>> getReviewsOfShopsByAuthorId(Long authorId) {
-        return circuitBreaker.executeSupplier(() ->
-                feignClient.getReviewsOfShopsByAuthorId(authorId)
-        );
-    }
-
-    public ResponseEntity<List<ReviewResponse>> getReviewsByShopId(Long shopId, int page, int size) {
-        return circuitBreaker.executeSupplier(() ->
-                feignClient.getReviewsByShopId(shopId,  page, size)
-        );
-    }
-
     public ResponseEntity<List<ReviewResponse>> getReviewsByPersonId(Long personId, int page, int size) {
         return circuitBreaker.executeSupplier(() ->
                 feignClient.getReviewsByPersonId(personId,  page, size)

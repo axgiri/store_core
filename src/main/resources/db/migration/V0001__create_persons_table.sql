@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS persons (
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role_enum VARCHAR(50),
-  company_id BIGINT,
   is_active BOOLEAN NOT NULL,
   created_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ

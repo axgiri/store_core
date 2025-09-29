@@ -21,6 +21,7 @@ public interface ActivateService {
 
     public void sendOtp(String email);
 
+    public void sendOtpReset(String email);
 
     public void resendOtp(String email);
 

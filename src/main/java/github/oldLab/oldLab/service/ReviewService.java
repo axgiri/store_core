@@ -7,10 +7,6 @@ import github.oldLab.oldLab.dto.response.ReviewResponse;
 
 public interface ReviewService {
     void createReviewToPerson(ReviewRequest reviewRequest);
-    
-    void createReviewToShop(ReviewRequest reviewRequest);
-    
-    List<ReviewResponse> getReviewsByShopId(Long id, int page, int size);
 
     List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size);
 

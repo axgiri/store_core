@@ -25,9 +25,6 @@ public class ReviewResponse {
     @JsonProperty("person_id")
     private Long personId;
 
-    @JsonProperty("shop_id")
-    private Long shopId;
-
     @JsonProperty("comment")
     private String comment;
 
@@ -38,7 +35,6 @@ public class ReviewResponse {
             .setAuthorId(review.getAuthor() != null ? review.getAuthor().getId() : null)
             .setRating(review.getRating())
             .setPersonId(review.getPerson() != null ? review.getPerson().getId() : null)
-            .setShopId(review.getShop() != null ? review.getShop().getId() : null)
             .setComment(review.getComment());
     }
 }
