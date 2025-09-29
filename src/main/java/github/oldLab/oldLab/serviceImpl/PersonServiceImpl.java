@@ -3,7 +3,6 @@ package github.oldLab.oldLab.serviceImpl;
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
-import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
@@ -235,10 +234,6 @@ public class PersonServiceImpl implements PersonService {
             newPerson.setFirstName(safeFirst);
             newPerson.setLastName(safeLast);
             newPerson.setIsActive(true);
-            newPerson.setRoleEnum(RoleEnum.USER);
-            newPerson.setCreatedAt(Instant.now());
-            newPerson.setUpdatedAt(Instant.now());
-            newPerson.setPassword(UUID.randomUUID().toString());
             return repository.save(newPerson);
         } else {
             switch (firstName) {
