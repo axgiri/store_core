@@ -8,6 +8,7 @@ import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
+import github.oldLab.oldLab.entity.Person;
 
 public interface PersonService {
 
