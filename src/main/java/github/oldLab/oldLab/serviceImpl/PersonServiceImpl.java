@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
+
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
@@ -111,8 +114,10 @@ public class PersonServiceImpl implements PersonService {
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public PersonResponse update(Long id, PersonRequest personRequest) {
         log.info("updating person with id: {}", id);
-            Person person = repository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
+            Person person = getReferenceByIdIfExists(id);
+
+            // Will throw BadCredentialsException on mismatch and let controller advice map it to 401
+            verifyPassword(personRequest.getPassword(), person.getPassword());
 
             person.setFirstName(personRequest.getFirstName());
             person.setLastName(personRequest.getLastName());
@@ -159,9 +164,8 @@ public class PersonServiceImpl implements PersonService {
         return CompletableFuture.runAsync(() -> {
             Person person = repository.findByEmail(loginRequest.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("person not found with email: " + loginRequest.getEmail()));
-            if (!passwordEncoder.matches(oldPassword, person.getPassword())) {
-                throw new UserNotFoundException("incorrect current password for email: " + loginRequest.getEmail());
-            }
+            // Throws BadCredentialsException; the future will complete exceptionally
+            verifyPassword(oldPassword, person.getPassword());
 
             person.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
             repository.save(person);
@@ -237,6 +241,10 @@ public class PersonServiceImpl implements PersonService {
             newPerson.setFirstName(safeFirst);
             newPerson.setLastName(safeLast);
             newPerson.setIsActive(true);
+            newPerson.setRoleEnum(RoleEnum.USER);
+            newPerson.setCreatedAt(Instant.now());
+            newPerson.setUpdatedAt(Instant.now());
+            newPerson.setPassword(UUID.randomUUID().toString());
             return repository.save(newPerson);
         } else {
             switch (firstName) {
@@ -254,6 +262,12 @@ public class PersonServiceImpl implements PersonService {
             person.setUpdatedAt(Instant.now());
             
             return repository.save(person);
+        }
+    }
+
+    private void verifyPassword(String raw, String encoded) {
+        if (!passwordEncoder.matches(raw, encoded)) {
+            throw new BadCredentialsException("invalid credentials");
         }
     }
 }

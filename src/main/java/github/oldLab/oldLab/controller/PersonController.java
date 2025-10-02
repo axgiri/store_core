@@ -125,7 +125,6 @@ public class PersonController {
     }
 
     @GetMapping("/findById/{id}")
-    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> findById(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);

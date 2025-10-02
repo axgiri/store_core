@@ -45,6 +45,7 @@ public class SecurityConfiguration {
                         "/api/v1/persons/resetPassword")
                     .permitAll()
                 .requestMatchers(HttpMethod.GET,
+                    "/api/v1/persons/findById/*",
                         "/api/v1/persons/validate",
                         "/api/v1/persons/getRoleName")
                     .permitAll()
