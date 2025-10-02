@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name = "notification-service", url = "http://notification-service:8081/api/notifications")
 public interface FeignNotificationController {
+
+    @GetMapping("/reviews/avg/person/{personId}")
+    ResponseEntity<Map<String, Object>> getAvgRateByPersonId(@PathVariable Long personId);
 
     @GetMapping("/reports/report/{reportId}")
     ReportResponse getReportById(@PathVariable Long reportId);
