@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,11 @@ public class NotificationReportsServiceImpl {
         return circuitBreaker.executeSupplier(() ->
                 feignClient.getReportById(reportId)
         );
+    }
+
+    public ResponseEntity<Map<String, Object>> getRateByPersonId(Long personId) {
+        return circuitBreaker.executeSupplier(() ->
+                feignClient.getAvgRateByPersonId(personId));
     }
 
     public ReviewResponse getReviewById(Long reviewId) {

@@ -1,11 +1,13 @@
 package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.exception.UserAlreadyExistsException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +43,7 @@ public class PersonServiceImpl implements PersonService {
     private final PhotoRepository photoRepository;
     private final PhotoStorage photoStorage;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    private final ObjectProvider<AuthenticationManager> authenticationManagerProvider;
     private final TokenService tokenService;
     private final ActivateService activateService;
     private final RefreshTokenService refreshTokenService;
@@ -63,7 +65,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public AuthResponse authenticate(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        authenticationManagerProvider.getObject()
+                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var person = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user not found with email: " + request.getEmail()));
         CompletableFuture<String> token = tokenService.generateToken(person);
