@@ -13,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @Slf4j
@@ -51,6 +53,20 @@ public class ReviewController {
             log.debug("get reviews by personId: {} page: {}, size: {}", personId, page, size);
             List<ReviewResponse> reviews = reviewService.getReviewsByPersonId(personId, page, size);
             return ResponseEntity.ok(reviews);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+    @GetMapping("/rate/person/{personId}")
+    public ResponseEntity<Map<String,Object>> getReviewsByPersonId(@PathVariable Long personId,
+                                                                   HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("get rate by personId: {}", personId);
+            Map<String, Object> rate = reviewService.getAvgRateByPersonId(personId);
+            return ResponseEntity.ok(rate);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

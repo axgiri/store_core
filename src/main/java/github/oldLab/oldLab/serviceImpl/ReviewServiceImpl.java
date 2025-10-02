@@ -2,6 +2,7 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import github.oldLab.oldLab.dto.events.ReviewMessage;
@@ -64,6 +65,12 @@ public class ReviewServiceImpl implements ReviewService {
             message.setPayload(reviewRequest);
 
         kafkaTemplate.send(reviewTopic, reviewPartitionCreate, message);
+    }
+
+    @Override
+    public Map<String, Object> getAvgRateByPersonId(Long id) {
+        Map<String, Object> rate = notificationReportsService.getRateByPersonId(id).getBody();
+        return rate;
     }
 
     @Override
