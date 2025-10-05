@@ -124,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> searchByCategory(CategoryEnum categoryEnum, String query, int page, int size) {
-        return productSearchRepository.findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(categoryEnum, query, categoryEnum, query, PageRequest.of(page, size))
+        return productSearchRepository.findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(categoryEnum, query, query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 }

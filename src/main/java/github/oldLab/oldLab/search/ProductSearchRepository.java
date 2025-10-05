@@ -21,5 +21,5 @@ public interface ProductSearchRepository extends ElasticsearchRepository<Product
         return findByPersonIdAndNameContainingOrPersonIdAndDescriptionContaining(personId, text, personId, text, pageable).getContent();
     }
 
-    Page<ProductDocument> findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(CategoryEnum category1, String name, CategoryEnum category2, String description, Pageable pageable);
+    Page<ProductDocument> findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(CategoryEnum category1, String name, String description, Pageable pageable);
 }
