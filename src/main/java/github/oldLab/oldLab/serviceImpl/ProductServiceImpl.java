@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.Enum.CategoryEnum;
 import github.oldLab.oldLab.dto.request.ProductRequest;
 import github.oldLab.oldLab.dto.response.ProductResponse;
 import github.oldLab.oldLab.entity.Person;
@@ -112,5 +113,18 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException("product not found with id: " + id);
         }
         return repository.getReferenceById(id);
+    }
+
+    @Override
+    public List<ProductResponse> listByCategory(CategoryEnum categoryEnum, int page, int size) {
+        return repository.findByCategory(categoryEnum, PageRequest.of(page, size))
+                .map(ProductResponse::fromEntityToDto)
+                .getContent();
+    }
+
+    @Override
+    public List<ProductResponse> searchByCategory(CategoryEnum categoryEnum, String query, int page, int size) {
+        return productSearchRepository.findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(categoryEnum, query, query, PageRequest.of(page, size))
+                .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 }

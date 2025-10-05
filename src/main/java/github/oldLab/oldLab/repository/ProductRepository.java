@@ -16,6 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByPerson(Person person);
     Page<Product> findByPersonId(Long personId, Pageable pageable);
-    
-    List<Product> findByCategory(CategoryEnum category);
+
+    Page<Product> findByCategory(CategoryEnum category, Pageable pageable);
 }
