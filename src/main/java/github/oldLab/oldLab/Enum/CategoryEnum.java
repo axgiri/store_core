@@ -2,5 +2,5 @@ package github.oldLab.oldLab.Enum;
 
 public enum CategoryEnum {
     //TODO: add categories as needed
-    TABLETS, SMARTPHONES, LAPTOPS, PSCOMPONENTS, ACCESSORIES, DEVICES
+    LAPTOPS, PC, PSCOMPONENTS, TABLETS,  SMARTPHONES, ACCESSORIES, OTHERS
 }

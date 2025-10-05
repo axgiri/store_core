@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import github.oldLab.oldLab.Enum.CategoryEnum;
 import github.oldLab.oldLab.dto.request.ProductRequest;
 import github.oldLab.oldLab.dto.response.ProductResponse;
 import github.oldLab.oldLab.service.ProductService;
@@ -143,6 +144,39 @@ public class ProductController {
         if (bucket.tryConsume(1)) {
             log.debug("searching products by personId: {}, q: {}, page: {}, size: {}", personId, query, page, size);
             return ResponseEntity.ok(productService.searchByPerson(personId, query, page, size));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+
+    @GetMapping("/categories/{categoryEnum}")
+    public ResponseEntity<List<ProductResponse>> listByCategory(@PathVariable CategoryEnum categoryEnum,
+                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "20") int size,
+                                                                 HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("listing products by category: {}, page: {}, size: {}", categoryEnum, page, size);
+            return ResponseEntity.ok(productService.listByCategory(categoryEnum, page, size));
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+
+    @GetMapping("/search/categories/{categoryEnum}")
+    public ResponseEntity<List<ProductResponse>> searchByCategory(@PathVariable CategoryEnum categoryEnum,
+                                                                  @RequestParam("q") String query,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "20") int size,
+                                                                  HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("searching products by category: {}, q: {}, page: {}, size: {}", categoryEnum, query, page, size);
+            return ResponseEntity.ok(productService.searchByCategory(categoryEnum, query, page, size));
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

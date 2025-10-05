@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
+import github.oldLab.oldLab.Enum.CategoryEnum;
+
 public interface ProductSearchRepository extends ElasticsearchRepository<ProductDocument, Long> {
     Page<ProductDocument> findByNameContainingOrDescriptionContaining(String name, String description, Pageable pageable);
 
@@ -18,4 +20,6 @@ public interface ProductSearchRepository extends ElasticsearchRepository<Product
     default List<ProductDocument> searchByPersonAndText(Long personId, String text, Pageable pageable) {
         return findByPersonIdAndNameContainingOrPersonIdAndDescriptionContaining(personId, text, personId, text, pageable).getContent();
     }
+
+    Page<ProductDocument> findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(CategoryEnum category1, String name, CategoryEnum category2, String description, Pageable pageable);
 }

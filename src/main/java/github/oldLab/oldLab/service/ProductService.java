@@ -2,6 +2,7 @@ package github.oldLab.oldLab.service;
 
 import java.util.List;
 
+import github.oldLab.oldLab.Enum.CategoryEnum;
 import github.oldLab.oldLab.dto.request.ProductRequest;
 import github.oldLab.oldLab.dto.response.ProductResponse;
 
@@ -16,4 +17,8 @@ public interface ProductService {
     // Elasticsearch search
     List<ProductResponse> search(String query, int page, int size);
     List<ProductResponse> searchByPerson(Long personId, String query, int page, int size);
+
+    List<ProductResponse> listByCategory(CategoryEnum categoryEnum, int page, int size);
+
+    List<ProductResponse> searchByCategory(CategoryEnum categoryEnum, String query, int page, int size);
 }
