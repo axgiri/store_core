@@ -77,7 +77,7 @@ public class TokenServiceImpl implements TokenService {
                     .claims(extraClaims)
                     .subject(userDetails.getUsername())
                     .issuedAt(new Date())
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1)) //1 minute expiration
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) //15 minute expiration
                     .signWith(getSignInKey())
                     .compact();
             return CompletableFuture.completedFuture(token);
