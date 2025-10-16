@@ -42,11 +42,11 @@ spring:
             client-id: ${GOOGLE_CLIENT_ID:your-id}
             client-secret: ${GOOGLE_CLIENT_SECRET:your-secret}
             scope: email,profile
-            redirect-uri: https://tais0ft.ru/login/oauth2/code/google
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
 
 frontend:
   redirect:
-    url: https://tais0ft.ru/oauth-success
+    url: ${FRONTEND_REDIRECT_URL}
 
 # ============================================
 # Database - PostgreSQL Production
