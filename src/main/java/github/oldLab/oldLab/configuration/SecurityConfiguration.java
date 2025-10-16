@@ -2,6 +2,9 @@ package github.oldLab.oldLab.configuration;
 
 import github.oldLab.oldLab.dto.handler.OAuth2SuccessHandler;
 import github.oldLab.oldLab.serviceImpl.OAuth2ServiceImpl;
+
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -94,7 +97,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
