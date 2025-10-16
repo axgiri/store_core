@@ -88,8 +88,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> search(String query, int page, int size) {
-    return productSearchRepository.searchByText(query, PageRequest.of(page, size))
-        .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
+        return productSearchRepository.search(query, PageRequest.of(page, size))
+                .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -99,8 +99,8 @@ public class ProductServiceImpl implements ProductService {
             throw new UserNotFoundException("User not found: " + personId);
         }
 
-        return productSearchRepository.searchByPersonAndText(personId, query, PageRequest.of(page, size))
-                .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
+    return productSearchRepository.searchByPerson(personId, query, PageRequest.of(page, size))
+        .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 
     public Product findEntityById(Long id) {
@@ -124,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> searchByCategory(CategoryEnum categoryEnum, String query, int page, int size) {
-        return productSearchRepository.findByCategoryAndNameContainingOrCategoryAndDescriptionContaining(categoryEnum, query, query, PageRequest.of(page, size))
+        return productSearchRepository.searchByCategory(categoryEnum, query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).collect(Collectors.toList());
     }
 }

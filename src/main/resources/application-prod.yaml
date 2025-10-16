@@ -1,0 +1,208 @@
+# ============================================
+# Production Profile - Standalone Configuration
+# ============================================
+# This config is fully independent from application.properties
+# to prevent local changes from affecting production
+
+# ============================================
+# Application & Logging
+# ============================================
+spring:
+  application:
+    name: oldLab
+
+logging:
+  level:
+    root: WARN
+    github.oldLab: INFO
+
+# ============================================
+# Server Configuration - HTTPS via Reverse Proxy
+# ============================================
+server:
+  port: 8080
+  # Forward headers strategy to respect X-Forwarded-Proto from nginx
+  forward-headers-strategy: native
+  tomcat:
+    remoteip:
+      remote-ip-header: X-Forwarded-For
+      protocol-header: X-Forwarded-Proto
+      internal-proxies: ".*"
+
+# ============================================
+# Security
+# ============================================
+spring:
+  security:
+    strategy: MODE_INHERITABLETHREADLOCAL
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-secret}
+            scope: email,profile
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+
+frontend:
+  redirect:
+    url: ${FRONTEND_REDIRECT_URL}
+
+# ============================================
+# Database - PostgreSQL Production
+# ============================================
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://authentication-db:5432/authenticationdb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+# ============================================
+# Flyway Migration
+# ============================================
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    url: ${DB_URL:jdbc:postgresql://authentication-db:5432/authenticationdb}
+    user: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:1}
+
+# ============================================
+# MinIO Object Storage
+# ============================================
+minio:
+  url: ${MINIO_URL:http://minio:9000}
+  access-key: ${MINIO_ACCESS_KEY:123456789qwerty123456789qwerty123456789qwerty}
+  secret-key: ${MINIO_SECRET_KEY:123456789qwerty123456789qwerty123456789qwerty}
+  bucket:
+    default: default-bucket
+    persons: persons-bucket
+    products: products-bucket
+
+# ============================================
+# Kafka Message Broker
+# ============================================
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:kafka:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: oldlab-client-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: github.oldLab.oldLab.dto.*
+
+kafka:
+  topic:
+    message: message-topic
+    review: review-topic
+    report: report-topic
+  dlt:
+    message: message-dlt
+    review: review-dlt
+    report: report-dlt
+  partition:
+    message:
+      sms: message-sms
+      email: message-email
+    review:
+      create: review-create
+      update: review-update
+      delete: review-delete
+    report:
+      create: report-create
+      update: report-update
+      delete: report-delete
+
+# ============================================
+# Elasticsearch
+# ============================================
+elasticsearch:
+  host: ${ELASTICSEARCH_HOST:elasticsearch:9200}
+
+spring:
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://elasticsearch:9200}
+
+# ============================================
+# Redis Cache
+# ============================================
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+  cache:
+    redis:
+      time-to-live: PT15M
+
+# ============================================
+# REST API Configuration
+# ============================================
+api:
+  service:
+    notification-reports: ${NOTIFICATION_SERVICE_URL:http://notification-service:8081/api/notifications}
+
+# ============================================
+# Resilience4j Circuit Breaker
+# ============================================
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        failure-rate-threshold: 50
+        event-consumer-buffer-size: 10
+
+# ============================================
+# Business Logic Configuration
+# ============================================
+app:
+  cleanup:
+    cron: "0 0 0 * * ?"
+    timezone: CET
+
+max:
+  photo:
+    per:
+      product: 5
+
+refreshTokenTTL: 30
+
+jwt:
+  secret: ${JWT_SECRET:123456789qwerty123456789qwerty123456789qwerty}
+
+refresh:
+  token:
+    secret: ${REFRESH_TOKEN_SECRET:123456789qwerty123456789qwerty123456789qwerty}
+
+rate:
+  limiting:
+    window:
+      size:
+        in:
+          minutes: 1
+    max:
+      requests:
+        per:
+          window: 200

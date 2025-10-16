@@ -150,7 +150,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/categories/{categoryEnum}")
+    @GetMapping("/list/{categoryEnum}")
     public ResponseEntity<List<ProductResponse>> listByCategory(@PathVariable CategoryEnum categoryEnum,
                                                                  @RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "20") int size,
