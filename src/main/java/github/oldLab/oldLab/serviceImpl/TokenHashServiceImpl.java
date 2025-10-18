@@ -13,7 +13,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class TokenHashServiceImpl {
 
-    @Value("${refresh.token.secret}")
+    @Value("${jwt.refresh.key}")
     private String key;
 
     private static final String HMAC_ALG = "HmacSHA256";

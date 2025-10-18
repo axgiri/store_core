@@ -27,8 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret.key}")
     private String KEY;
+
+    @Value("${jwt.secret.ttl}")
+    private Long TTL;
         
     public String extractUsername(String token) {
         try {
@@ -77,7 +80,7 @@ public class TokenServiceImpl implements TokenService {
                     .claims(extraClaims)
                     .subject(userDetails.getUsername())
                     .issuedAt(new Date())
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) //15 minute expiration
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * TTL))
                     .signWith(getSignInKey())
                     .compact();
             return CompletableFuture.completedFuture(token);

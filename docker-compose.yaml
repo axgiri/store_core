@@ -8,8 +8,6 @@ services:
     volumes:
     - ./:/app
     working_dir: /app
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     command: ./mvnw spring-boot:run
     depends_on:
       - authentication-db
@@ -17,7 +15,6 @@ services:
       - elasticsearch
       - kibana
       - minio
-      - redis
     networks:
       - auth-network
   
@@ -47,17 +44,6 @@ services:
       - authentication-db
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - auth-network
-  
-  redis:
-    image: redis:6.2.6-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
-    volumes:
-    - redis_data:/data
     networks:
       - auth-network
 
@@ -131,4 +117,3 @@ volumes:
   pgadmin_data:
   es_data:
   minio_data:
-  redis_data:
