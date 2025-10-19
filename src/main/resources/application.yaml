@@ -40,8 +40,6 @@ spring:
     consumer:
       group-id: oldlab-client-group
       auto-offset-reset: earliest
-      properties: #delete this if works without it
-        spring.json.trusted.packages: github.oldLab.oldLab.dto.events* #and this
 
   elasticsearch:
     uris: http://elasticsearch:9200
