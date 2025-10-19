@@ -33,6 +33,7 @@ public class ProductFactory implements DataFactory<Product> {
                 .setDescription(faker.lorem().sentence())
                 .setPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 10, 5000)))
                 .setCategory(category)
+                .setIsAvailable(true)
                 .setPerson(person)
                 .setTags(new ArrayList<>(List.of(faker.commerce().material(), faker.commerce().department())))
                 .setHiddenLabels(new java.util.HashSet<>(List.of(faker.lorem().word())))
@@ -45,6 +46,7 @@ public class ProductFactory implements DataFactory<Product> {
                 .setName(faker.commerce().productName())
                 .setDescription(faker.lorem().sentence())
                 .setPrice(BigDecimal.valueOf(faker.number().randomDouble(2, 10, 5000)))
-                .setCategory(CategoryEnum.TABLETS);
+                .setCategory(CategoryEnum.TABLETS)
+                .setIsAvailable(true);
     }
 }
