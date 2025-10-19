@@ -41,6 +41,7 @@ public class PersonFactory implements DataFactory<Person> {
         .setPassword(passwordEncoder.encode(email))
         .setRoleEnum(RoleEnum.values()[ThreadLocalRandom.current().nextInt(RoleEnum.values().length)])
         .setIsActive(true)
+        .setIsNotBlocked(true)
         .setCreatedAt(Instant.now())
         .setUpdatedAt(Instant.now());
     }
