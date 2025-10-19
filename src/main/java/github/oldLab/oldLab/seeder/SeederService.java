@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,13 @@ import github.oldLab.oldLab.seeder.factory.ReviewFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
+/**
+ * Seeder Service - Generates fake data for development environment
+ * This service is ONLY active when Spring profile "dev" is enabled
+ * Production will NOT load this bean
+ */
 @Service
+@Profile("dev")  // ← Only active in development environment
 @RequiredArgsConstructor
 public class SeederService {
 

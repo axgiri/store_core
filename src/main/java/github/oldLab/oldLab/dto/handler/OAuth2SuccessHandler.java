@@ -28,7 +28,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${frontend.redirect.url}")
     private String frontendRedirectUrl;
 
-    @Value("${refreshTokenTTL}")
+    @Value("${jwt.refresh.ttl}")
     private int refreshTokenTTL;
 
     @Override

@@ -1,0 +1,84 @@
+version: '3.8'
+include:
+  - docker-compose.base.yaml
+
+services:
+  authentication-service:
+    image: eclipse-temurin:21-jdk-alpine
+    container_name: authentication-service-dev
+    hostname: authentication-service
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ./:/app
+      - ~/.m2:/root/.m2
+    working_dir: /app
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    command: ./mvnw spring-boot:run
+    depends_on:
+      authentication-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - auth-network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ax@micro.kz
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "7313:80"
+    depends_on:
+      authentication-db:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - auth-network
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana-dev
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - auth-network
+    restart: unless-stopped
+
+  authentication-db:
+    ports:
+      - "5432:5432"
+
+  kafka:
+    ports:
+      - "9092:9092"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  minio:
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # Web console
+
+volumes:
+  pgadmin_data:

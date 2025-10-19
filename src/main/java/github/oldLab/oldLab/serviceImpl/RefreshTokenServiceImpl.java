@@ -26,10 +26,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository repository;
     private final TokenHashServiceImpl tokenHashService;
 
-    @Value("${refresh.token.secret}")
+    @Value("${jwt.refresh.key}")
     private String refreshTokenSecret;
 
-    @Value("${refreshTokenTTL}")
+    @Value("${jwt.refresh.ttl}")
     private int refreshExpiresDays;
 
     private static final SecureRandom RANDOM = new SecureRandom();

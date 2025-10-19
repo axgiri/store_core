@@ -1,58 +1,26 @@
+version: '3.8'
+
 services:
-  authentication-service:
-    image: eclipse-temurin:21-jdk-alpine
-    container_name: authentication-service
-    hostname: authentication-service
-    ports:
-      - "8080:8080"
-    volumes:
-    - ./:/app
-    working_dir: /app
-    command: ./mvnw spring-boot:run
-    depends_on:
-      - authentication-db
-      - kafka
-      - elasticsearch
-      - kibana
-      - minio
-    networks:
-      - auth-network
-  
   authentication-db:
     image: postgres:13-alpine
     container_name: authentication-db
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-1}
       POSTGRES_DB: authenticationdb
     volumes:
       - authentication_db_data:/var/lib/postgresql/data
     networks:
       - auth-network
-  
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ax@micro.kz
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "7313:80"
-    depends_on:
-      - authentication-db
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: apache/kafka:4.0.0
     container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9094:9094"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -64,6 +32,11 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -73,40 +46,32 @@ services:
       - xpack.security.enabled=false
       - xpack.ml.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ports:
-      - '9200:9200'
-      - '9300:9300'
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
       - auth-network
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.13.4
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - '5601:5601'
-    depends_on:
-      - elasticsearch
-    networks:
-      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: minio/minio:RELEASE.2025-07-23T15-54-02Z
     container_name: minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: "123456789qwerty123456789qwerty123456789qwerty"
-      MINIO_ROOT_PASSWORD: "123456789qwerty123456789qwerty123456789qwerty"
-    ports:
-      - "9000:9000" # S3 API
-      - "9001:9001" # Web console
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-123456789qwerty123456789qwerty123456789qwerty}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-123456789qwerty123456789qwerty123456789qwerty}
     volumes:
       - minio_data:/data
     networks:
       - auth-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   auth-network:
@@ -114,6 +79,5 @@ networks:
 
 volumes:
   authentication_db_data:
-  pgadmin_data:
   es_data:
   minio_data:
