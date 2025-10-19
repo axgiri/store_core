@@ -74,7 +74,7 @@ public class Person implements UserDetails {
     private Boolean isActive;
 
     @NotNull
-    @Column(name = "is_not_blocked")
+    @Column(name = "is_not_blocked", nullable = false)
     private Boolean isNotBlocked;
 
     @Column(name = "created_at")
@@ -101,5 +101,5 @@ public class Person implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         return isNotBlocked;
-    } //todo migrations
+    }
 }
