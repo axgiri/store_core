@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT,
   price NUMERIC(19,2) NOT NULL,
   category VARCHAR(100) NOT NULL,
+  is_available BOOLEAN NOT NULL,
   person_id BIGINT NOT NULL
 );
 

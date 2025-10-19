@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS persons (
   password VARCHAR(255) NOT NULL,
   role_enum VARCHAR(50),
   is_active BOOLEAN NOT NULL,
+  is_not_blocked BOOLEAN NOT NULL,
   created_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ
 );

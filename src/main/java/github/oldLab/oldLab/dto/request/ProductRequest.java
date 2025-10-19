@@ -39,6 +39,7 @@ public class ProductRequest {
                 .setDescription(description)
                 .setPrice(price)
                 .setCategory(category)
+                .setIsAvailable(true)
                 .setPerson(person)
                 .setTags(tags)
                 .setHiddenLabels(hiddenLabels)

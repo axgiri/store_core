@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -167,7 +168,7 @@ public class PersonController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable Long id, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
@@ -181,6 +182,20 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
+
+    // @PutMapping("/{id}/lock") //for idempotency
+    // @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    // public ResponseEntity<Void> lock(@PathVariable Long id) {
+    //     service.lock(id);
+    //     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    // }
+    
+    // @DeleteMapping("/{id}/lock")
+    // @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    // public ResponseEntity<Void> unlock(@PathVariable Long id) {
+    //     service.unlock(id);
+    //     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    // }
 
     @GetMapping("/validate")
     public ResponseEntity<String> validate(@RequestHeader("Authorization") String token, HttpServletRequest httpRequest){
