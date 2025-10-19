@@ -46,6 +46,7 @@ public class PersonRequest {
                 .setEmail(email)
                 .setPassword(password)
                 .setIsActive(false)
+                .setIsNotBlocked(true)
                 .setRoleEnum(this.role != null ? role : RoleEnum.USER)
                 .setCreatedAt(Instant.now())
                 .setUpdatedAt(Instant.now());

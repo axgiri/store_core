@@ -44,6 +44,10 @@ public class Product {
     @Column(name = "category", nullable = false)
     private CategoryEnum category;
 
+    @NotNull
+    @Column(name = "is_available", nullable = false)
+    private Boolean isAvailable;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;

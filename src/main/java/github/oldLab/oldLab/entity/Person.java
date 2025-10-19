@@ -73,6 +73,10 @@ public class Person implements UserDetails {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @NotNull
+    @Column(name = "is_not_blocked")
+    private Boolean isNotBlocked;
+
     @Column(name = "created_at")
     private Instant createdAt;
 
@@ -93,4 +97,9 @@ public class Person implements UserDetails {
     public boolean isEnabled() {
         return isActive;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isNotBlocked;
+    } //todo migrations
 }
