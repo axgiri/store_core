@@ -30,6 +30,9 @@ public class PersonResponse {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("role")
+    private String role;
+    
     @JsonProperty("created_at")
     private Instant createdAt;
 
@@ -44,6 +47,7 @@ public class PersonResponse {
             .setLastName(person.getLastName())
             .setPhoneNumber(person.getPhoneNumber())
             .setEmail(person.getEmail())
+            .setRole(person.getRoleEnum().name())
             .setCreatedAt(person.getCreatedAt())
             .setUpdatedAt(person.getUpdatedAt());
     }
