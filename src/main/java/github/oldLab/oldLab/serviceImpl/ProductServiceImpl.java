@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         Product existing = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         BeanUtils.copyProperties(request, existing, "id", "version");
         Product saved = repository.save(existing);
-    productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
+        productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
         return ProductResponse.fromEntityToDto(saved);
     }
 

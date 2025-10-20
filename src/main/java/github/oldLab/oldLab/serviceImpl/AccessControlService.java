@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.repository.ProductRepository;
-import github.oldLab.oldLab.repository.ReviewRepository;
+import github.oldLab.oldLab.dto.response.ReviewResponse;
 import github.oldLab.oldLab.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class AccessControlService {
 
 	private final PersonRepository personRepository;
 	private final ProductRepository productRepository;
-	private final ReviewRepository reviewRepository;
+	private final NotificationReportsServiceImpl notificationReportsServiceImpl;
 
 	public boolean isAdmin(Authentication authentication) {
 		return hasRole(authentication, RoleEnum.ADMIN);
@@ -88,10 +88,10 @@ public class AccessControlService {
 			throw new IllegalArgumentException("current user not found");
 		}
 
-		return reviewRepository.findById(reviewId)
-			.map(r -> r.getAuthor() != null && r.getAuthor().getId().equals(current.getId()))
-			.map(owner -> owner || isAdmin(authentication) || isModerator(authentication))
-			.orElse(false);
+		ReviewResponse review = notificationReportsServiceImpl.getReviewById(reviewId);
+		boolean owner = review != null && review.getAuthorId() != null &&
+			review.getAuthorId().equals(current.getId());
+		return owner || isAdmin(authentication) || isModerator(authentication);
 	}
 
 	@Cacheable(value = "personByEmail", key = "#email", unless = "#result == null")

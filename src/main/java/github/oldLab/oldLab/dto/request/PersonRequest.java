@@ -36,8 +36,6 @@ public class PersonRequest {
     @Size(min = 6, max = 32, message = "password must be between 6 and 32 characters")
     private String password;
 
-    private RoleEnum role;
-
     public Person toEntity() {
         return new Person()
                 .setFirstName(firstName)
@@ -47,7 +45,7 @@ public class PersonRequest {
                 .setPassword(password)
                 .setIsActive(false)
                 .setIsNotBlocked(true)
-                .setRoleEnum(this.role != null ? role : RoleEnum.USER)
+                .setRoleEnum(RoleEnum.USER)
                 .setCreatedAt(Instant.now())
                 .setUpdatedAt(Instant.now());
     }

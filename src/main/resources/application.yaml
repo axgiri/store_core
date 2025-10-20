@@ -134,8 +134,8 @@ rate:
     window:
       size:
         in:
-          minutes: 1
+          seconds: 1
     max:
       requests:
         per:
-          window: 200
+          window: 50
