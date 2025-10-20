@@ -15,8 +15,8 @@ import io.github.bucket4j.Refill;
 @Service
 public class RateLimiterServiceImpl implements RateLimiterService {
 
-    @Value("${rate.limiting.window.size.in.minutes}")
-    private int windowSizeInMinutes;
+    @Value("${rate.limiting.window.size.in.seconds}")
+    private int windowSizeInSeconds;
 
     @Value("${rate.limiting.max.requests.per.window}")
     private int maxRequestsPerWindow;
@@ -28,7 +28,7 @@ public class RateLimiterServiceImpl implements RateLimiterService {
     }
 
     public Bucket newBucket(String ip) {
-        Refill refill = Refill.greedy(maxRequestsPerWindow, Duration.ofMinutes(windowSizeInMinutes));
+        Refill refill = Refill.greedy(maxRequestsPerWindow, Duration.ofSeconds(windowSizeInSeconds));
         Bandwidth limit = Bandwidth.classic(maxRequestsPerWindow, refill);
         return Bucket.builder()
                 .addLimit(limit)
