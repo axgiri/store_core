@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -45,9 +46,15 @@ public class NotificationReportsServiceImpl {
         );
     }
 
-    public ResponseEntity<List<ReviewResponse>> getReviewsOfPersonsByAuthorId(Long authorId) {
+    public ResponseEntity<List<ReviewResponse>> getReviewsByAuthorId(Long authorId, int page, int size) {
         return circuitBreaker.executeSupplier(() ->
-                feignClient.getReviewsOfPersonsByAuthorId(authorId)
+                feignClient.getReviewsByAuthorId(authorId, page, size)
+        );
+    }
+
+    public Boolean hasReviewsByAuthorId(Long personId, Long authorId) {
+        return circuitBreaker.executeSupplier(() ->
+                feignClient.hasReviewsByAuthorId(personId, authorId)
         );
     }
 
@@ -68,6 +75,13 @@ public class NotificationReportsServiceImpl {
     public List<ReportResponse> getReportsByStatus(ReportStatusEnum status, int page, int size) {
         ResponseEntity<List<ReportResponse>> response = circuitBreaker.executeSupplier(() ->
                 feignClient.getReportsByStatus(status, page, size)
+        );
+        return response.getBody() != null ? response.getBody() : Collections.emptyList();
+    }
+
+    public List<ReportResponse> getReportsByAuthorId(Long authorId, int page, int size) {
+        ResponseEntity<List<ReportResponse>> response = circuitBreaker.executeSupplier(() ->
+                feignClient.getReportsByAuthorId(authorId, page, size)
         );
         return response.getBody() != null ? response.getBody() : Collections.emptyList();
     }

@@ -75,6 +75,38 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
+    @GetMapping("/{Id}")
+    public ResponseEntity<ReportResponse> getReportById(
+            @PathVariable Long Id,
+            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting report by id: {}", Id);
+            ReportResponse response = service.getReportById(Id);
+            return ResponseEntity.ok(response);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+    @GetMapping("/{authorId}")
+    public ResponseEntity<List<ReportResponse>> getReportsByAuthorId(
+            @PathVariable Long authorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting report by id: {}", authorId);
+            List<ReportResponse> responses = service.getReportsByAuthorId(authorId, page, size);
+            return ResponseEntity.ok(responses);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
 
     @PatchMapping("/{reportId}/status")
     @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")

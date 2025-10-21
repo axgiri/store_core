@@ -30,7 +30,13 @@ public interface FeignNotificationController {
                                         @RequestParam int size);
 
     @GetMapping("/reviews/persons/author/{authorId}")
-    ResponseEntity<List<ReviewResponse>> getReviewsOfPersonsByAuthorId(@PathVariable Long authorId);
+    ResponseEntity<List<ReviewResponse>> getReviewsByAuthorId(@PathVariable Long authorId,
+                                                              @RequestParam("page") int  page,
+                                                              @RequestParam("size") int size);
+
+    @GetMapping("/reviews/persons/{personId}/author/{authorId}")
+    Boolean hasReviewsByAuthorId(@PathVariable Long personId,
+                                 @PathVariable Long authorId);
 
     @GetMapping("/reports")
     ResponseEntity<List<ReportResponse>> getAllReports(
@@ -48,4 +54,9 @@ public interface FeignNotificationController {
             @RequestParam("page") int page,
             @RequestParam("size") int size
     );
+
+    @GetMapping("/reports/author/{authorId}")
+    ResponseEntity<List<ReportResponse>> getReportsByAuthorId(Long authorId,
+                                                              @RequestParam("page") int page,
+                                                              @RequestParam("size") int size);
 }

@@ -73,6 +73,23 @@ public class ReviewController {
         }
     }
 
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByAuthorId(@PathVariable Long authorId,
+                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "20") int size,
+                                                                   HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("get reviews by authorId: {}", authorId);
+            List<ReviewResponse> reviews = reviewService.getReviewsByAuthorId(authorId, page, size);
+            return ResponseEntity.ok(reviews);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<ReviewResponse>> getAllReviews(
             @RequestParam(defaultValue = "0") int page,

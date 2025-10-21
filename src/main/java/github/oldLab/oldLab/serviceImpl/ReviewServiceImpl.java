@@ -3,14 +3,12 @@ package github.oldLab.oldLab.serviceImpl;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import github.oldLab.oldLab.dto.events.ReviewMessage;
 import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.stereotype.Service;
@@ -41,23 +39,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void createReviewToPerson(ReviewRequest reviewRequest) {
-        log.info("creating review to person: personId={}, authorId={}", reviewRequest.getPersonId(), reviewRequest.getAuthorId());
+        log.info("creating review to person: personId={}, authorId={}",
+                reviewRequest.getPersonId(), reviewRequest.getAuthorId());
 
         if (!personService.existsById(reviewRequest.getPersonId()) || !personService.existsById(reviewRequest.getAuthorId())) {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
-        ResponseEntity<List<ReviewResponse>> response = notificationReportsService.getReviewsOfPersonsByAuthorId(reviewRequest.getAuthorId());
-        if (response.getBody() != null) {
-            boolean hasDuplicate = Optional.ofNullable(response.getBody())
-            .orElseThrow(() -> new DuplicateReviewException("author has already reviewed this person")).stream()
-                    .anyMatch(r -> (reviewRequest.getPersonId() != null
-                        && r.getPersonId() != null
-                        && r.getPersonId().equals(reviewRequest.getPersonId()))
-                    );
-            if (hasDuplicate) {
-                throw new DuplicateReviewException("author has already reviewed this person");
-            }
+        if(notificationReportsService.hasReviewsByAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
+            throw new DuplicateReviewException("author has already reviewed this person");
         }
 
         ReviewMessage message = new ReviewMessage();
@@ -71,6 +61,11 @@ public class ReviewServiceImpl implements ReviewService {
     public Map<String, Object> getAvgRateByPersonId(Long id) {
         Map<String, Object> rate = notificationReportsService.getRateByPersonId(id).getBody();
         return rate;
+    }
+
+    @Override
+    public List<ReviewResponse> getReviewsByAuthorId(Long id, int page, int size) {
+        return notificationReportsService.getReviewsByAuthorId(id, page, size).getBody();
     }
 
     @Override

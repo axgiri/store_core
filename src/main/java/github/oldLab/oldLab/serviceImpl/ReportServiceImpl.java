@@ -93,8 +93,16 @@ public class ReportServiceImpl implements ReportService {
                 });
     }
 
+    public ReportResponse getReportById(Long reportId) {
+        return notificationReportsService.getReportById(reportId);
+    }
+
     public List<ReportResponse> getAllReports(int page, int size) {
         return notificationReportsService.getAllReports(page, size);
+    }
+
+    public List<ReportResponse> getReportsByAuthorId(Long authorId, int page, int size) {
+        return notificationReportsService.getReportsByAuthorId(authorId, page, size);
     }
 
     @Transactional(readOnly = true)
