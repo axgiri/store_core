@@ -56,7 +56,7 @@ public interface FeignNotificationController {
     );
 
     @GetMapping("/reports/author/{authorId}")
-    ResponseEntity<List<ReportResponse>> getReportsByAuthorId(Long authorId,
+    ResponseEntity<List<ReportResponse>> getReportsByAuthorId(@PathVariable("authorId") Long authorId,
                                                               @RequestParam("page") int page,
                                                               @RequestParam("size") int size);
 }

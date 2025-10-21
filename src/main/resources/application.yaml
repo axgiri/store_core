@@ -44,20 +44,13 @@ spring:
   elasticsearch:
     uris: http://elasticsearch:9200
 
-  # data:
-  #   redis:
-  #     host: redis
-  #     port: 6379
-  # cache:
-  #   redis:
-  #     time-to-live: 15m
-
 server:
   port: 8080
 
 logging:
   level:
     root: INFO
+    github.oldLab.oldLab: INFO
 
 app:
   cleanup:

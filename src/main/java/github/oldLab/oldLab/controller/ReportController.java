@@ -42,6 +42,7 @@ public class ReportController {
     }
 
     @GetMapping
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<List<ReportResponse>> getAllReports(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -59,6 +60,7 @@ public class ReportController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<List<ReportResponse>> getReportsByStatus(
             @PathVariable ReportStatusEnum status,
             @RequestParam(defaultValue = "0") int page,
@@ -76,6 +78,7 @@ public class ReportController {
         }
     }
     @GetMapping("/{Id}")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<ReportResponse> getReportById(
             @PathVariable Long Id,
             HttpServletRequest httpRequest) {
@@ -91,6 +94,7 @@ public class ReportController {
         }
     }
     @GetMapping("/author/{authorId}")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #authorId) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<List<ReportResponse>> getReportsByAuthorId(
             @PathVariable Long authorId,
             @RequestParam(defaultValue = "0") int page,
