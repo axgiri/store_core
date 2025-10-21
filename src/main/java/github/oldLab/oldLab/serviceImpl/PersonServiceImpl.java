@@ -23,6 +23,7 @@ import github.oldLab.oldLab.Enum.RoleEnum;
 import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
+import github.oldLab.oldLab.dto.request.UpdatePasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.exception.InvalidTokenException;
@@ -159,17 +160,16 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword) {
-        log.info("updating password for email: {}", loginRequest.getEmail());
+    public CompletableFuture<Void> updatePasswordAsync(UpdatePasswordRequest request) {
+        log.info("updating password for email: {}", request.getEmail());
         return CompletableFuture.runAsync(() -> {
-            Person person = repository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new UserNotFoundException("person not found with email: " + loginRequest.getEmail()));
-            // Throws BadCredentialsException; the future will complete exceptionally
-            verifyPassword(oldPassword, person.getPassword());
+            Person person = repository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("person not found with email: " + request.getEmail()));
+            verifyPassword(request.getOldPassword(), person.getPassword());
 
-            person.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
+            person.setPassword(passwordEncoder.encode(request.getNewPassword()));
             repository.save(person);
-            log.info("updated password for email: {}", loginRequest.getEmail());
+            log.info("updated password for email: {}", request.getEmail());
         }, taskExecutor);
     }
 
