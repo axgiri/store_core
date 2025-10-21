@@ -6,6 +6,7 @@ import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
+import github.oldLab.oldLab.dto.request.UpdatePasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.entity.Person;
@@ -26,7 +27,7 @@ public interface PersonService {
 
     public void validateToken(String token);
 
-    public CompletableFuture<Void> updatePasswordAsync(LoginRequest loginRequest, String oldPassword);
+    public CompletableFuture<Void> updatePasswordAsync(UpdatePasswordRequest request);
 
     // Reset Password Section
     public void requestPasswordReset(ContactRequest contactRequest);

@@ -73,7 +73,9 @@ public class SecurityConfiguration {
 
                 // Reviews
                 .requestMatchers(HttpMethod.GET,
-                        "/api/v1/reviews/person/*")
+                        "/api/v1/reviews/person/*",
+                        "/api/v1/reviews/author/*",
+                        "/api/v1/reviews/rate/person/*")
                     .permitAll()
 
                 // Photos

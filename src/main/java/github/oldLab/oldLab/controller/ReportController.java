@@ -26,6 +26,7 @@ public class ReportController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping("/create")
+    @PreAuthorize("isSelf(authentication, #request.authorId)")
     public ResponseEntity<Void> createReport(
             @RequestBody ReportRequest request,
             HttpServletRequest httpRequest) {
@@ -42,6 +43,7 @@ public class ReportController {
     }
 
     @GetMapping
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<List<ReportResponse>> getAllReports(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -59,6 +61,7 @@ public class ReportController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<List<ReportResponse>> getReportsByStatus(
             @PathVariable ReportStatusEnum status,
             @RequestParam(defaultValue = "0") int page,
@@ -69,6 +72,40 @@ public class ReportController {
         if (bucket.tryConsume(1)) {
             log.debug("getting reports by status: {} page: {}, size: {}", status, page, size);
             List<ReportResponse> responses = service.getReportsByStatus(status, page, size);
+            return ResponseEntity.ok(responses);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+    @GetMapping("/{Id}")
+    @PreAuthorize("@accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    public ResponseEntity<ReportResponse> getReportById(
+            @PathVariable Long Id,
+            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting report by id: {}", Id);
+            ReportResponse response = service.getReportById(Id);
+            return ResponseEntity.ok(response);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+    @GetMapping("/author/{authorId}")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #authorId) or @accessControlService.isModerator(authentication) or @accessControlService.isAdmin(authentication)")
+    public ResponseEntity<List<ReportResponse>> getReportsByAuthorId(
+            @PathVariable Long authorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("getting report by id: {}", authorId);
+            List<ReportResponse> responses = service.getReportsByAuthorId(authorId, page, size);
             return ResponseEntity.ok(responses);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);

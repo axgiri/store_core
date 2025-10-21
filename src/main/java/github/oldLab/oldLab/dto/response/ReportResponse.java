@@ -53,14 +53,13 @@ public class ReportResponse {
         return new ReportResponse()
         .setId(report.getId())
         .setReporterId(report.getReporterId().getId())
-            .setReporterName(report.getReporterId().getFirstName() + " " + report.getReporterId().getLastName())
+        .setReporterName(report.getReporterId().getFirstName() + " " + report.getReporterId().getLastName())
         .setReason(report.getReason())
         .setDetails(report.getDetails())
         .setStatus(report.getStatus())
         .setModeratorId(report.getModerator() != null ? report.getModerator().getId() : null)
-            .setModeratorName(report.getModerator() != null ?
-                    report.getModerator().getFirstName() + " " +
-                            report.getModerator().getLastName() : null)
+        .setModeratorName(report.getModerator() != null ?
+        report.getModerator().getFirstName() + " " + report.getModerator().getLastName() : null)
         .setCreatedAt(report.getCreatedAt())
         .setUpdatedAt(report.getUpdatedAt())
         .setType(report.getType())

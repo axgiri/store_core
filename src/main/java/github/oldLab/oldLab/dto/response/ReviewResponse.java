@@ -28,6 +28,12 @@ public class ReviewResponse {
     @JsonProperty("comment")
     private String comment;
 
+    @JsonProperty("created_at")
+    private String createdAt;
+
+    @JsonProperty("updated_at")
+    private String updatedAt;
+
     public static ReviewResponse fromEntityToDto(Review review) {
         return new ReviewResponse()
             .setId(review.getId())

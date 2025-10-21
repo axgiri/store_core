@@ -27,6 +27,7 @@ public class ReviewController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping("/person")
+    @PreAuthorize("isSelf(authentication, #reviewRequest.authorId)")
     public ResponseEntity<Void> createReviewToPerson(@RequestBody ReviewRequest reviewRequest,
                                                      HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
@@ -67,6 +68,23 @@ public class ReviewController {
             log.debug("get rate by personId: {}", personId);
             Map<String, Object> rate = reviewService.getAvgRateByPersonId(personId);
             return ResponseEntity.ok(rate);
+        } else {
+            log.warn("rate limit exceeded for IP: {}", ip);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        }
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByAuthorId(@PathVariable Long authorId,
+                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "20") int size,
+                                                                   HttpServletRequest httpRequest) {
+        String ip = httpRequest.getRemoteAddr();
+        Bucket bucket = rateLimiterService.resolveBucket(ip);
+        if (bucket.tryConsume(1)) {
+            log.debug("get reviews by authorId: {}", authorId);
+            List<ReviewResponse> reviews = reviewService.getReviewsByAuthorId(authorId, page, size);
+            return ResponseEntity.ok(reviews);
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

@@ -12,7 +12,8 @@ public interface ReviewService {
     List<ReviewResponse> getReviewsByPersonId(Long id, int page, int size);
 
     List<ReviewResponse> getAllReviewsPaginated(int page, int size);
+    List<ReviewResponse> getReviewsByAuthorId(Long id, int page, int size);
 
-    public Map<String, Object> getAvgRateByPersonId(Long id);
+    Map<String, Object> getAvgRateByPersonId(Long id);
     void deleteReview(Long id);
 }

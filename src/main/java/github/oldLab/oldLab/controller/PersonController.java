@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.RefreshRequest;
 import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
+import github.oldLab.oldLab.dto.request.UpdatePasswordRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
 import github.oldLab.oldLab.serviceImpl.PersonServiceImpl;
@@ -211,14 +211,14 @@ public class PersonController {
     }
 
     @PutMapping("/updatePassword")
-    @PreAuthorize("@accessControlService.isSelfByEmail(authentication, #loginRequest.email)")
-    public ResponseEntity<Void> updatePassword(@Valid @RequestBody LoginRequest loginRequest,@RequestParam String oldPassword, HttpServletRequest httpRequest) {
+    @PreAuthorize("@accessControlService.isSelfByEmail(authentication, #request.email)")
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody UpdatePasswordRequest request, HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
-            log.debug("updating password for email: {}", loginRequest.getEmail());
+            log.debug("updating password for email: {}", request.getEmail());
             try {
-                service.updatePasswordAsync(loginRequest, oldPassword).join();
+                service.updatePasswordAsync(request).join();
             } catch (java.util.concurrent.CompletionException e) {
                 if (e.getCause() instanceof RuntimeException re) {
                     throw re;
