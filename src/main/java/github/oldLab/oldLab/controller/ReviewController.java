@@ -27,6 +27,7 @@ public class ReviewController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping("/person")
+    @PreAuthorize("isSelf(authentication, #reviewRequest.authorId)")
     public ResponseEntity<Void> createReviewToPerson(@RequestBody ReviewRequest reviewRequest,
                                                      HttpServletRequest httpRequest) {
         String ip = httpRequest.getRemoteAddr();
