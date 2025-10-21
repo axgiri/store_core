@@ -90,7 +90,7 @@ public class ReportController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
     }
-    @GetMapping("/{authorId}")
+    @GetMapping("/author/{authorId}")
     public ResponseEntity<List<ReportResponse>> getReportsByAuthorId(
             @PathVariable Long authorId,
             @RequestParam(defaultValue = "0") int page,
