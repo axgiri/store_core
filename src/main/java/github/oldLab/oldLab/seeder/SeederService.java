@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import github.oldLab.oldLab.entity.Activates;
 import github.oldLab.oldLab.entity.Person;
 import github.oldLab.oldLab.entity.Product;
 import github.oldLab.oldLab.repository.ActivateRepository;
@@ -70,7 +71,7 @@ public class SeederService {
         persons = personRepository.saveAll(persons);
 
     // Activate (independent of persons; uses emails in the new flow)
-    var activates = new ArrayList<github.oldLab.oldLab.entity.Activate>(count);
+    var activates = new ArrayList<Activates>(count);
         for (int i = 0; i < count; i++) {
             activates.add(activateFactory.create());
         }

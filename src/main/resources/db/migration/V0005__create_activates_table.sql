@@ -1,5 +1,5 @@
 -- Activate table
-CREATE TABLE IF NOT EXISTS active (
+CREATE TABLE IF NOT EXISTS activates (
   id BIGSERIAL PRIMARY KEY,
   email VARCHAR(255) NOT NULL,
   otp INT NOT NULL,

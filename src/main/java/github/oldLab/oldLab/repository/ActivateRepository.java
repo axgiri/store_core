@@ -9,23 +9,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import github.oldLab.oldLab.entity.Activate;
+import github.oldLab.oldLab.entity.Activates;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface ActivateRepository extends JpaRepository<Activate, Long>{
+public interface ActivateRepository extends JpaRepository<Activates, Long>{
 
-    Optional<Activate> findTopByEmailOrderByCreatedAtDesc(String email);
+    Optional<Activates> findTopByEmailOrderByCreatedAtDesc(String email);
 
-    Optional<Activate> findTopByEmailAndIsLoginOrderByCreatedAtDesc(String email, boolean isLogin);
+    Optional<Activates> findTopByEmailAndIsLoginOrderByCreatedAtDesc(String email, boolean isLogin);
 
     @Transactional
-    Optional<Activate> findByEmailAndOtpResetAndIsActive(String email, int otp, boolean isActive);
+    Optional<Activates> findByEmailAndOtpResetAndIsActive(String email, int otp, boolean isActive);
 
     boolean existsByEmail(String email);
 
     @Modifying
-    @Query("DELETE FROM Activate a WHERE a.createdAt < :cutoffDate")
+    @Query("DELETE FROM Activates a WHERE a.createdAt < :cutoffDate")
     void deleteOlderThan(@Param("cutoffDate") Instant cutoffDate);
 
 }

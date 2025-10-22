@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import github.oldLab.oldLab.dto.request.ActivateRequest;
 import github.oldLab.oldLab.dto.response.AuthResponse;
 import github.oldLab.oldLab.dto.response.PersonResponse;
-import github.oldLab.oldLab.entity.Activate;
+import github.oldLab.oldLab.entity.Activates;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 import github.oldLab.oldLab.repository.ActivateRepository;
 import github.oldLab.oldLab.repository.PersonRepository;
@@ -40,7 +40,7 @@ public class ActivateServiceImpl implements ActivateService {
     @Transactional
     public void setActive(ActivateRequest request) {
         log.debug("saving to activate with email: {}", request.getEmail());
-        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(request.getEmail())
+        Activates activation = repository.findTopByEmailOrderByCreatedAtDesc(request.getEmail())
             .orElseThrow(() -> new UserNotFoundException("no OTP found for email: " + request.getEmail()));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
@@ -80,7 +80,7 @@ public class ActivateServiceImpl implements ActivateService {
         log.debug("saving to activate with email: {}, loginAttempted={}", email, isLogin);
         int otp = setOtp();
         Instant createdAt = Instant.now();
-        Activate activation = Activate.builder()
+        Activates activation = Activates.builder()
             .email(email)
             .otp(otp)
             .isActive(false)
@@ -114,7 +114,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public void resendOtp(String email) {
         log.debug("resending OTP to email: {}", email);
-        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
+        Activates activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
             .orElseThrow(() -> new UserNotFoundException("users with email: " + email + " not found, please register first"));
 
         Instant createdAt = activation.getCreatedAt();
@@ -127,7 +127,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public AuthResponse login(String email, int OTP) {
         log.debug("logging by otp in user with email: {}", email);
-        Activate activation = repository.findTopByEmailAndIsLoginOrderByCreatedAtDesc(email, true)
+        Activates activation = repository.findTopByEmailAndIsLoginOrderByCreatedAtDesc(email, true)
             .orElseThrow(() -> new UserNotFoundException("users with email: " + email + " not found, please send OTP first"));
         Instant createdAt = activation.getCreatedAt();
         Instant expiration = createdAt.plus(Duration.ofMinutes(OTP_EXPIRATION_MINUTES));
@@ -149,7 +149,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     public void delete(String email) {
         log.debug("deleting activation with email: {}", email);
-        Activate activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
+        Activates activation = repository.findTopByEmailOrderByCreatedAtDesc(email)
             .orElseThrow(() -> new UserNotFoundException("activation with email: " + email + " not found"));
         repository.delete(activation);
     }
@@ -162,8 +162,8 @@ public class ActivateServiceImpl implements ActivateService {
 
     // Methods for reset password
     public void saveOtpReset(String email, int otp, boolean isForLogin) {
-    Activate activate = repository.findTopByEmailOrderByCreatedAtDesc(email)
-        .orElse(new Activate());
+    Activates activate = repository.findTopByEmailOrderByCreatedAtDesc(email)
+        .orElse(new Activates());
         activate.setEmail(email);
         activate.setOtpReset(otp);
         activate.setActive(true);
@@ -175,7 +175,7 @@ public class ActivateServiceImpl implements ActivateService {
 
     @Transactional
     public void validateOtpReset(String email, int otp) {
-        Activate activate = repository.findByEmailAndOtpResetAndIsActive(email, otp, true)
+        Activates activate = repository.findByEmailAndOtpResetAndIsActive(email, otp, true)
                 .orElseThrow(() -> new InvalidOtpException("Invalid OTP"));
 
         Instant createdAt = activate.getCreatedAt();
