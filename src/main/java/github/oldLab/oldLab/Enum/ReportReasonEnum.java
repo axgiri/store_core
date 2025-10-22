@@ -7,5 +7,6 @@ public enum ReportReasonEnum {
     INAPPROPRIATE,      // Неподобающий контент
     FAKE_REVIEW,
     ILLEGAL_CONTENT,
+    COUNTERFEIT_PRODUCT, // Контрафактный товар
     OTHER               // Другое (требует пояснения в details)
 }
