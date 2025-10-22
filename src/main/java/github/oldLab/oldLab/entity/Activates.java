@@ -21,8 +21,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "active")
-public class Activate {
+@Table(name = "activates")
+public class Activates {
     
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
