@@ -8,6 +8,7 @@ import github.oldLab.oldLab.dto.events.ReviewMessage;
 import github.oldLab.oldLab.exception.DuplicateReviewException;
 import github.oldLab.oldLab.exception.UserNotFoundException;
 
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -46,6 +47,9 @@ public class ReviewServiceImpl implements ReviewService {
             throw new UserNotFoundException("authorId " + reviewRequest.getAuthorId() + " or personId " + reviewRequest.getPersonId() + " not found");
         }
 
+        if (reviewRequest.getAuthorId().equals(reviewRequest.getPersonId())) {
+            throw new ValidationException("author cannot comment on himself");
+        }
         if(notificationReportsService.hasReviewsByAuthorId(reviewRequest.getPersonId(), reviewRequest.getAuthorId())) {
             throw new DuplicateReviewException("author has already reviewed this person");
         }
