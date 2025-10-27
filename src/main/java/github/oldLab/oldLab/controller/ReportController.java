@@ -26,7 +26,7 @@ public class ReportController {
     private final RateLimiterServiceImpl rateLimiterService;
 
     @PostMapping("/create")
-    @PreAuthorize("isSelf(authentication, #request.reporterId)")
+    @PreAuthorize("@accessControlService.isSelf(authentication, #request.reporterId)")
     public ResponseEntity<Void> createReport(
             @RequestBody ReportRequest request,
             HttpServletRequest httpRequest) {

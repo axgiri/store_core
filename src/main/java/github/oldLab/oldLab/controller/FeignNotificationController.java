@@ -34,7 +34,7 @@ public interface FeignNotificationController {
                                                               @RequestParam("page") int  page,
                                                               @RequestParam("size") int size);
 
-    @GetMapping("/reviews/persons/{personId}/author/{authorId}")
+    @GetMapping("/reviews/person/{personId}/author/{authorId}")
     Boolean hasReviewsByAuthorId(@PathVariable Long personId,
                                  @PathVariable Long authorId);
 
