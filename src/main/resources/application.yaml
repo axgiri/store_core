@@ -132,3 +132,12 @@ rate:
       requests:
         per:
           window: 50
+
+cors:
+  allowed-origins:
+    - http://localhost:5173 # Vite default port
+    - http://localhost:3000 # React default port
+    - https://www.site.com # Your production domain here
+    - http://www.site.com # Your production domain here
+    - https://site.com # Your production domain here
+    - http://site.com # Your production domain here
