@@ -5,6 +5,7 @@ import github.oldLab.oldLab.serviceImpl.OAuth2ServiceImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,6 +32,9 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final OAuth2SuccessHandler oAuthSuccessHandler;
     private final OAuth2ServiceImpl oAuth2Service;
+
+    @Value("${cors.allowed-origins}")
+    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -99,14 +103,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
-            "http://localhost:5173",
-            "http://localhost:3000",
-            "https://axgiri.com.kz",
-            "https://www.axgiri.com.kz",
-            "http://axgiri.com.kz",
-            "http://www.axgiri.com.kz"
-        ));
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
