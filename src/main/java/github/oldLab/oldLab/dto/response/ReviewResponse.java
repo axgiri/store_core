@@ -20,7 +20,7 @@ public class ReviewResponse {
     private Long authorId;
 
     @JsonProperty("rating")
-    private Long rating;
+    private float rating;
 
     @JsonProperty("person_id")
     private Long personId;
