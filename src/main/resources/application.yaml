@@ -61,6 +61,8 @@ app:
   cleanup:
     cron: 0 0 0 * * ?
     timezone: CET
+  activation-ttl-minutes: 15
+  inactive-account-ttl-days: 1
 
 frontend:
   redirect:

@@ -8,6 +8,8 @@ import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.Enum.MessageChannelEnum;
 import github.oldLab.oldLab.exception.InvalidOtpException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import github.oldLab.oldLab.dto.request.ActivateRequest;
@@ -35,7 +37,8 @@ public class ActivateServiceImpl implements ActivateService {
     private final MessageSenderServiceImpl messageSender;
     private final RefreshTokenService refreshTokenService;
 
-    private final int OTP_EXPIRATION_MINUTES = 15;
+    @Value("${app.activation-ttl-minutes}")
+    private int OTP_EXPIRATION_MINUTES;
 
     @Transactional
     public void setActive(ActivateRequest request) {
@@ -189,7 +192,7 @@ public class ActivateServiceImpl implements ActivateService {
     
     @Transactional
     public void cleanupOldRecords() {
-        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * OTP_EXPIRATION_MINUTES); //60sec * 60min * 24hour * minutes in .application
+        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 + OTP_EXPIRATION_MINUTES); //60sec * 60min * 24hour * minutes in .application
         repository.deleteOlderThan(cutoffDate);
     }
 }

@@ -11,6 +11,7 @@ import github.oldLab.oldLab.exception.UserAlreadyExistsException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +52,9 @@ public class PersonServiceImpl implements PersonService {
     private final TokenService tokenService;
     private final ActivateService activateService;
     private final RefreshTokenService refreshTokenService;
+
+    @Value("${app.inactive-account-ttl-days}")
+    private int inactiveAccountTtlDays;
 
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
@@ -269,5 +273,11 @@ public class PersonServiceImpl implements PersonService {
         if (!passwordEncoder.matches(raw, encoded)) {
             throw new BadCredentialsException("invalid credentials");
         }
+    }
+
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public void cleanupInactivePersons() {
+        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * inactiveAccountTtlDays); //60sec * 60min * 24hour * days in .application
+        repository.deleteByIsActiveFalseAndCreatedAtBefore(cutoffDate);
     }
 }
