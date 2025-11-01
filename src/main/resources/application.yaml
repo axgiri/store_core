@@ -141,3 +141,4 @@ cors:
     - http://www.site.com # Your production domain here
     - https://site.com # Your production domain here
     - http://site.com # Your production domain here
+  max-age: 3600
