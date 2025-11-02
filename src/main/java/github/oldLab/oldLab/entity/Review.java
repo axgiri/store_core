@@ -35,7 +35,7 @@ public class Review {
     @JoinColumn(name = "author_id", nullable = false)
     private Person author;
 
-    private Long rating;
+    private float rating;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "person_id")

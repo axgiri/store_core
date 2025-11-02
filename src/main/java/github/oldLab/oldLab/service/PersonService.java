@@ -37,4 +37,6 @@ public interface PersonService {
 
     // Centralized OAuth upsert to avoid duplication
     Person upsertFromOAuth(String email, String firstName, String lastName);
+
+    public void cleanupInactivePersons();
 }

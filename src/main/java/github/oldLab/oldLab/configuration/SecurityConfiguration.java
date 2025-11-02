@@ -36,6 +36,9 @@ public class SecurityConfiguration {
     @Value("${cors.allowed-origins}")
     private List<String> allowedOrigins;
 
+    @Value("${cors.max-age}")
+    private Long maxAge;
+
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -107,6 +110,7 @@ public class SecurityConfiguration {
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(maxAge);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

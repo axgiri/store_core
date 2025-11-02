@@ -1,6 +1,7 @@
 package github.oldLab.oldLab.repository;
 
 import java.util.Optional;
+import java.time.Instant;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,4 +28,8 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     @Transactional
     @Query("UPDATE Person p SET p.isActive = :isActive WHERE p.email = :email")
     int setActiveByEmail(@Param("email") String email, @Param("isActive") boolean isActive);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("DELETE FROM Person p WHERE p.isActive = false AND p.createdAt < :cutoffDate")
+    int deleteByIsActiveFalseAndCreatedAtBefore(@Param("cutoffDate") Instant cutoffDate);
 }

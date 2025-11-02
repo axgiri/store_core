@@ -44,6 +44,11 @@ spring:
   elasticsearch:
     uris: http://elasticsearch:9200
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 server:
   port: 8080
 
@@ -56,6 +61,8 @@ app:
   cleanup:
     cron: 0 0 0 * * ?
     timezone: CET
+  activation-ttl-minutes: 15
+  inactive-account-ttl-days: 1
 
 frontend:
   redirect:
@@ -141,3 +148,4 @@ cors:
     - http://www.site.com # Your production domain here
     - https://site.com # Your production domain here
     - http://site.com # Your production domain here
+  max-age: 3600

@@ -16,7 +16,7 @@ public class ReviewRequest {
     private Long authorId;
 
     @NotNull(message = "rating cannot be null")
-    private Long rating;
+    private float rating;
 
     @NotNull(message = "personId must be provided")
     private Long personId;
