@@ -192,7 +192,7 @@ public class ActivateServiceImpl implements ActivateService {
     
     @Transactional
     public void cleanupOldRecords() {
-        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 + OTP_EXPIRATION_MINUTES); //60sec * 60min * 24hour * minutes in .application
+        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 + 60 * OTP_EXPIRATION_MINUTES); //60sec * 60min * 24hour + minutes in .env || .yaml (converted to seconds)
         repository.deleteOlderThan(cutoffDate);
     }
 }

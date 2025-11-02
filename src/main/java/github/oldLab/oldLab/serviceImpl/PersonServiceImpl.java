@@ -277,7 +277,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void cleanupInactivePersons() {
-        Instant cutoffDate = Instant.now().minusSeconds(60 * 60 * 24 * inactiveAccountTtlDays); //60sec * 60min * 24hour * days in .application
+        Instant cutoffDate = Instant.now().minusSeconds(60L * 60 * 24 * inactiveAccountTtlDays); //60sec * 60min * 24hour * days in .application
         repository.deleteByIsActiveFalseAndCreatedAtBefore(cutoffDate);
     }
 }
