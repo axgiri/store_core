@@ -15,6 +15,7 @@ services:
       - elasticsearch
       - kibana
       - minio
+      - redis
     networks:
       - auth-network
     restart: on-failure:3
@@ -157,6 +158,24 @@ services:
         max_attempts: 3
         window: 120s
 
+  redis:
+    image: redis:7-alpine
+    container_name: oldlab-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - auth-network
+    restart: on-failure:3
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
 networks:
   auth-network:
     driver: bridge
@@ -166,3 +185,4 @@ volumes:
   pgadmin_data:
   es_data:
   minio_data:
+  redis_data:
