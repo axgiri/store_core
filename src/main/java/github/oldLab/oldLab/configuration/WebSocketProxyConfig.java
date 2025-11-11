@@ -22,12 +22,12 @@ public class WebSocketProxyConfig implements WebSocketConfigurer {
 
     private final ChatWebSocketProxyHandler chatWebSocketProxyHandler;
 
-    @Value("${cors.allowed-origins}")
-    private List<String> allowedOrigins;
+    // @Value("${cors.allowed-origins}")
+    // private List<String> allowedOrigins;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatWebSocketProxyHandler, "/ws/chat")
-                .setAllowedOrigins(allowedOrigins.toArray(new String[0]));
+                .setAllowedOrigins("localhost:5173", "localhost:8081", "localhost:8082", "localhost:8083");
     }
 }

@@ -84,7 +84,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void revoke(String token) {
         log.debug("initial token: {}", token);
         String hash = tokenHashService.hash(token);

@@ -1,7 +1,5 @@
 package github.oldLab.oldLab.service;
 
-import java.util.concurrent.CompletableFuture;
-
 import github.oldLab.oldLab.dto.request.ContactRequest;
 import github.oldLab.oldLab.dto.request.LoginRequest;
 import github.oldLab.oldLab.dto.request.PersonRequest;
@@ -27,7 +25,7 @@ public interface PersonService {
 
     public void validateToken(String token);
 
-    public CompletableFuture<Void> updatePasswordAsync(UpdatePasswordRequest request);
+    public void updatePasswordAsync(UpdatePasswordRequest request);
 
     // Reset Password Section
     public void requestPasswordReset(ContactRequest contactRequest);

@@ -33,8 +33,8 @@ public class SecurityConfiguration {
     private final OAuth2SuccessHandler oAuthSuccessHandler;
     private final OAuth2ServiceImpl oAuth2Service;
 
-    @Value("${cors.allowed-origins}")
-    private List<String> allowedOrigins;
+    // @Value("${cors.allowed-origins}")
+    // private List<String> allowedOrigins;
 
     @Value("${cors.max-age}")
     private Long maxAge;
@@ -106,7 +106,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8081", "http://localhost:8082", "http://localhost:8083"));
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
