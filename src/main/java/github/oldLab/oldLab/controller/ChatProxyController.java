@@ -44,13 +44,24 @@ public class ChatProxyController {
             @RequestParam(required = false) String beforeChatId,
             @RequestParam(defaultValue = "50") Integer size) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat", "GET", null, 
+        return forwardRequest(authHeader, "/api/v1/chat", "GET", null, 
             builder -> {
                 if (beforeChatId != null) {
                     builder.queryParam("beforeChatId", beforeChatId);
                 }
                 builder.queryParam("size", size);
             });
+    }
+
+    /**
+     * Create or get existing chat with recipient
+     */
+    @PostMapping("/create/{recipientId}")
+    public Mono<ResponseEntity<String>> createChat(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+            @PathVariable Long recipientId) {
+        
+        return forwardRequest(authHeader, "/api/v1/chat/create/" + recipientId, "POST", null, null);
     }
 
     /**
@@ -63,7 +74,7 @@ public class ChatProxyController {
             @RequestParam(required = false) Long beforeTimestamp,
             @RequestParam(defaultValue = "50") Integer size) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/messages", "GET", null,
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/messages", "GET", null,
             builder -> {
                 if (beforeTimestamp != null) {
                     builder.queryParam("beforeTimestamp", beforeTimestamp);
@@ -80,7 +91,7 @@ public class ChatProxyController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @PathVariable String chatId) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/messages/unread/count", "GET", null, null);
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/messages/unread/count", "GET", null, null);
     }
 
     /**
@@ -91,7 +102,7 @@ public class ChatProxyController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @PathVariable String chatId) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/read", "PUT", null, null);
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/read", "PUT", null, null);
     }
 
     /**
@@ -103,7 +114,7 @@ public class ChatProxyController {
             @PathVariable String chatId,
             @RequestBody String requestBody) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/send", "POST", requestBody, null);
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/send", "POST", requestBody, null);
     }
 
     /**
@@ -116,7 +127,7 @@ public class ChatProxyController {
             @PathVariable String messageId,
             @RequestBody String requestBody) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/messages/" + messageId, 
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/messages/" + messageId, 
             "PUT", requestBody, null);
     }
 
@@ -129,7 +140,7 @@ public class ChatProxyController {
             @PathVariable String chatId,
             @PathVariable String messageId) {
         
-        return forwardRequest(authHeader, "/ws/v1/chat/" + chatId + "/messages/" + messageId, 
+        return forwardRequest(authHeader, "/api/v1/chat/" + chatId + "/messages/" + messageId, 
             "DELETE", null, null);
     }
 

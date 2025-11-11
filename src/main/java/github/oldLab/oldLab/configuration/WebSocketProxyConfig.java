@@ -28,6 +28,6 @@ public class WebSocketProxyConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatWebSocketProxyHandler, "/ws/chat")
-                .setAllowedOrigins("localhost:5173", "localhost:8081", "localhost:8082", "localhost:8083");
+                .setAllowedOrigins("http://localhost:5173", "http://localhost:8081", "http://localhost:8082", "http://localhost:8083");
     }
 }
