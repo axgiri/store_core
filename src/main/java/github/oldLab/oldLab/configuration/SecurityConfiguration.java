@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                         "/api/v1/persons/validate",
                         "/api/v1/persons/getRoleName")
                     .permitAll()
-
+                .requestMatchers("/api/v1/chat/**").permitAll()
                 // Activate (OTP / login)
                 .requestMatchers(HttpMethod.POST,
                         "/api/v1/activate/activate",
