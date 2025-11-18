@@ -59,6 +59,7 @@ public class SecurityConfiguration {
                         "/api/v1/persons/validate",
                         "/api/v1/persons/getRoleName")
                     .permitAll()
+                .requestMatchers("/ws/**").permitAll() // WebSocket endpoints
                 .requestMatchers("/api/v1/chat/**").permitAll()
                 // Activate (OTP / login)
                 .requestMatchers(HttpMethod.POST,

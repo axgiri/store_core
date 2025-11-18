@@ -15,6 +15,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import github.oldLab.oldLab.entity.Person;
+import github.oldLab.oldLab.repository.PersonRepository;
 import github.oldLab.oldLab.service.UserIdCacheService;
 import github.oldLab.oldLab.serviceImpl.TokenServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class ChatWebSocketProxyHandler extends TextWebSocketHandler {
 
     private final TokenServiceImpl tokenService;
     private final UserIdCacheService userIdCacheService;
+    private final PersonRepository personRepository;
     private final StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
 
     // Map: client session -> chat service session
@@ -157,16 +159,19 @@ public class ChatWebSocketProxyHandler extends TextWebSocketHandler {
         Long userId = userIdCacheService.getCachedUserId(token);
         
         if (userId == null) {
-            // Cache miss - extract from token
+            // Cache miss - extract from token and lookup user by email
             try {
-                tokenService.extractUsername(token); // Validate token
+                String email = tokenService.extractUsername(token); // email from JWT
+                log.debug("Extracted email from token: {}", email);
                 
-                // Get user from session attributes (set by JWT filter)
-                Object principal = session.getPrincipal();
-                if (principal instanceof Person) {
-                    userId = ((Person) principal).getId();
+                // Find user by email
+                Person person = personRepository.findByEmail(email).orElse(null);
+                if (person != null) {
+                    userId = person.getId();
                     userIdCacheService.cacheUserId(token, userId);
-                    log.debug("Cached userId {} for WebSocket connection", userId);
+                    log.debug("Found userId {} for email {} and cached", userId, email);
+                } else {
+                    log.warn("User not found for email: {}", email);
                 }
             } catch (Exception e) {
                 log.error("Failed to extract userId from token", e);
