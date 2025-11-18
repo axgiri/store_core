@@ -178,7 +178,8 @@ services:
 
 networks:
   auth-network:
-    driver: bridge
+    external: true
+    name: oldlab_auth-network
 
 volumes:
   authentication_db_data:

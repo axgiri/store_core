@@ -163,8 +163,8 @@ cors:
 
 chat:
   service:
-    url: http://localhost:8082
+    url: http://chat-service:8082
     websocket:
-      url: ws://localhost:8082/ws/chat
+      url: ws://chat-service:8082/ws/chat
   user-id-cache:
     ttl-minutes: 15
