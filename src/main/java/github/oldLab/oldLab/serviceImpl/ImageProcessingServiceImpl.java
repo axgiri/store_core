@@ -35,12 +35,8 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
                 throw new IOException("Couldn't read image: " + originalImage.getOriginalFilename());
             }
             
-            if (!isWebP(originalImage.getOriginalFilename())) {
-                byte[] webpImage = convertToWebp(image);
-                return compressImage(webpImage);
-            } else {
-                return compressImage(originalImage.getBytes());
-            }
+            // Compress and convert to WebP directly from BufferedImage
+            return compressAndConvertToWebp(image);
 
         } catch (OutOfMemoryError e) {
             log.error("Out of memory while processing image: {}", e.getMessage());
@@ -63,38 +59,22 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
                 throw new IOException("Couldn't read image from byte array");
             }
             
-            byte[] webpImage = convertToWebp(image);
-            return compressImage(webpImage);
+            return compressAndConvertToWebp(image);
         } catch (Exception e) {
             log.error("Error processing image: {}", e.getMessage(), e);
             throw new IOException("Failed to process image", e);
         }
     }
 
-    private byte[] convertToWebp(BufferedImage image) throws IOException {
+    /**
+     * Compress and convert image to WebP format with adaptive quality
+     */
+    private byte[] compressAndConvertToWebp(BufferedImage image) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        Thumbnails.of(image)
-            .size(image.getWidth(), image.getHeight())
-            .outputQuality(INITIAL_QUALITY)
-            .outputFormat(OUTPUT_FORMAT)
-            .toOutputStream(outputStream);
-
-        log.debug("Image converted to WebP: original size {}x{}", image.getWidth(), image.getHeight());
-        return outputStream.toByteArray();
-    }
-
-    private byte[] compressImage(byte[] webpImage) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(webpImage));
-        
-        if (image == null) {
-            return webpImage;
-        }
-
         float quality = INITIAL_QUALITY;
         byte[] result;
 
+        // Try different quality levels until file size is acceptable
         do {
             outputStream.reset();
 
@@ -109,6 +89,7 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
             
         } while (result.length > MAX_FILE_SIZE && quality >= MIN_QUALITY);
 
+        // If still too large, reduce dimensions
         if (result.length > MAX_FILE_SIZE) {
             log.debug("Image still too large ({}KB) at minimum quality, reducing dimensions",
                     result.length / 1024);
@@ -125,15 +106,9 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
             result = outputStream.toByteArray();
         }
 
-        log.debug("Image compressed: final size {}KB", result.length / 1024);
+        log.debug("Image compressed: final size {}KB, dimensions {}x{}", 
+                result.length / 1024, image.getWidth(), image.getHeight());
 
         return result;
-    }
-
-    private boolean isWebP(String filename) {
-        if (filename == null)
-            return false;
-
-        return filename.toLowerCase().endsWith(".webp");
     }
 }
