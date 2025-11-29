@@ -63,7 +63,7 @@ public class AsyncJwtFilter extends OncePerRequestFilter {
                 return;
             }
 
-            Claims claims = tokenService.extractAllClaimsAsync(jwt).join();
+            Claims claims = tokenService.extractAllClaims(jwt);
             List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles"))
                     .stream()
                     .map(r -> new SimpleGrantedAuthority("ROLE_" + r))

@@ -4,14 +4,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -42,18 +40,16 @@ public class TokenServiceImpl implements TokenService {
         }
     }
     
-    @Async("asyncExecutor")
-    public CompletableFuture<Claims> extractAllClaimsAsync(String token) {
+    public Claims extractAllClaims(String token) {
         try {
             Jws<Claims> jws = Jwts.parser()
                     .verifyWith(getSignInKey())
                     .build()
                     .parseSignedClaims(token);
-            Claims claims = jws.getPayload();
-            return CompletableFuture.completedFuture(claims);
+            return jws.getPayload();
         } catch (Exception e) {
             log.error("token validation failed: {}", e.getMessage());
-            return CompletableFuture.failedFuture(e);
+            throw new InvalidTokenException("Invalid JWT token: " + e.getMessage());
         }
     }
 
@@ -64,12 +60,11 @@ public class TokenServiceImpl implements TokenService {
 
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
-        final CompletableFuture<Claims> claim = extractAllClaimsAsync(token);
-        return claim.thenApply(claimsResolver).join();
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
-    @Async("asyncExecutor")
-    public CompletableFuture<String> generateTokenAsync(Map<String, Object> extraClaims, UserDetails userDetails){
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
         log.info("generating token for user: {}", userDetails.getUsername());
         extraClaims.put("roles", userDetails.getAuthorities().stream()
         .map(authority -> authority.getAuthority().replace("ROLE_", ""))
@@ -83,16 +78,15 @@ public class TokenServiceImpl implements TokenService {
                     .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * TTL))
                     .signWith(getSignInKey())
                     .compact();
-            return CompletableFuture.completedFuture(token);
+            return token;
         } catch (Exception e) {
-            log.info("failed to generate token for user: {}", userDetails.getUsername(), e);
-            return CompletableFuture.failedFuture(e);
+            log.error("failed to generate token for user: {}", userDetails.getUsername(), e);
+            throw new InvalidTokenException("Failed to generate token: " + e.getMessage());
         }
     }
 
-    @Async("asyncExecutor")
-    public CompletableFuture<String> generateToken(UserDetails userDetails){
-        return generateTokenAsync(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails){
+        return generateToken(new HashMap<>(), userDetails);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){

@@ -44,6 +44,17 @@ spring:
   elasticsearch:
     uris: http://elasticsearch:9200
 
+  data:
+    redis:
+      host: redis
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8 #bad machine, default is 8
+          max-idle: 8
+          min-idle: 0
+
   servlet:
     multipart:
       max-file-size: 100MB
@@ -149,3 +160,11 @@ cors:
     - https://site.com # Your production domain here
     - http://site.com # Your production domain here
   max-age: 3600
+
+chat:
+  service:
+    url: http://chat-service:8082
+    websocket:
+      url: ws://chat-service:8082/ws/chat
+  user-id-cache:
+    ttl-minutes: 15

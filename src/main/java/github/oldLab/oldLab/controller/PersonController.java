@@ -217,15 +217,8 @@ public class PersonController {
         Bucket bucket = rateLimiterService.resolveBucket(ip);
         if (bucket.tryConsume(1)) {
             log.debug("updating password for email: {}", request.getEmail());
-            try {
-                service.updatePasswordAsync(request).join();
-            } catch (java.util.concurrent.CompletionException e) {
-                if (e.getCause() instanceof RuntimeException re) {
-                    throw re;
-                }
-                throw e;
-            }
-            return ResponseEntity.ok().build();
+            service.updatePasswordAsync(request);
+            return ResponseEntity.accepted().build(); // 202 так как async
         } else {
             log.warn("rate limit exceeded for IP: {}", ip);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();

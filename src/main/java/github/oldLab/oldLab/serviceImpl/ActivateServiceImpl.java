@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.Enum.MessageChannelEnum;
 import github.oldLab.oldLab.exception.InvalidOtpException;
@@ -145,9 +144,9 @@ public class ActivateServiceImpl implements ActivateService {
 
         var person = personRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("person not found with email: " + email));
-        CompletableFuture<String> token = tokenService.generateToken(person);
+        String token = tokenService.generateToken(person);
         String refreshToken = refreshTokenService.issue(person);
-        return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
+        return new AuthResponse(token, refreshToken, PersonResponse.fromEntityToDto(person));
     }
 
     public void delete(String email) {

@@ -2,7 +2,6 @@ package github.oldLab.oldLab.serviceImpl;
 
 import java.time.Instant;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import github.oldLab.oldLab.dto.request.ResetPasswordRequest;
 import github.oldLab.oldLab.entity.Person;
@@ -65,10 +64,20 @@ public class PersonServiceImpl implements PersonService {
             throw new UserAlreadyExistsException("email " + personRequest.getEmail() + " already exists");
         }
         taskExecutor.execute(() -> {
-            activateService.saveForRegister(personRequest.getEmail());
-            personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
-            repository.save(personRequest.toEntity());
-            log.info("created person with first name: {}", personRequest.getFirstName());
+            try {
+                if (repository.existsByEmail(personRequest.getEmail())) {
+                    log.warn("Race condition detected: email {} already exists", personRequest.getEmail());
+                    return;
+                }
+                activateService.saveForRegister(personRequest.getEmail());
+                personRequest.setPassword(passwordEncoder.encode(personRequest.getPassword()));
+                repository.save(personRequest.toEntity());
+                log.info("created person with first name: {}", personRequest.getFirstName());
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                log.error("Duplicate email constraint violation for: {}", personRequest.getEmail(), e);
+            } catch (Exception e) {
+                log.error("Error creating person asynchronously", e);
+            }
         });
     }
 
@@ -77,16 +86,16 @@ public class PersonServiceImpl implements PersonService {
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var person = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user not found with email: " + request.getEmail()));
-        CompletableFuture<String> token = tokenService.generateToken(person);
+        String token = tokenService.generateToken(person);
         String refreshToken = refreshTokenService.issue(person);
-        return new AuthResponse(token.join(), refreshToken, PersonResponse.fromEntityToDto(person));
+        return new AuthResponse(token, refreshToken, PersonResponse.fromEntityToDto(person));
     }
 
     public AuthResponse refreshAccessToken(String refreshToken) {
         var rotated = refreshTokenService.rotate(refreshToken);
         var person = rotated.getPerson();
-        CompletableFuture<String> access = tokenService.generateToken(person);
-        return new AuthResponse(access.join(), rotated.getTokenHash(), PersonResponse.fromEntityToDto(person));
+        String access = tokenService.generateToken(person);
+        return new AuthResponse(access, rotated.getTokenHash(), PersonResponse.fromEntityToDto(person));
     }
 
     public void revoke(String refreshToken) {
@@ -116,7 +125,11 @@ public class PersonServiceImpl implements PersonService {
         );
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @org.springframework.cache.annotation.CacheEvict(
+        value = {"personByEmail", "personById", "personId"},
+        key = "#id"
+    )
     public PersonResponse update(Long id, PersonRequest personRequest) {
         log.info("updating person with id: {}", id);
             Person person = getReferenceByIdIfExists(id);
@@ -133,6 +146,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
+    @org.springframework.cache.annotation.CacheEvict(
+        value = {"personByEmail", "personById", "personId"},
+        key = "#id"
+    )
     public void delete(Long id) {
         log.info("deleting person with id: {}", id);
         Person person = repository.findById(id)
@@ -164,9 +181,9 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    public CompletableFuture<Void> updatePasswordAsync(UpdatePasswordRequest request) {
+    public void updatePasswordAsync(UpdatePasswordRequest request) {
         log.info("updating password for email: {}", request.getEmail());
-        return CompletableFuture.runAsync(() -> {
+        taskExecutor.execute(() -> {
             Person person = repository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("person not found with email: " + request.getEmail()));
             verifyPassword(request.getOldPassword(), person.getPassword());
@@ -174,7 +191,7 @@ public class PersonServiceImpl implements PersonService {
             person.setPassword(passwordEncoder.encode(request.getNewPassword()));
             repository.save(person);
             log.info("updated password for email: {}", request.getEmail());
-        }, taskExecutor);
+        });
     }
 
     @Override
@@ -277,7 +294,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void cleanupInactivePersons() {
-        Instant cutoffDate = Instant.now().minusSeconds(60L * 60 * 24 * inactiveAccountTtlDays); //60sec * 60min * 24hour * days in .application
+        Instant cutoffDate = Instant.now().minusSeconds(60L * 60 * 24 * inactiveAccountTtlDays);
         repository.deleteByIsActiveFalseAndCreatedAtBefore(cutoffDate);
     }
 }

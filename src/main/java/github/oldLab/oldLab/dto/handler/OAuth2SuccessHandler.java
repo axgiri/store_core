@@ -44,7 +44,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Person person = personService.upsertFromOAuth(email, firstName, lastName);
 
-        String jwt = jwtTokenProvider.generateToken(person).join();
+        String jwt = jwtTokenProvider.generateToken(person);
         String refreshToken = refreshTokenService.issue(person);
 
         Cookie jwtCookie = new Cookie("jwt", jwt);
