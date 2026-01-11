@@ -1,4 +1,4 @@
-# OldLab API
+# OldLab API (axgiri.com.kz)
 
 Backend microservice for a tech marketplace platform. Handles user authentication, product management, reviews, reports, and serves as an API gateway for the chat microservice.
 
