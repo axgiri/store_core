@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS products (
   price NUMERIC(19,2) NOT NULL,
   category VARCHAR(100) NOT NULL,
   is_available BOOLEAN NOT NULL,
-  person_id BIGINT NOT NULL
+  person_id UUID NOT NULL
 );
 
 ALTER TABLE products

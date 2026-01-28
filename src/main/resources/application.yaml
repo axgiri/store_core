@@ -3,16 +3,9 @@ spring:
     name: oldLab
   security:
     strategy: MODE_INHERITABLETHREADLOCAL
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: your-id
-            client-secret: your-secret
-            scope: email,profile
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+    
   datasource:
-    url: jdbc:postgresql://authentication-db:5432/authenticationdb
+    url: jdbc:postgresql://client-db:5432/clientdb
     username: postgres
     password: 1
     driver-class-name: org.postgresql.Driver
@@ -28,7 +21,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: jdbc:postgresql://authentication-db:5432/authenticationdb
+    url: jdbc:postgresql://client-db:5432/clientdb
     user: postgres
     password: 1
 
@@ -75,10 +68,6 @@ app:
   activation-ttl-minutes: 15
   inactive-account-ttl-days: 1
 
-frontend:
-  redirect:
-    url: http://localhost:5173/oauth-success
-
 minio:
   url: http://minio:9000
   access-key: 123456789qwerty123456789qwerty123456789qwerty
@@ -90,17 +79,12 @@ minio:
 
 kafka:
   topic:
-    message: message-topic
     report: report-topic
     review: review-topic
   dlt:
-    message: message-dlt
     review: review-dlt
     report: report-dlt
   partition:
-    message:
-      sms: message-sms
-      email: message-email
     review:
       create: review-create
       update: review-update
@@ -112,7 +96,7 @@ kafka:
 
 api:
   service:
-    notification-reports: http://notification-service:8081/api/notifications
+    notification-reports: http://notification-service:51740/api/notifications
 
 resilience4j:
   circuitbreaker:
@@ -132,14 +116,6 @@ max:
     per:
       product: 5
 
-jwt:
-  secret:
-    key: 123456789qwerty123456789qwerty123456789qwerty
-    ttl: 15
-  refresh:
-    key: 123456789qwerty123456789qwerty123456789qwerty
-    ttl: 30
-
 rate:
   limiting:
     window:
@@ -150,21 +126,3 @@ rate:
       requests:
         per:
           window: 50
-
-cors:
-  allowed-origins:
-    - http://localhost:5173 # Vite default port
-    - http://localhost:3000 # React default port
-    - https://www.site.com # Your production domain here
-    - http://www.site.com # Your production domain here
-    - https://site.com # Your production domain here
-    - http://site.com # Your production domain here
-  max-age: 3600
-
-chat:
-  service:
-    url: http://chat-service:8082
-    websocket:
-      url: ws://chat-service:8082/ws/chat
-  user-id-cache:
-    ttl-minutes: 15
