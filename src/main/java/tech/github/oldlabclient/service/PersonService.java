@@ -35,7 +35,7 @@ public class PersonService{
     @Qualifier("asyncExecutor")
     private final TaskExecutor taskExecutor;
 
-    public void createAsync(PersonRequest personRequest) {
+    public void create(PersonRequest personRequest) {
         log.info("creating person with first name: {}", personRequest.getFirstName());
         // if (repository.existsByEmail(personRequest.getEmail())) {
         // throw new UserAlreadyExistsException("email " + personRequest.getEmail() + "
@@ -52,7 +52,7 @@ public class PersonService{
 
     public PersonResponse findById(UUID id) {
         log.info("finding person with id: {}", id);
-        return PersonResponse.fromEntityToDto(repository.findById(id)
+        return PersonResponse.fromEntity(repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id)));
     }
 
@@ -63,10 +63,10 @@ public class PersonService{
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @org.springframework.cache.annotation.CacheEvict(
-        value = {"personByEmail", "personById", "personId"},
-        key = "#id"
-    )
+    // @org.springframework.cache.annotation.CacheEvict(
+    //     value = {"personByEmail", "personById", "personId"},
+    //     key = "#id"
+    // )
     public PersonResponse update(UUID id, PersonRequest personRequest) {
         log.info("updating person with id: {}", id);
             Person person = getReferenceByIdIfExists(id);
@@ -75,14 +75,14 @@ public class PersonService{
             person.setLastName(personRequest.getLastName());
             person.setPhoneNumber(personRequest.getPhoneNumber());
             person.setUpdatedAt(Instant.now());
-            return PersonResponse.fromEntityToDto(repository.save(person));
+            return PersonResponse.fromEntity(repository.save(person));
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    @org.springframework.cache.annotation.CacheEvict(
-        value = {"personByEmail", "personById", "personId"},
-        key = "#id"
-    )
+    // @org.springframework.cache.annotation.CacheEvict(
+    //     value = {"personByEmail", "personById", "personId"},
+    //     key = "#id"
+    // )
     public void delete(UUID id) { //TODO: call OL_Auth to delete associated auth data
         log.info("deleting person with id: {}", id);
         Person person = repository.findById(id)

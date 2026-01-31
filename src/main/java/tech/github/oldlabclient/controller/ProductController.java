@@ -5,9 +5,17 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tech.github.oldlabclient.Enum.CategoryEnum;
@@ -49,14 +57,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    // @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id,
             @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    // @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.ok().build();

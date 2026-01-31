@@ -2,9 +2,6 @@ package tech.github.oldlabclient.dto.request;
 
 import java.time.Instant;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -12,7 +9,6 @@ import lombok.Data;
 import tech.github.oldlabclient.entity.Person;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PersonRequest {
 
     @NotNull(message = "first name cannot be null")

@@ -1,10 +1,12 @@
 package tech.github.oldlabclient.dto.request;
 
 import java.math.BigDecimal;
-import java.util.*;
-
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +15,6 @@ import tech.github.oldlabclient.entity.Person;
 import tech.github.oldlabclient.entity.Product;
 
 @Data
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductRequest {
 
     @NotNull

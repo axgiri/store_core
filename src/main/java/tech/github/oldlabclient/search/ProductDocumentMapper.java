@@ -21,15 +21,16 @@ public static ProductDocument fromEntity(Product product) {
     }
 
     public static ProductResponse toResponse(ProductDocument d) {
-        return new ProductResponse()
-                .setId(d.getId())
-                .setName(d.getName())
-                .setDescription(d.getDescription())
-                .setPrice(d.getPrice())
-                .setCategory(d.getCategory())
-                .setPersonId(d.getPersonId())
-                .setTags(d.getTags())
-                .setHiddenLabels(d.getHiddenLabels())
-                .setAttributes(d.getAttributes());
+        return new ProductResponse(
+                d.getId(),
+                d.getName(),
+                d.getDescription(),
+                d.getPrice(),
+                d.getCategory(),
+                d.getPersonId(),
+                d.getTags(),
+                d.getHiddenLabels(),
+                d.getAttributes()
+        );
     }
 }

@@ -109,11 +109,8 @@ public class PhotoService{
         
         return photos.stream()
                 .map(photo -> {
-                    ProductPhotoResponse dto = new ProductPhotoResponse();
-                    dto.setObjectKey(photo.getObjectKey());
                     byte[] fileBytes = storage.load(photo.getObjectKey(), bucketProducts);
-                    dto.setFile(fileBytes);
-                    return dto;
+                    return new ProductPhotoResponse(photo.getObjectKey(), fileBytes);
                 })
                 .toList();
     }

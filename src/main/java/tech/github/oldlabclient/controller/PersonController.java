@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +27,9 @@ public class PersonController {
 
     private final PersonService service;
 
-    @PostMapping("/async/signup")
-    public ResponseEntity<Void> createAsync(@Valid @RequestBody PersonRequest personRequest) {
-        service.createAsync(personRequest);
+    @PostMapping("/signup")
+    public ResponseEntity<Void> create(@Valid @RequestBody PersonRequest personRequest) {
+        service.create(personRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
@@ -40,13 +39,13 @@ public class PersonController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> update(@PathVariable UUID id, @Valid @RequestBody PersonRequest personRequest) {
         return ResponseEntity.ok(service.update(id, personRequest));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
+    // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         log.debug("deleting person with id: {}", id);
         service.delete(id);

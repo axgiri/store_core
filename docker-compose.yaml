@@ -4,15 +4,18 @@ services:
     container_name: oldlab-client
     hostname: oldlab-client
     ports:
-      - "51730:8080"
+      - "51730:51730"
     volumes:
     - ./:/app
     working_dir: /app
     command: ./mvnw spring-boot:run
     depends_on:
-      - client-db
-      - elasticsearch
-      - minio
+      oldlab-client-db:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_started
     networks:
       - oldlab-network
     restart: on-failure:3
@@ -23,17 +26,17 @@ services:
         max_attempts: 3
         window: 120s
   
-  client-db:
+  oldlab-client-db:
     image: postgres:13-alpine
-    container_name: client-db
+    container_name: oldlab-client-db
     ports:
       - "51731:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1
-      POSTGRES_DB: clientdb
+      POSTGRES_DB: oldlabclientdb
     volumes:
-      - client_db_data:/var/lib/postgresql/data
+      - oldlab_client_db_data:/var/lib/postgresql/data
     networks:
       - oldlab-network
     restart: on-failure:3
@@ -45,7 +48,7 @@ services:
         window: 120s
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    image: elasticsearch:9.2.4
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -59,6 +62,11 @@ services:
       - es_data:/usr/share/elasticsearch/data
     networks:
       - oldlab-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -89,11 +97,21 @@ services:
         max_attempts: 3
         window: 120s
 
+  elasticvue:
+    image: cars10/elasticvue:1.11.1
+    container_name: elasticvue
+    ports:
+      - "51732:8080"
+    depends_on:
+      - elasticsearch
+    networks:
+      - oldlab-network
+
 networks:
   oldlab-network:
     external: true
 
 volumes:
-  client_db_data:
+  oldlab_client_db_data:
   es_data:
   minio_data:

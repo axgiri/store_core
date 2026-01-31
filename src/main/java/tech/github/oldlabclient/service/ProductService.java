@@ -40,17 +40,17 @@ public class ProductService{
         Person personReference = personService.getReferenceById(personId);
         Product saved = repository.save(request.toEntity(personReference));
         productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
-        return ProductResponse.fromEntityToDto(saved);
+        return ProductResponse.fromEntity(saved);
     }
 
     public ProductResponse getById(Long id) {
         Product p = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
-        return ProductResponse.fromEntityToDto(p);
+        return ProductResponse.fromEntity(p);
     }
 
     public List<ProductResponse> list(int page, int size) {
         return repository.findAll(PageRequest.of(page, size)).getContent().stream()
-                .map(ProductResponse::fromEntityToDto)
+                .map(ProductResponse::fromEntity)
                 .toList();
     }
 
@@ -59,7 +59,7 @@ public class ProductService{
             throw new UserNotFoundException("Person not found: " + personId);
         }
         return repository.findByPersonId(personId, PageRequest.of(page, size))
-                .map(ProductResponse::fromEntityToDto)
+                .map(ProductResponse::fromEntity)
                 .getContent();
     }
 
@@ -69,7 +69,7 @@ public class ProductService{
         BeanUtils.copyProperties(request, existing, "id", "version");
         Product saved = repository.save(existing);
         productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
-        return ProductResponse.fromEntityToDto(saved);
+        return ProductResponse.fromEntity(saved);
     }
 
     @Transactional
@@ -106,7 +106,7 @@ public class ProductService{
 
     public List<ProductResponse> listByCategory(CategoryEnum categoryEnum, int page, int size) {
         return repository.findByCategory(categoryEnum, PageRequest.of(page, size))
-                .map(ProductResponse::fromEntityToDto)
+                .map(ProductResponse::fromEntity)
                 .getContent();
     }
 
