@@ -33,18 +33,18 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @GetMapping("/findById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PersonResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<PersonResponse> update(@PathVariable UUID id, @Valid @RequestBody PersonRequest personRequest) {
         return ResponseEntity.ok(service.update(id, personRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         log.debug("deleting person with id: {}", id);

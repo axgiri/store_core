@@ -66,4 +66,14 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
+
+    @ExceptionHandler(MaxPhotosPerProductReachedException.class)
+    public ResponseEntity<ApiError> onMaxPhotosPerProductReached(MaxPhotosPerProductReachedException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "MAX_PHOTOS_PER_PRODUCT_REACHED",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
 }

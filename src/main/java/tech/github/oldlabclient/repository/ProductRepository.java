@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import tech.github.oldlabclient.Enum.CategoryEnum;
 import tech.github.oldlabclient.entity.Product;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {

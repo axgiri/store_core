@@ -1,4 +1,4 @@
-package tech.github.oldlabclient.Enum;
+package tech.github.oldlabclient.enumeration;
 
 public enum ReportStatusEnum {
     PENDING,

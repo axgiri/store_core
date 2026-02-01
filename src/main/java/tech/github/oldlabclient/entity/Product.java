@@ -29,7 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import tech.github.oldlabclient.Enum.CategoryEnum;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 @Entity
 @Table(name = "products")

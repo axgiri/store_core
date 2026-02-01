@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import lombok.Data;
-import tech.github.oldlabclient.Enum.CategoryEnum;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 @Data
 @Document(indexName = "products")

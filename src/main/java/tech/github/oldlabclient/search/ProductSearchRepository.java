@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import tech.github.oldlabclient.Enum.CategoryEnum;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 import org.springframework.data.elasticsearch.annotations.Query;
 

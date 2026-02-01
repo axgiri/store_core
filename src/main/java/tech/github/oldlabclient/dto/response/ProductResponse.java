@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import tech.github.oldlabclient.Enum.CategoryEnum;
 import tech.github.oldlabclient.entity.Product;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 public record ProductResponse(
     Long id,

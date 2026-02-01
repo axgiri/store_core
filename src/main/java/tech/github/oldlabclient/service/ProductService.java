@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import tech.github.oldlabclient.Enum.CategoryEnum;
 import tech.github.oldlabclient.dto.request.ProductRequest;
 import tech.github.oldlabclient.dto.response.ProductResponse;
 import tech.github.oldlabclient.entity.Person;
 import tech.github.oldlabclient.entity.Product;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 import tech.github.oldlabclient.exception.ProductNotFoundException;
 import tech.github.oldlabclient.exception.UserNotFoundException;
 import tech.github.oldlabclient.repository.ProductRepository;

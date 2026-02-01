@@ -10,9 +10,9 @@ import java.util.Set;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import tech.github.oldlabclient.Enum.CategoryEnum;
 import tech.github.oldlabclient.entity.Person;
 import tech.github.oldlabclient.entity.Product;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 
 @Data
 public class ProductRequest {

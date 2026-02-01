@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import tech.github.oldlabclient.Enum.CategoryEnum;
 import tech.github.oldlabclient.dto.request.ProductRequest;
 import tech.github.oldlabclient.dto.response.ProductResponse;
+import tech.github.oldlabclient.enumeration.CategoryEnum;
 import tech.github.oldlabclient.service.ProductService;
 
 @Slf4j
@@ -32,8 +32,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponse> create(@RequestBody @Validated ProductRequest request,
-            @RequestHeader("Authorization") UUID userId) {
+    public ResponseEntity<ProductResponse> create(@RequestBody @Validated ProductRequest request, @RequestHeader("Authorization") UUID userId) {
+        //TODO: get user id from token or header
         return ResponseEntity.ok(productService.create(request, userId));
     }
 
@@ -43,8 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductResponse>> list(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<List<ProductResponse>> list(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(productService.list(page, size));
     }
 
@@ -58,8 +57,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     // @PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<ProductResponse> update(@PathVariable Long id,
-            @RequestBody ProductRequest request) {
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.update(id, request));
     }
 

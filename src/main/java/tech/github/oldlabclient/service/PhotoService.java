@@ -15,6 +15,7 @@ import tech.github.oldlabclient.dto.response.ProductPhotoResponse;
 import tech.github.oldlabclient.entity.Person;
 import tech.github.oldlabclient.entity.Photo;
 import tech.github.oldlabclient.entity.Product;
+import tech.github.oldlabclient.exception.MaxPhotosPerProductReachedException;
 import tech.github.oldlabclient.exception.PhotoNotFoundException;
 import tech.github.oldlabclient.exception.ProductNotFoundException;
 import tech.github.oldlabclient.repository.PhotoRepository;
@@ -82,7 +83,7 @@ public class PhotoService{
 
         
         if (stats.getCount() >= maxPhotosPerProduct) {
-            throw new ProductNotFoundException("max photos per product reached");
+            throw new MaxPhotosPerProductReachedException("max photos per product reached");
         }
 
         Product product = productService.getReferenceByIdIfExists(productId);

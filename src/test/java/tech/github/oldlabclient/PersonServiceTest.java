@@ -1,4 +1,4 @@
-// package github.oldLab.oldLab;
+package tech.github.oldlabclient;
 
 // import github.oldLab.oldLab.dto.request.PersonRequest;
 // import github.oldLab.oldLab.entity.Person;
