@@ -47,7 +47,7 @@ spring:
       timeout: 2000ms
       lettuce:
         pool:
-          max-active: 8 #bad machine, default is 8
+          max-active: 8
           max-idle: 8
           min-idle: 0
 
@@ -69,6 +69,9 @@ app:
     timezone: CET
   activation-ttl-minutes: 15
   inactive-account-ttl-days: 1
+  kafka:
+    replicas: 1
+    min-insync-replicas: 1
 
 minio:
   url: http://minio:9000

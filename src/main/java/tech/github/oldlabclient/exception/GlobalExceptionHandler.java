@@ -76,4 +76,45 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
+
+    @ExceptionHandler(DuplicateReportException.class)
+    public ResponseEntity<ApiError> onDuplicateReport(DuplicateReportException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "DUPLICATE_REPORT",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(DuplicateReviewException.class)
+    public ResponseEntity<ApiError> onDuplicateReview(DuplicateReviewException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "DUPLICATE_REVIEW",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> onIllegalArgument(IllegalArgumentException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "BAD_REQUEST",
+            ex.getMessage()
+        );
+        return ResponseEntity.badRequest().body(err);
+    }
+
+    @ExceptionHandler(ServiceCommunicationException.class)
+    public ResponseEntity<ApiError> onServiceCommunication(ServiceCommunicationException ex) {
+        log.error("Service communication error", ex);
+        ApiError err = new ApiError(
+            Instant.now(),
+            "SERVICE_UNAVAILABLE",
+            "External service temporarily unavailable"
+        );
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
+    }
 }
