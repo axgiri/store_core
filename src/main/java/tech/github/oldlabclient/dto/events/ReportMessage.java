@@ -1,22 +1,34 @@
-// package tech.github.oldlabclient.dto.events;
+package tech.github.oldlabclient.dto.events;
 
-// import java.time.Instant;
+import java.time.Instant;
+import java.util.UUID;
 
-// import org.hibernate.annotations.Fetch;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import tech.github.oldlabclient.enumeration.ReportReasonEnum;
+import tech.github.oldlabclient.enumeration.ReportStatusEnum;
+import tech.github.oldlabclient.enumeration.ReportTypeEnum;
 
-// import lombok.Data;
-// import tech.github.oldlabclient.dto.request.ReportRequest;
-
-// @Data
-// public class ReportMessage {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ReportMessage {
     
-//     private Long reportId;
-    
-//     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-//     private ReportRequest payload;
+    private Long reportId;
+    private ReportPayload payload;
+    private UUID moderatorId;
+    private Instant timestamp = Instant.now();
 
-//     private Long moderatorId;
-
-//     private Instant timestamp = Instant.now();
-
-// }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReportPayload {
+        private UUID reporterId;
+        private ReportTypeEnum type;
+        private UUID targetId;
+        private ReportStatusEnum status;
+        private ReportReasonEnum reason;
+        private String details;
+    }
+}

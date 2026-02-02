@@ -1,19 +1,30 @@
-// package tech.github.oldlabclient.dto.events;
+package tech.github.oldlabclient.dto.events;
 
-// import java.time.Instant;
+import java.time.Instant;
+import java.util.UUID;
 
-// import org.hibernate.annotations.Fetch;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-// import lombok.Data;
-// import tech.github.oldlabclient.dto.request.ReviewRequest;
-
-// @Data
-// public class ReviewMessage {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ReviewMessage {
     
-//     private Long reviewId;
+    private Long reviewId;
+    private ReviewPayload payload;
+    private Instant timestamp = Instant.now();
 
-//     @Fetch(org.hibernate.annotations.FetchMode.JOIN)
-//     private ReviewRequest payload;
-
-//     private Instant timestamp = Instant.now();
-// }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReviewPayload {
+        private UUID authorId;
+        private Float rating;
+        private UUID personId;
+        private String comment;
+        private Instant createdAt;
+        private Instant updatedAt;
+    }
+}
