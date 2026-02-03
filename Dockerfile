@@ -37,4 +37,4 @@ COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 
 # JVM options can be overridden via JAVA_OPTS env var
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java --enable-preview ${JAVA_OPTS} -jar app.jar"]

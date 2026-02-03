@@ -48,7 +48,9 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, ReportMessage> reportProducerFactory(KafkaProperties kafkaProperties, JsonMapper jsonMapper) {
         var props = kafkaProperties.buildProducerProperties();
-        return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), new JacksonJsonSerializer<>(jsonMapper));
+        var serializer = new JacksonJsonSerializer<ReportMessage>(jsonMapper);
+        serializer.setAddTypeInfo(false);
+        return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), serializer);
     }
 
     @Bean
@@ -59,7 +61,9 @@ public class KafkaConfig {
     @Bean
     public ProducerFactory<String, ReviewMessage> reviewProducerFactory(KafkaProperties kafkaProperties, JsonMapper jsonMapper) {
         var props = kafkaProperties.buildProducerProperties();
-        return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), new JacksonJsonSerializer<>(jsonMapper));
+        var serializer = new JacksonJsonSerializer<ReviewMessage>(jsonMapper);
+        serializer.setAddTypeInfo(false);
+        return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), serializer);
     }
 
     @Bean

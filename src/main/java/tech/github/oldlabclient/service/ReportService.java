@@ -1,30 +1,34 @@
 package tech.github.oldlabclient.service;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import tech.github.oldlabclient.client.NotificationReportsClient;
 import tech.github.oldlabclient.dto.events.ReportMessage;
 import tech.github.oldlabclient.dto.events.ReportMessage.ReportPayload;
 import tech.github.oldlabclient.dto.request.ReportRequest;
 import tech.github.oldlabclient.enumeration.ReportTypeEnum;
-import tech.github.oldlabclient.exception.DuplicateReportException;
-import tech.github.oldlabclient.exception.UserNotFoundException;
+import tech.github.oldlabclient.service.report.ReportStrategy;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ReportService {
 
-    private final PersonService personService;
-    private final NotificationReportsClient notificationClient;
     private final KafkaTemplate<String, ReportMessage> reportKafkaTemplate;
+    private final Map<ReportTypeEnum, ReportStrategy> strategyMap;
+
+    public ReportService(KafkaTemplate<String, ReportMessage> reportKafkaTemplate, List<ReportStrategy> strategies) {
+        this.reportKafkaTemplate = reportKafkaTemplate;
+        this.strategyMap = strategies.stream()
+                .collect(Collectors.toMap(ReportStrategy::getType, Function.identity()));
+    }
 
     @Value("${kafka.topic.report}")
     private String reportTopic;
@@ -33,60 +37,38 @@ public class ReportService {
     private String reportCreatePartition;
 
     public void createReport(ReportRequest request) {
-        log.info("Creating report: reporterId={}, targetId={}, type={}", request.getReporterId(), request.getTargetId(), request.getType());
+        ReportStrategy strategy = getStrategy(request.getType());
+        strategy.validate(request);
+        sendReportMessage(request);
 
-        validateReporterExists(request.getReporterId());
-        
-        if (request.getType() == ReportTypeEnum.USER) {
-            validateUserTargetExists(request.getTargetId());
+        log.info("Report created successfully: type={}, targetId={}", 
+                request.getType(), request.getTargetId());
+    }
+
+    private ReportStrategy getStrategy(ReportTypeEnum type) {
+        ReportStrategy strategy = strategyMap.get(type);
+        if (strategy == null) {
+            throw new IllegalArgumentException("Unsupported report type: " + type);
         }
+        return strategy;
+    }
 
-        UUID reporterId = request.getReporterId();
-        
-        boolean isDuplicate = notificationClient.hasReportByReporter(
-                reporterId, 
-                request.getTargetId(), 
-                request.getType()
-        );
-        
-        if (isDuplicate) {
-            log.warn("Duplicate report detected: reporterId={}, targetId={}, type={}", 
-                    reporterId, request.getTargetId(), request.getType());
-            throw new DuplicateReportException(
-                    "You have already submitted a report for this target"
-            );
-        }
-
+    private void sendReportMessage(ReportRequest request) {
         ReportPayload payload = new ReportPayload(
-                reporterId,
+                request.getReporterId(),
                 request.getType(),
                 request.getTargetId(),
                 null,
                 request.getReason(),
-                request.getDetails()
-        );
+                request.getDetails());
 
         ReportMessage message = new ReportMessage(
                 null,
                 payload,
                 null,
-                Instant.now()
-        );
+                Instant.now());
 
         reportKafkaTemplate.send(reportTopic, reportCreatePartition, message);
-        log.info("Report message sent to Kafka: reporterId={}, targetId={}", 
-                reporterId, request.getTargetId());
-    }
-
-    private void validateReporterExists(UUID reporterId) {
-        if (!personService.existsById(reporterId)) {
-            throw new UserNotFoundException("Reporter not found with id: " + reporterId);
-        }
-    }
-
-    private void validateUserTargetExists(UUID targetId) {
-        if (!personService.existsById(targetId)) {
-            throw new UserNotFoundException("Target user not found with id: " + targetId);
-        }
+        log.debug("Report message sent to Kafka: topic={}, partition={}", reportTopic, reportCreatePartition);
     }
 }

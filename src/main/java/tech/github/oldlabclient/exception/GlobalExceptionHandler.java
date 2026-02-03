@@ -112,9 +112,9 @@ public class GlobalExceptionHandler {
         log.error("Service communication error", ex);
         ApiError err = new ApiError(
             Instant.now(),
-            "SERVICE_UNAVAILABLE",
-            "External service temporarily unavailable"
+            "NOT_ACCEPTABLE",
+            ex.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
     }
 }

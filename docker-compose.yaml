@@ -8,7 +8,7 @@ services:
     volumes:
     - ./:/app
     working_dir: /app
-    command: ./mvnw spring-boot:run
+    command: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     depends_on:
       oldlab-client-db:
         condition: service_started
@@ -96,16 +96,6 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-
-  elasticvue:
-    image: cars10/elasticvue:1.11.1
-    container_name: elasticvue
-    ports:
-      - "51732:8080"
-    depends_on:
-      - elasticsearch
-    networks:
-      - oldlab-network
 
 networks:
   oldlab-network:

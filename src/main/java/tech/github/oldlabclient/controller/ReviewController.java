@@ -27,17 +27,10 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<Void> createReview(@Valid @RequestBody ReviewRequest request, @RequestHeader("X-User-Id") UUID requesterId) {
+    public ResponseEntity<Void> createReview(@Valid @RequestBody ReviewRequest request) {
         log.debug("received review request: authorId={}, personId={}", 
         request.getAuthorId(), request.getPersonId());
-        reviewService.createReview(request, requesterId);
+        reviewService.createReview(request);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @RequestHeader("X-User-Id") UUID requesterId) {
-        log.debug("received delete review request: reviewId={}", reviewId);
-        reviewService.deleteReview(reviewId, requesterId);
-        return ResponseEntity.ok().build();
     }
 }
