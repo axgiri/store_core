@@ -31,10 +31,7 @@ public class ReviewService {
     @Value("${kafka.partition.review.create}")
     private String reviewCreatePartition;
 
-    public void createReview(ReviewRequest request, UUID requesterId) {
-        log.info("Creating review: authorId={}, personId={}", 
-                request.getAuthorId(), request.getPersonId());
-
+    public void createReview(ReviewRequest request) {
         validateAuthorExists(request.getAuthorId());
         validatePersonExists(request.getPersonId());
 
@@ -71,19 +68,6 @@ public class ReviewService {
 
         reviewKafkaTemplate.send(reviewTopic, reviewCreatePartition, message);
         log.info("Review message sent to Kafka: authorId={}, personId={}", authorId, personId);
-    }
-
-    public void deleteReview(Long reviewId, UUID requesterId) {
-        log.info("Deleting review: reviewId={}, requesterId={}", reviewId, requesterId);
-
-        ReviewMessage message = new ReviewMessage(
-                reviewId,
-                null,
-                Instant.now()
-        );
-
-        reviewKafkaTemplate.send(reviewTopic, "review-delete", message);
-        log.info("Review delete message sent to Kafka: reviewId={}", reviewId);
     }
 
     private void validateAuthorExists(UUID authorId) {
