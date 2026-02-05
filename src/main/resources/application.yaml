@@ -1,6 +1,6 @@
 spring:
   application:
-    name: oldLab
+    name: store-core
   jackson:
     property-naming-strategy: SNAKE_CASE
     threads:
@@ -8,7 +8,7 @@ spring:
         enabled: true
     
   datasource:
-    url: jdbc:postgresql://oldlab-client-db:5432/oldlabclientdb
+    url: jdbc:postgresql://store-core-db:5432/storecoredb
     username: postgres
     password: 1
     driver-class-name: org.postgresql.Driver
@@ -24,7 +24,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: jdbc:postgresql://oldlab-client-db:5432/oldlabclientdb
+    url: jdbc:postgresql://store-core-db:5432/storecoredb
     user: postgres
     password: 1
 
@@ -34,7 +34,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
-      group-id: oldlab-client-group
+      group-id: store-core-group
       auto-offset-reset: earliest
 
   elasticsearch:

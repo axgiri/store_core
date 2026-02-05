@@ -1,8 +1,8 @@
 services:
-  oldlab-client:
+  store-core:
     image: eclipse-temurin:21-jdk-alpine
-    container_name: oldlab-client
-    hostname: oldlab-client
+    container_name: store-core
+    hostname: store-core
     ports:
       - "51730:51730"
     volumes:
@@ -10,14 +10,14 @@ services:
     working_dir: /app
     command: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     depends_on:
-      oldlab-client-db:
+      store-core-db:
         condition: service_started
       elasticsearch:
         condition: service_healthy
       minio:
         condition: service_started
     networks:
-      - oldlab-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -26,19 +26,19 @@ services:
         max_attempts: 3
         window: 120s
   
-  oldlab-client-db:
+  store-core-db:
     image: postgres:13-alpine
-    container_name: oldlab-client-db
+    container_name: store-core-db
     ports:
       - "51731:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1
-      POSTGRES_DB: oldlabclientdb
+      POSTGRES_DB: storecoredb
     volumes:
-      - oldlab_client_db_data:/var/lib/postgresql/data
+      - store_core_db_data:/var/lib/postgresql/data
     networks:
-      - oldlab-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -61,7 +61,7 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
-      - oldlab-network
+      - store-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 30s
@@ -88,7 +88,7 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - oldlab-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -98,10 +98,10 @@ services:
         window: 120s
 
 networks:
-  oldlab-network:
+  store-network:
     external: true
 
 volumes:
-  oldlab_client_db_data:
+  store_core_db_data:
   es_data:
   minio_data:

@@ -1,0 +1,36 @@
+package tech.github.storecore.dto.response;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import tech.github.storecore.entity.Product;
+import tech.github.storecore.enumeration.CategoryEnum;
+
+public record ProductResponse(
+    Long id,
+    String name,
+    String description,
+    BigDecimal price,
+    CategoryEnum category,
+    UUID personId,
+    List<String> tags,
+    Set<String> hiddenLabels,
+    Map<String, String> attributes
+) {
+    public static ProductResponse fromEntity(Product product) {
+        return new ProductResponse(
+            product.getId(),
+            product.getName(),
+            product.getDescription(),
+            product.getPrice(),
+            product.getCategory(),
+            product.getPerson() != null ? product.getPerson().getId() : null,
+            product.getTags(),
+            product.getHiddenLabels(),
+            product.getAttributes()
+        );
+    }
+}
