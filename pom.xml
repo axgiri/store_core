@@ -8,10 +8,10 @@
 		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>github.oldLab</groupId>
-	<artifactId>oldLab</artifactId>
+	<groupId>github.store</groupId>
+	<artifactId>store-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>oldLab</name>
+	<name>store-core</name>
 	<description></description>
 	<url/>
 	<licenses>
