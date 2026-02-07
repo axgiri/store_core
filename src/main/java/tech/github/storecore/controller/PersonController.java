@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tech.github.storecore.security.AuthenticatedUser;
+import tech.github.storecore.security.CurrentUser;
 import tech.github.storecore.dto.request.PersonRequest;
 import tech.github.storecore.dto.response.PersonResponse;
 import tech.github.storecore.service.PersonService;
@@ -38,20 +40,21 @@ public class PersonController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PutMapping("/{id}")
-    // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<PersonResponse> update(@PathVariable UUID id, @Valid @RequestBody PersonRequest personRequest) {
-        return ResponseEntity.ok(service.update(id, personRequest));
+    @GetMapping("/me")
+    public ResponseEntity<PersonResponse> me(@CurrentUser AuthenticatedUser user) {
+        return ResponseEntity.ok(service.findById(user.userId()));
     }
 
-    @DeleteMapping("/{id}")
-    // @PreAuthorize("@accessControlService.isSelf(authentication, #id) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        log.debug("deleting person with id: {}", id);
-        service.delete(id);
-        return ResponseEntity.ok().build();
+    @PutMapping("/me")
+    public ResponseEntity<PersonResponse> update(@CurrentUser AuthenticatedUser user,
+            @Valid @RequestBody PersonRequest personRequest) {
+        return ResponseEntity.ok(service.update(user.userId(), personRequest));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> delete(@CurrentUser AuthenticatedUser user) {
+        log.debug("deleting person with id: {}", user.userId());
+        service.delete(user.userId());
+        return ResponseEntity.noContent().build();
     }
 }
-
-// TODO: exists by id
-// is he have already report or review for this entity

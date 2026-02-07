@@ -29,8 +29,7 @@ public class ReviewReportStrategy implements ReportStrategy {
     }
 
     @Override
-    public void validate(ReportRequest request) {
-        UUID reporterId = request.getReporterId();
+    public void validate(UUID reporterId, ReportRequest request) {
         UUID targetId = request.getTargetId();
 
         try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {

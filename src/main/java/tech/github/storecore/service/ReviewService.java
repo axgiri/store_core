@@ -31,15 +31,14 @@ public class ReviewService {
     @Value("${kafka.partition.review.create}")
     private String reviewCreatePartition;
 
-    public void createReview(ReviewRequest request) {
-        validateAuthorExists(request.getAuthorId());
+    public void createReview(UUID authorId, ReviewRequest request) {
+        validateAuthorExists(authorId);
         validatePersonExists(request.getPersonId());
 
-        if (request.getAuthorId().equals(request.getPersonId())) {
+        if (authorId.equals(request.getPersonId())) {
             throw new IllegalArgumentException("Cannot review yourself");
         }
 
-        UUID authorId = request.getAuthorId();
         UUID personId = request.getPersonId();
 
         boolean isDuplicate = notificationClient.hasReviewByAuthor(personId, authorId);
@@ -67,7 +66,6 @@ public class ReviewService {
         );
 
         reviewKafkaTemplate.send(reviewTopic, reviewCreatePartition, message);
-        log.info("Review message sent to Kafka: authorId={}, personId={}", authorId, personId);
     }
 
     private void validateAuthorExists(UUID authorId) {

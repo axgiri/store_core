@@ -19,11 +19,10 @@ import tech.github.storecore.exception.MaxPhotosPerProductReachedException;
 import tech.github.storecore.exception.PhotoNotFoundException;
 import tech.github.storecore.exception.ProductNotFoundException;
 import tech.github.storecore.repository.PhotoRepository;
-import tech.github.storecore.service.PhotoService;
 
 @Service
 @RequiredArgsConstructor
-public class PhotoService{
+public class PhotoService {
 
     private final PhotoRepository repository;
     private final PersonService personService;
@@ -74,19 +73,17 @@ public class PhotoService{
 
     @Transactional
     public void uploadForProduct(Long productId, MultipartFile file) throws IOException {
-
         var stats = repository.findProductExistsAndPhotoCount(productId);
 
         if (stats == null || !stats.isExists()) {
             throw new ProductNotFoundException("product not found: " + productId);
         }
 
-        
         if (stats.getCount() >= maxPhotosPerProduct) {
             throw new MaxPhotosPerProductReachedException("max photos per product reached");
         }
 
-        Product product = productService.getReferenceByIdIfExists(productId);
+        Product product = productService.findEntityById(productId);
 
         byte[] processedImage = imageProcessor.processImage(file);
 
@@ -94,7 +91,7 @@ public class PhotoService{
 
         Photo photo = Photo.builder()
                         .objectKey(key)
-                        .contentType("image/webp") 
+                        .contentType("image/webp")
                         .size((long) processedImage.length)
                         .product(product)
                         .bucket(bucketProducts)
@@ -107,7 +104,7 @@ public class PhotoService{
         productService.getReferenceByIdIfExists(productId);
 
         List<Photo> photos = repository.findAllByProductId(productId);
-        
+
         return photos.stream()
                 .map(photo -> {
                     byte[] fileBytes = storage.load(photo.getObjectKey(), bucketProducts);
@@ -116,12 +113,12 @@ public class PhotoService{
                 .toList();
     }
 
+    @Transactional
     public void deleteForProduct(Long productId, String objectKey) {
         Photo photo = repository.findByProductIdAndObjectKey(productId, objectKey)
                 .orElseThrow(() -> new PhotoNotFoundException("photo not found for product: " + productId + " and key: " + objectKey));
         removePhoto(photo);
     }
-
 
     public void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey(), ph.getBucket());

@@ -16,6 +16,26 @@ public class GlobalExceptionHandler {
 
     record ApiError(Instant timestamp, String code, String message) {}
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiError> onUnauthorized(UnauthorizedException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "UNAUTHORIZED",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiError> onForbidden(ForbiddenException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "FORBIDDEN",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> onNotFound(UserNotFoundException ex) {
         ApiError err = new ApiError(
