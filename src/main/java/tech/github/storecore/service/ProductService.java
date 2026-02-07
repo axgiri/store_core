@@ -21,21 +21,17 @@ import tech.github.storecore.repository.ProductRepository;
 import tech.github.storecore.search.ProductDocumentRequest;
 import tech.github.storecore.search.ProductDocumentResponse;
 import tech.github.storecore.search.ProductSearchRepository;
-import tech.github.storecore.service.ProductService;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductService{
+public class ProductService {
 
     private final ProductRepository repository;
     private final PersonService personService;
-
     private final ProductSearchRepository productSearchRepository;
 
     @Transactional
-     //TODO: no zero trust now as i mentioned before in SecurityConfiguration 117 line
-    // because of that we will get token from header (gateway) . zero trust will be implemented later
     public ProductResponse create(ProductRequest request, UUID personId) {
         Person personReference = personService.getReferenceById(personId);
         Product saved = repository.save(request.toEntity(personReference));
@@ -74,7 +70,8 @@ public class ProductService{
 
     @Transactional
     public void delete(Long id) {
-        repository.deleteById(id);
+        Product existing = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        repository.delete(existing);
         productSearchRepository.deleteById(id);
     }
 
@@ -82,14 +79,13 @@ public class ProductService{
         return productSearchRepository.search(query, PageRequest.of(page, size))
                 .stream().map(ProductDocumentResponse::toResponse).toList();
     }
-    public List<ProductResponse> searchByPerson(UUID personId, String query, int page, int size) {
 
+    public List<ProductResponse> searchByPerson(UUID personId, String query, int page, int size) {
         if (!personService.existsById(personId)) {
             throw new UserNotFoundException("User not found: " + personId);
         }
-
-    return productSearchRepository.searchByPerson(personId, query, PageRequest.of(page, size))
-        .stream().map(ProductDocumentResponse::toResponse).toList();
+        return productSearchRepository.searchByPerson(personId, query, PageRequest.of(page, size))
+                .stream().map(ProductDocumentResponse::toResponse).toList();
     }
 
     public Product findEntityById(Long id) {

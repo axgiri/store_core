@@ -10,9 +10,6 @@ import lombok.Data;
 @Data
 public class ReviewRequest {
 
-    @NotNull(message = "Author id cannot be null")
-    private UUID authorId;
-
     @NotNull(message = "Rating cannot be null")
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")

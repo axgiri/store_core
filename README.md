@@ -169,7 +169,7 @@ Base URL: `/api/v1`
 // Response
 {
   "access_token": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh_token": "dGhpcyBpcyBhIHJlZnJl...",
+  "refresh_token": "dGcyBcyBhIHJlZnJl...",
   "person": {
     "id": 1,
     "first_name": "John",

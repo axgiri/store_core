@@ -3,6 +3,7 @@ package tech.github.storecore.service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,13 +37,10 @@ public class ReportService {
     @Value("${kafka.partition.report.create}")
     private String reportCreatePartition;
 
-    public void createReport(ReportRequest request) {
+    public void createReport(UUID reporterId, ReportRequest request) {
         ReportStrategy strategy = getStrategy(request.getType());
-        strategy.validate(request);
-        sendReportMessage(request);
-
-        log.info("Report created successfully: type={}, targetId={}", 
-                request.getType(), request.getTargetId());
+        strategy.validate(reporterId, request);
+        sendReportMessage(reporterId, request);
     }
 
     private ReportStrategy getStrategy(ReportTypeEnum type) {
@@ -53,9 +51,9 @@ public class ReportService {
         return strategy;
     }
 
-    private void sendReportMessage(ReportRequest request) {
+    private void sendReportMessage(UUID reporterId, ReportRequest request) {
         ReportPayload payload = new ReportPayload(
-                request.getReporterId(),
+                reporterId,
                 request.getType(),
                 request.getTargetId(),
                 null,

@@ -10,9 +10,6 @@ import tech.github.storecore.enumeration.ReportTypeEnum;
 @Data
 public class ReportRequest {
 
-    @NotNull(message = "Reporter id cannot be null")
-    private UUID reporterId;
-
     @NotNull(message = "Report type cannot be null")
     private ReportTypeEnum type;
 

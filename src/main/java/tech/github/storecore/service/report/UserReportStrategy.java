@@ -1,5 +1,7 @@
 package tech.github.storecore.service.report;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -25,37 +27,33 @@ public class UserReportStrategy implements ReportStrategy {
     }
 
     @Override
-    public void validate(ReportRequest request) {
-        validateNotSelfReport(request);
-        validateReporterExists(request.getReporterId());
-        validateTargetUserExists(request.getTargetId());
-        validateNoDuplicateReport(request);
-    }
-
-    private void validateNotSelfReport(ReportRequest request) {
-        if (request.getReporterId().equals(request.getTargetId())) {
+    public void validate(UUID reporterId, ReportRequest request) {
+        if (reporterId.equals(request.getTargetId())) {
             throw new IllegalArgumentException("You cannot report yourself");
         }
+        validateReporterExists(reporterId);
+        validateTargetUserExists(request.getTargetId());
+        validateNoDuplicateReport(reporterId, request);
     }
 
-    private void validateReporterExists(java.util.UUID reporterId) {
+    private void validateReporterExists(UUID reporterId) {
         if (!personService.existsById(reporterId)) {
             throw new UserNotFoundException("Reporter not found with id: " + reporterId);
         }
     }
 
-    private void validateTargetUserExists(java.util.UUID targetId) {
+    private void validateTargetUserExists(UUID targetId) {
         if (!personService.existsById(targetId)) {
             throw new UserNotFoundException("Target user not found with id: " + targetId);
         }
     }
 
-    private void validateNoDuplicateReport(ReportRequest request) {
+    private void validateNoDuplicateReport(UUID reporterId, ReportRequest request) {
         boolean isDuplicate = notificationClient.hasReportByReporter(
-                request.getReporterId(),
+                reporterId,
                 request.getTargetId(),
                 request.getType());
-        
+
         if (isDuplicate) {
             throw new DuplicateReportException("You have already submitted a report for this user");
         }

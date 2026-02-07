@@ -36,7 +36,6 @@ public class PersonService{
     private final TaskExecutor taskExecutor;
 
     public void create(PersonRequest personRequest) {
-        log.info("creating person with first name: {}", personRequest.getFirstName());
         // if (repository.existsByEmail(personRequest.getEmail())) {
         // throw new UserAlreadyExistsException("email " + personRequest.getEmail() + "
         // already exists");
@@ -51,13 +50,11 @@ public class PersonService{
     }
 
     public PersonResponse findById(UUID id) {
-        log.info("finding person with id: {}", id);
         return PersonResponse.fromEntity(repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id)));
     }
 
     public Person findEntityById(UUID id) {
-        log.info("finding person with id: {}", id);
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
     }
@@ -68,7 +65,6 @@ public class PersonService{
     //     key = "#id"
     // )
     public PersonResponse update(UUID id, PersonRequest personRequest) {
-        log.info("updating person with id: {}", id);
             Person person = getReferenceByIdIfExists(id);
 
             person.setFirstName(personRequest.getFirstName());
@@ -84,7 +80,6 @@ public class PersonService{
     //     key = "#id"
     // )
     public void delete(UUID id) { //TODO: call OL_Auth to delete associated auth data
-        log.info("deleting person with id: {}", id);
         Person person = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
         photoRepository.findByPersonId(id).ifPresent(photo -> {
@@ -98,16 +93,13 @@ public class PersonService{
         });
 
         repository.delete(person);
-        log.info("deleted person with id: {}", id);
     }
 
     public boolean existsById(UUID id) {
-        log.info("checking if person exists with id: {}", id);
         return repository.existsById(id);
     }
 
     public Person getReferenceById(UUID id) {
-        log.info("getting reference for person with id: {}", id);
         return repository.getReferenceById(id);
     }
 

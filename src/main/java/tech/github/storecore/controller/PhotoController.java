@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tech.github.storecore.security.AuthenticatedUser;
+import tech.github.storecore.security.CurrentUser;
+import tech.github.storecore.security.OwnershipVerifier;
 import tech.github.storecore.dto.response.ProductPhotoResponse;
 import tech.github.storecore.service.PhotoService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/photos")
@@ -30,14 +32,28 @@ import jakarta.servlet.http.HttpServletRequest;
 public class PhotoController {
 
     private final PhotoService service;
+    private final OwnershipVerifier ownershipVerifier;
 
-    @PutMapping(path = "/persons/{personId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    //@PreAuthorize("@accessControlService.isSelf(authentication, #personId) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> uploadPersonPhoto(@PathVariable UUID personId,
-            @RequestPart("file") MultipartFile file,
-            HttpServletRequest httpRequest) throws IOException {
-        service.uploadForPerson(personId, file);
+    @PutMapping(path = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadPersonPhoto(@CurrentUser AuthenticatedUser user,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        service.uploadForPerson(user.userId(), file);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<byte[]> getOwnPhoto(@CurrentUser AuthenticatedUser user) {
+        byte[] bytes = service.loadForPerson(user.userId());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("image/webp"))
+                .cacheControl(CacheControl.noCache())
+                .body(bytes);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deletePersonPhoto(@CurrentUser AuthenticatedUser user) {
+        service.deleteForPerson(user.userId());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/persons/{personId}")
@@ -50,7 +66,7 @@ public class PhotoController {
     }
 
     @GetMapping("/products/{productId}")
-    public ResponseEntity<List<ProductPhotoResponse>> getProductPhoto(@PathVariable Long productId) {
+    public ResponseEntity<List<ProductPhotoResponse>> getProductPhotos(@PathVariable Long productId) {
         List<ProductPhotoResponse> response = service.loadForProduct(productId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache())
@@ -58,28 +74,22 @@ public class PhotoController {
     }
 
     @PostMapping(path = "/products/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    //@PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> uploadProductPhotos(@PathVariable Long productId,
-            @RequestPart("file") MultipartFile file) throws Exception {
-        log.debug("upload product photos id: {}", productId);
+    public ResponseEntity<Void> uploadProductPhoto(@CurrentUser AuthenticatedUser user,
+            @PathVariable Long productId,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        ownershipVerifier.verifyAndLoadProduct(user, productId);
+        log.debug("upload product photo id: {}, user: {}", productId, user.userId());
         service.uploadForProduct(productId, file);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products/{productId}/{objectKey}")
-    //@PreAuthorize("@accessControlService.isProductOwnerByProduct(authentication, #productId) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> deleteProductPhoto(@PathVariable Long productId,
-            @PathVariable String objectKey) throws Exception {
-        log.debug("delete product photo product id: {}, object key: {}", productId, objectKey);
+    public ResponseEntity<Void> deleteProductPhoto(@CurrentUser AuthenticatedUser user,
+            @PathVariable Long productId,
+            @PathVariable String objectKey) {
+        ownershipVerifier.verifyAndLoadProduct(user, productId);
+        log.debug("delete product photo product id: {}, key: {}, user: {}", productId, objectKey, user.userId());
         service.deleteForProduct(productId, objectKey);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/persons/{personId}")
-    //@PreAuthorize("@accessControlService.isSelf(authentication, #personId) or @accessControlService.isAdmin(authentication)")
-    public ResponseEntity<Void> deletePersonPhoto(@PathVariable UUID personId) throws Exception {
-        service.deleteForPerson(personId);
-        return ResponseEntity.noContent().build();
-    }
 }
-// TODO: make it "friendly" and get personId from header
