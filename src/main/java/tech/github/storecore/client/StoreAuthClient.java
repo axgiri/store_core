@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import tech.github.storecore.exception.ServiceCommunicationException;
 
 @Slf4j
 @Component
 public class StoreAuthClient {
+
+    private static final String CB_STORE_AUTH = "store-auth";
 
     private final RestClient restClient;
 
@@ -24,6 +27,7 @@ public class StoreAuthClient {
                 .build();
     }
 
+    @CircuitBreaker(name = CB_STORE_AUTH, fallbackMethod = "validateEmailFallback")
     public boolean validateEmail(String email) {
         log.debug("Validating email: {}", email);
         return executeRequest(() -> restClient.get()
@@ -32,7 +36,14 @@ public class StoreAuthClient {
                         .queryParam("email", email)
                         .build())
                 .retrieve()
-                .body(Boolean.class),"Failed to validate email");
+                .body(Boolean.class), "Failed to validate email");
+    }
+
+    @SuppressWarnings("unused") //reflection api uses this method as fallback
+    private boolean validateEmailFallback(String email, Throwable t) {
+        log.warn("Circuit breaker fallback for validateEmail, email={}: {}", email, t.getMessage());
+        throw new ServiceCommunicationException(
+                "Authentication service is temporarily unavailable, please try again later", t);
     }
 
     private boolean executeRequest(BooleanSupplier request, String errorMessage) {
