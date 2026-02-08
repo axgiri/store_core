@@ -107,16 +107,28 @@ api:
 
 resilience4j:
   circuitbreaker:
-    instances:
+    configs:
       default:
         register-health-indicator: true
+        sliding-window-type: COUNT_BASED
         sliding-window-size: 10
         minimum-number-of-calls: 5
         permitted-number-of-calls-in-half-open-state: 3
         automatic-transition-from-open-to-half-open-enabled: true
         wait-duration-in-open-state: 5s
         failure-rate-threshold: 50
-        event-consumer-buffer-size: 10
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 80
+        record-exceptions:
+          - java.io.IOException
+          - java.net.SocketTimeoutException
+          - org.springframework.web.client.ResourceAccessException
+          - tech.github.storecore.exception.ServiceCommunicationException
+    instances:
+      store-auth:
+        base-config: default
+        sliding-window-size: 5
+        wait-duration-in-open-state: 10s
 
 max:
   photo:

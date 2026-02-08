@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -127,14 +128,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(err);
     }
 
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<ApiError> onCircuitBreakerOpen(CallNotPermittedException ex) {
+        log.warn("Circuit breaker open: {}", ex.getMessage());
+        ApiError err = new ApiError(
+            Instant.now(),
+            "SERVICE_UNAVAILABLE",
+            "Service is temporarily unavailable, please try again later"
+        );
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
+    }
+
     @ExceptionHandler(ServiceCommunicationException.class)
     public ResponseEntity<ApiError> onServiceCommunication(ServiceCommunicationException ex) {
         log.error("Service communication error", ex);
         ApiError err = new ApiError(
             Instant.now(),
-            "NOT_ACCEPTABLE",
+            "SERVICE_UNAVAILABLE",
             ex.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
     }
 }
