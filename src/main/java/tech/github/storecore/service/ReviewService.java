@@ -60,7 +60,6 @@ public class ReviewService {
         );
 
         ReviewMessage message = new ReviewMessage(
-                null,
                 payload,
                 Instant.now()
         );

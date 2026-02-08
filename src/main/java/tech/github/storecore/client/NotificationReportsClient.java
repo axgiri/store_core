@@ -20,8 +20,7 @@ public class NotificationReportsClient {
 
     private final RestClient restClient;
 
-    public NotificationReportsClient(
-            @Value("${api.service.notification-reports}") String baseUrl) {
+    public NotificationReportsClient(@Value("${api.service.notification-reports}") String baseUrl) {
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .build();

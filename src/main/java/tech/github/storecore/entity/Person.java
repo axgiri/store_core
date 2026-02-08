@@ -5,15 +5,13 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.UuidGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,15 +24,12 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "persons", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "phone_number")
-})
+@Builder
+@Table(name = "persons", uniqueConstraints = {@UniqueConstraint(columnNames = "phone_number")})
 @Accessors(chain = true)
 public class Person{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     private UUID id;
 
     @Version

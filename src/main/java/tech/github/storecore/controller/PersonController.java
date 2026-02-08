@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tech.github.storecore.security.AuthenticatedUser;
 import tech.github.storecore.security.CurrentUser;
+import tech.github.storecore.dto.request.PersonCreateRequest;
 import tech.github.storecore.dto.request.PersonRequest;
 import tech.github.storecore.dto.response.PersonResponse;
 import tech.github.storecore.service.PersonService;
@@ -30,8 +31,8 @@ public class PersonController {
     private final PersonService service;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> create(@Valid @RequestBody PersonRequest personRequest) {
-        service.create(personRequest);
+    public ResponseEntity<Void> create(@Valid @RequestBody PersonCreateRequest personCreateRequest) {
+        service.create(personCreateRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

@@ -61,9 +61,7 @@ public class ReportService {
                 request.getDetails());
 
         ReportMessage message = new ReportMessage(
-                null,
                 payload,
-                null,
                 Instant.now());
 
         reportKafkaTemplate.send(reportTopic, reportCreatePartition, message);

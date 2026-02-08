@@ -33,9 +33,17 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      enable.idempotence: true
+      max.in.flight.requests.per.connection: 5
     consumer:
       group-id: store-core-group
       auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.github.storecore.dto.events
+        spring.json.use.type.headers: false
 
   elasticsearch:
     uris: elasticsearch:9200
@@ -70,8 +78,8 @@ app:
   activation-ttl-minutes: 15
   inactive-account-ttl-days: 1
   kafka:
-    replicas: 1
-    min-insync-replicas: 1
+    replicas: 3
+    min-insync-replicas: 2
 
 minio:
   url: http://minio:9000
@@ -86,22 +94,16 @@ kafka:
   topic:
     report: report-topic
     review: review-topic
-  dlt:
-    review: review-dlt
-    report: report-dlt
-  partition:
-    review:
-      create: review-create
-      update: review-update
-      delete: review-delete
-    report:
-      create: report-create
-      update: report-update
-      delete: report-delete
+    registration: registration-topic
+    registration-compensate: registration-compensate-topic
+
 
 api:
   service:
     notification-reports: http://notification-service:51740/api/notifications
+    store-authentication:
+      base-url: http://store-authentication:51720/api/v1/users
+      validate: /is-email-available
 
 resilience4j:
   circuitbreaker:
