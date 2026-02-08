@@ -14,10 +14,8 @@ import tech.github.storecore.enumeration.ReportTypeEnum;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportMessage {
-    
-    private Long reportId;
+
     private ReportPayload payload;
-    private UUID moderatorId;
     private Instant timestamp = Instant.now();
 
     @Data

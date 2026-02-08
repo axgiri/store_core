@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import tech.github.storecore.dto.request.ProductRequest;
 import tech.github.storecore.dto.response.ProductResponse;
 import tech.github.storecore.entity.Person;
@@ -24,7 +23,6 @@ import tech.github.storecore.search.ProductSearchRepository;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ProductService {
 
     private final ProductRepository repository;

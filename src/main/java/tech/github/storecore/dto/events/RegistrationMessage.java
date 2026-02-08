@@ -10,20 +10,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewMessage {
-    
-    private ReviewPayload payload;
+public class RegistrationMessage {
+
+    private RegistrationPayload payload;
     private Instant timestamp = Instant.now();
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ReviewPayload {
-        private UUID authorId;
-        private Float rating;
-        private UUID personId;
-        private String comment;
-        private Instant createdAt;
-        private Instant updatedAt;
+    public static class RegistrationPayload {
+        private UUID idempotencyKey;
+        private String email;
+        private String password;
     }
 }
