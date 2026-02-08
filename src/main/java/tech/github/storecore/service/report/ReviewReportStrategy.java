@@ -1,7 +1,6 @@
 package tech.github.storecore.service.report;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.StructuredTaskScope.Subtask;
 
@@ -32,13 +31,13 @@ public class ReviewReportStrategy implements ReportStrategy {
     public void validate(UUID reporterId, ReportRequest request) {
         UUID targetId = request.getTargetId();
 
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+        try (var scope = StructuredTaskScope.open()) {
             Subtask<Boolean> reporterExists = scope.fork(() -> personService.existsById(reporterId));
             Subtask<Boolean> reviewExists = scope.fork(() -> notificationClient.reviewExistsById(targetId));
             Subtask<UUID> reviewAuthor = scope.fork(() -> notificationClient.getReviewAuthorId(targetId));
             Subtask<Boolean> isDuplicate = scope.fork(() -> notificationClient.hasReportByReporter(reporterId, targetId, request.getType()));
 
-            scope.join().throwIfFailed();
+            scope.join();
 
             if (Boolean.FALSE.equals(reporterExists.get())) {
                 throw new UserNotFoundException("Reporter not found with id: " + reporterId);
@@ -55,12 +54,6 @@ public class ReviewReportStrategy implements ReportStrategy {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Validation interrupted", e);
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException re) {
-                throw re;
-            }
-            throw new RuntimeException("Validation failed", cause);
         }
     }
 }
