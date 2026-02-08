@@ -27,6 +27,8 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     List<Photo> findAllByProductId(Long productId);
 
+    void deleteAllByProductId(Long productId);
+
     Optional<Photo> findByProductIdAndObjectKey(Long productId, String objectKey);
 
     Optional<Photo> findByProductIdAndId(Long productId, Long Id);

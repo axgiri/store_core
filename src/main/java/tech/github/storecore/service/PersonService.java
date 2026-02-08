@@ -104,28 +104,39 @@ public class PersonService{
 
         productRepository.findAllByPersonId(id).forEach(product -> {
             photoRepository.findAllByProductId(product.getId()).forEach(photo -> {
-                try {
-                    photoStorage.delete(photo.getObjectKey(), photo.getBucket());
-                } catch (Exception e) {
-                    log.warn("failed to delete product photo '{}' from storage: {}", photo.getObjectKey(), e.getMessage());
+                boolean deleted = photoStorage.safeDelete(photo.getObjectKey(), photo.getBucket());
+                if (!deleted) {
+                    log.warn("Product photo '{}' not deleted from storage, will be handled by cleanup job", 
+                            photo.getObjectKey());
                 }
-                photoRepository.delete(photo);
             });
-            productSearchRepository.deleteById(product.getId());
-            productRepository.delete(product);
         });
 
         photoRepository.findByPersonId(id).ifPresent(photo -> {
-            try {
-                photoStorage.delete(photo.getObjectKey(), photo.getBucket());
-            } catch (Exception e) {
-                log.warn("failed to delete person photo '{}' from storage: {}", photo.getObjectKey(), e.getMessage());
-                throw e;
+            boolean deleted = photoStorage.safeDelete(photo.getObjectKey(), photo.getBucket());
+            if (!deleted) {
+                log.warn("Person photo '{}' not deleted from storage, will be handled by cleanup job", 
+                        photo.getObjectKey());
             }
-            photoRepository.delete(photo);
         });
 
+        productRepository.findAllByPersonId(id).forEach(product -> {
+            photoRepository.deleteAllByProductId(product.getId());
+            
+            try {
+                productSearchRepository.deleteById(product.getId());
+            } catch (Exception e) {
+                log.error("Failed to delete product {} from Elasticsearch, will be handled by reindex job: {}", 
+                        product.getId(), e.getMessage());
+            }
+            
+            productRepository.delete(product);
+        });
+
+        photoRepository.findByPersonId(id).ifPresent(photoRepository::delete);
         repository.delete(person);
+        
+        log.info("Person deleted: id={}", id);
     }
 
     public boolean existsById(UUID id) {
