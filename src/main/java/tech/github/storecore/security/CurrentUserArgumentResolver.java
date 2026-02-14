@@ -1,12 +1,16 @@
 package tech.github.storecore.security;
 
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import jakarta.servlet.http.HttpServletRequest;
+import tech.axgiri.jwtstore.common.dto.Payload;
 import tech.github.storecore.exception.UnauthorizedException;
 
 @Component
@@ -15,25 +19,25 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(CurrentUser.class)
-                && AuthenticatedUser.class.isAssignableFrom(parameter.getParameterType());
+                && parameter.getParameterType().equals(AuthenticatedUser.class);
     }
 
     @Override
     public AuthenticatedUser resolveArgument(MethodParameter parameter,
-                                              ModelAndViewContainer mavContainer,
-                                              NativeWebRequest webRequest,
-                                              WebDataBinderFactory binderFactory) {
+            ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory) {
 
-        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        if (request == null) {
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        Payload payload = (Payload) request.getAttribute("jwt.payload");
+
+        if (payload == null) {
             throw new UnauthorizedException("authentication required");
         }
 
-        Object attribute = request.getAttribute(AuthenticationFilter.ATTRIBUTE_KEY);
-        if (attribute instanceof AuthenticatedUser user) {
-            return user;
-        }
+        UUID userId = UUID.fromString(payload.sub());
+        UserRole role = UserRole.valueOf(payload.roles().toUpperCase());
 
-        throw new UnauthorizedException("authentication required");
+        return new AuthenticatedUser(userId, role);
     }
 }

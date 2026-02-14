@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByPersonId(UUID personId);
 
     Page<Product> findByCategory(CategoryEnum category, Pageable pageable);
+
+    boolean existsByIdAndPersonId(Long id, UUID personId);
 }

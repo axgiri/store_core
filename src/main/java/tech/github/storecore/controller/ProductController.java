@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import tech.github.storecore.security.AuthenticatedUser;
-import tech.github.storecore.security.CurrentUser;
-import tech.github.storecore.security.OwnershipVerifier;
 import tech.github.storecore.dto.request.ProductRequest;
 import tech.github.storecore.dto.response.ProductResponse;
 import tech.github.storecore.enumeration.CategoryEnum;
+import tech.github.storecore.security.AuthenticatedUser;
+import tech.github.storecore.security.CurrentUser;
+import tech.github.storecore.security.ResourceType;
+import tech.github.storecore.security.VerifyOwnership;
 import tech.github.storecore.service.ProductService;
 
 @Slf4j
@@ -32,7 +33,6 @@ import tech.github.storecore.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
-    private final OwnershipVerifier ownershipVerifier;
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(@CurrentUser AuthenticatedUser user,
@@ -40,18 +40,17 @@ public class ProductController {
         return ResponseEntity.ok(productService.create(request, user.userId()));
     }
 
+    @VerifyOwnership(ResourceType.PRODUCT)
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@CurrentUser AuthenticatedUser user,
             @PathVariable Long id,
             @RequestBody ProductRequest request) {
-        ownershipVerifier.verifyAndLoadProduct(user, id);
         return ResponseEntity.ok(productService.update(id, request));
     }
 
+    @VerifyOwnership(ResourceType.PRODUCT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@CurrentUser AuthenticatedUser user,
-            @PathVariable Long id) {
-        ownershipVerifier.verifyAndLoadProduct(user, id);
+    public ResponseEntity<Void> delete(@CurrentUser AuthenticatedUser user, @PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }

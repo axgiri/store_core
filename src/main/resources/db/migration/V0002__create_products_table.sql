@@ -15,6 +15,8 @@ ALTER TABLE products
   FOREIGN KEY (person_id) REFERENCES persons(id)
   ON DELETE CASCADE;
 
+CREATE INDEX idx_products_person_id ON products(person_id);
+
 -- Element collections for products
 CREATE TABLE IF NOT EXISTS product_tags (
   product_id BIGINT NOT NULL,

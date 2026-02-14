@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tech.github.storecore.dto.request.ReviewRequest;
 import tech.github.storecore.security.AuthenticatedUser;
 import tech.github.storecore.security.CurrentUser;
-import tech.github.storecore.dto.request.ReviewRequest;
 import tech.github.storecore.service.ReviewService;
 
 @Slf4j
