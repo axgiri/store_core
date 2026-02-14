@@ -1,6 +1,5 @@
 package tech.github.storecore.dto.events;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -11,16 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistrationMessage {
-
-    private RegistrationPayload payload;
-    private Instant timestamp = Instant.now();
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RegistrationPayload {
-        private UUID idempotencyKey;
-        private String email;
-        private String password;
-    }
+    private UUID idempotencyKey;
+    private String email;
+    private String password;
 }

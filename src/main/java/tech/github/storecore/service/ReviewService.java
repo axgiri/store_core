@@ -28,9 +28,6 @@ public class ReviewService {
     @Value("${kafka.topic.review}")
     private String reviewTopic;
 
-    @Value("${kafka.partition.review.create}")
-    private String reviewCreatePartition;
-
     public void createReview(UUID authorId, ReviewRequest request) {
         validateAuthorExists(authorId);
         validatePersonExists(request.getPersonId());
@@ -64,7 +61,7 @@ public class ReviewService {
                 Instant.now()
         );
 
-        reviewKafkaTemplate.send(reviewTopic, reviewCreatePartition, message);
+        reviewKafkaTemplate.send(reviewTopic, message);
     }
 
     private void validateAuthorExists(UUID authorId) {
