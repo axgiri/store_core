@@ -20,3 +20,5 @@ ALTER TABLE photos
     ADD CONSTRAINT fk_photos_product
         FOREIGN KEY (product_id) REFERENCES products(id)
             ON DELETE CASCADE;
+
+CREATE INDEX idx_photos_person_id ON photos(person_id);

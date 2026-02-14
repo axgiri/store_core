@@ -19,10 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tech.github.storecore.dto.response.ProductPhotoResponse;
 import tech.github.storecore.security.AuthenticatedUser;
 import tech.github.storecore.security.CurrentUser;
-import tech.github.storecore.security.OwnershipVerifier;
-import tech.github.storecore.dto.response.ProductPhotoResponse;
+import tech.github.storecore.security.ResourceType;
+import tech.github.storecore.security.VerifyOwnership;
 import tech.github.storecore.service.PhotoService;
 
 @RestController
@@ -32,7 +33,6 @@ import tech.github.storecore.service.PhotoService;
 public class PhotoController {
 
     private final PhotoService service;
-    private final OwnershipVerifier ownershipVerifier;
 
     @PutMapping(path = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadPersonPhoto(@CurrentUser AuthenticatedUser user,
@@ -73,21 +73,21 @@ public class PhotoController {
                 .body(response);
     }
 
+    @VerifyOwnership(value = ResourceType.PRODUCT, idParam = "productId")
     @PostMapping(path = "/products/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadProductPhoto(@CurrentUser AuthenticatedUser user,
             @PathVariable Long productId,
             @RequestPart("file") MultipartFile file) throws IOException {
-        ownershipVerifier.verifyAndLoadProduct(user, productId);
         log.debug("upload product photo id: {}, user: {}", productId, user.userId());
         service.uploadForProduct(productId, file);
         return ResponseEntity.ok().build();
     }
 
+    @VerifyOwnership(value = ResourceType.PRODUCT, idParam = "productId")
     @DeleteMapping("/products/{productId}/{objectKey}")
     public ResponseEntity<Void> deleteProductPhoto(@CurrentUser AuthenticatedUser user,
             @PathVariable Long productId,
             @PathVariable String objectKey) {
-        ownershipVerifier.verifyAndLoadProduct(user, productId);
         log.debug("delete product photo product id: {}, key: {}, user: {}", productId, objectKey, user.userId());
         service.deleteForProduct(productId, objectKey);
         return ResponseEntity.noContent().build();
