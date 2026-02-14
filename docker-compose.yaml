@@ -1,6 +1,6 @@
 services:
   store-core:
-    image: eclipse-temurin:21-jdk-alpine
+    image: eclipse-temurin:25-jdk-alpine
     container_name: store-core
     hostname: store-core
     ports:

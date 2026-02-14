@@ -34,9 +34,6 @@ public class ReportService {
     @Value("${kafka.topic.report}")
     private String reportTopic;
 
-    @Value("${kafka.partition.report.create}")
-    private String reportCreatePartition;
-
     public void createReport(UUID reporterId, ReportRequest request) {
         ReportStrategy strategy = getStrategy(request.getType());
         strategy.validate(reporterId, request);
@@ -64,7 +61,7 @@ public class ReportService {
                 payload,
                 Instant.now());
 
-        reportKafkaTemplate.send(reportTopic, reportCreatePartition, message);
-        log.debug("Report message sent to Kafka: topic={}, partition={}", reportTopic, reportCreatePartition);
+        reportKafkaTemplate.send(reportTopic, message);
+        log.debug("Report message sent to Kafka: topic={}", reportTopic);
     }
 }

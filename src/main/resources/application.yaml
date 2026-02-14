@@ -31,19 +31,12 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       acks: all
       enable.idempotence: true
       max.in.flight.requests.per.connection: 5
     consumer:
       group-id: store-core-group
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: com.github.storecore.dto.events
-        spring.json.use.type.headers: false
 
   elasticsearch:
     uris: elasticsearch:9200
@@ -70,6 +63,9 @@ server:
 logging:
   level:
     root: INFO
+    org:
+      apache:
+        kafka: WARN
 
 app:
   cleanup:
@@ -102,7 +98,7 @@ api:
   service:
     notification-reports: http://notification-service:51740/api/notifications
     store-authentication:
-      base-url: http://store-authentication:51720/api/v1/users
+      base-url: http://store-auth:51720/api/v1/users
       validate: /is-email-available
 
 resilience4j:

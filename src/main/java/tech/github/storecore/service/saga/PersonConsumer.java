@@ -18,7 +18,7 @@ public class PersonConsumer{
     private final PersonService personService;
 
     @KafkaListener(
-        topics = "${app.kafka.topic.registration-compensate}",
+        topics = "${kafka.topic.registration-compensate}",
         containerFactory = "registrationCompensateKafkaListenerContainerFactory",
         groupId = "${spring.kafka.consumer.group-id}"
     )
