@@ -7,8 +7,9 @@ services:
       - "51730:51730"
     volumes:
     - ./:/app
+    - ./.mvn/settings.xml:/root/.m2/settings.xml
     working_dir: /app
-    command: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
+    command: ./mvnw -s /root/.m2/settings.xml spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     depends_on:
       store-core-db:
         condition: service_started

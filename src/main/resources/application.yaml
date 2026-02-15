@@ -77,6 +77,12 @@ app:
     replicas: 3
     min-insync-replicas: 2
 
+jwt:
+  starter:
+    enabled: true
+    issuer: "axgiri@proton.me"
+    jwks-uri: "http://store-auth:51720/api/v1/.well-known/jwks.json"
+
 minio:
   url: http://minio:9000
   access-key: 123456789qwerty123456789qwerty123456789qwerty
