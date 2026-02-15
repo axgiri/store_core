@@ -10,22 +10,30 @@
 	</parent>
 	<groupId>github.store</groupId>
 	<artifactId>store-core</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<name>store-core</name>
-	<description></description>
-	<url/>
+	<description>"core microservice of TechSell (axgiri.tech)"</description>
+		<url>https://github.com/axgiri/store-core</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://github.com/axgiri/store_core/blob/master/LICENSE</url>
+			<distribution>repository</distribution>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>axgiri</name>
+			<email>axgiri@proton.me</email>
+			<url>https://github.com/axgiri</url>
+		</developer>
+		<developer>
+			<id>contributor</id>
+			<name>Scheldie</name>
+			<email>piligrimovivan2@gmail.com</email>
+			<url>https://github.com/Scheldie</url>
+		</developer>
 	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>25</java.version>
 		<maven.compiler.source>25</maven.compiler.source>
