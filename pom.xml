@@ -44,7 +44,7 @@
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<url>http://localhost:8081/repository/maven-public/</url>
+			<url>http://127.0.0.1:8081/repository/maven-public/</url>
 		</repository>
 	</repositories>
 
@@ -147,7 +147,6 @@
 					<source>25</source>
 					<target>25</target>
 					<fork>true</fork>
-					<executable>/usr/bin/javac</executable>
 					<compilerArgs>
 						<arg>--enable-preview</arg>
 					</compilerArgs>
