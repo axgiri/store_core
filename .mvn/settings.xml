@@ -8,7 +8,7 @@
     <mirror>
       <id>nexus-mirror</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://127.0.0.1:8081/repository/maven-public/</url>
+      <url>http://nexus:8081/repository/maven-public/</url>
       <blocked>false</blocked>
     </mirror>
   </mirrors>
@@ -19,7 +19,7 @@
       <repositories>
         <repository>
           <id>nexus</id>
-          <url>http://127.0.0.1:8081/repository/maven-public/</url>
+          <url>http://nexus:8081/repository/maven-public/</url>
           <releases>
             <enabled>true</enabled>
           </releases>
