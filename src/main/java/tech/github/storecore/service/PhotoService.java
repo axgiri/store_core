@@ -120,7 +120,7 @@ public class PhotoService {
         removePhoto(photo);
     }
 
-    public void removePhoto(Photo ph) {
+    private void removePhoto(Photo ph) {
         storage.delete(ph.getObjectKey(), ph.getBucket());
         repository.delete(ph);
         repository.flush();

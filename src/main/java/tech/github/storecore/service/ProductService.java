@@ -86,12 +86,12 @@ public class ProductService {
                 .stream().map(ProductDocumentResponse::toResponse).toList();
     }
 
-    public Product findEntityById(Long id) {
+    Product findEntityById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("product not found with id: " + id));
     }
 
-    public Product getReferenceByIdIfExists(Long id) {
+    Product getReferenceByIdIfExists(Long id) {
         if (!repository.existsById(id)) {
             throw new ProductNotFoundException("product not found with id: " + id);
         }
