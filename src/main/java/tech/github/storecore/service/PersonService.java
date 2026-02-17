@@ -73,7 +73,7 @@ public class PersonService{
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id)));
     }
 
-    public Person findEntityById(UUID id) {
+    Person findEntityById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("person not found with id: " + id));
     }
@@ -143,11 +143,11 @@ public class PersonService{
         return repository.existsById(id);
     }
 
-    public Person getReferenceById(UUID id) {
+    Person getReferenceById(UUID id) {
         return repository.getReferenceById(id);
     }
 
-    public Person getReferenceByIdIfExists(UUID id) {
+    Person getReferenceByIdIfExists(UUID id) {
         if (!repository.existsById(id)) {
             throw new UserNotFoundException("user not found with id: " + id);
         }

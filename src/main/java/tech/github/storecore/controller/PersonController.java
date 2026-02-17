@@ -51,12 +51,4 @@ public class PersonController {
             @Valid @RequestBody PersonRequest personRequest) {
         return ResponseEntity.ok(service.update(user.userId(), personRequest));
     }
-
-    // @DeleteMapping("/me")
-    // public ResponseEntity<Void> delete(@CurrentUser AuthenticatedUser user) {
-    //     log.debug("deleting person with id: {}", user.userId());
-    //     service.delete(user.userId());
-    //     return ResponseEntity.noContent().build();
-    // }
-    //TODO: https://github.com/users/axgiri/projects/5/views/1?pane=issue&itemId=155426931
 }

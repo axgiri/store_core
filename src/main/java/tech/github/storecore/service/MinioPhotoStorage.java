@@ -20,7 +20,7 @@ public class MinioPhotoStorage {
 
     private final S3Client s3;
 
-    public String save(byte[] bytes, String contentType, String bucket) {
+    String save(byte[] bytes, String contentType, String bucket) {
         String key = generateKey();   
 
         s3.putObject(
@@ -33,7 +33,7 @@ public class MinioPhotoStorage {
             return key;
     }
 
-    public byte[] load(String objectKey, String bucket) {
+    byte[] load(String objectKey, String bucket) {
         return s3.getObjectAsBytes(GetObjectRequest
             .builder()
             .bucket(bucket)
@@ -41,7 +41,7 @@ public class MinioPhotoStorage {
             .build()).asByteArray();
     }
 
-    public void delete(String objectKey, String bucket) {
+    void delete(String objectKey, String bucket) {
         s3.deleteObject(DeleteObjectRequest
             .builder()
             .bucket(bucket)
@@ -49,7 +49,7 @@ public class MinioPhotoStorage {
             .build());
     }
 
-    public boolean safeDelete(String objectKey, String bucket) {
+    boolean safeDelete(String objectKey, String bucket) {
         try {
             delete(objectKey, bucket);
             return true;

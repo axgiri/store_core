@@ -25,7 +25,7 @@ public class ImageProcessingService {
     private static final float QUALITY_DECREMENT = 0.05f;
 
     private static final String OUTPUT_FORMAT = "webp";
-    public byte[] processImage(MultipartFile originalImage) throws IOException {
+    byte[] processImage(MultipartFile originalImage) throws IOException {
         try {            
             BufferedImage image = ImageIO.read(originalImage.getInputStream());
             
@@ -48,7 +48,7 @@ public class ImageProcessingService {
         }
     }
 
-    public byte[] processImage(byte[] imageData) throws IOException {
+    byte[] processImage(byte[] imageData) throws IOException {
         try {
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
             
