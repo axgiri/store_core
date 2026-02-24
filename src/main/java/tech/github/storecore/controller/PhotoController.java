@@ -35,7 +35,7 @@ public class PhotoController {
     private final PhotoService service;
 
     @PutMapping(path = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadPersonPhoto(@CurrentUser AuthenticatedUser user,
+    public ResponseEntity<Void> uploadOwnPhoto(@CurrentUser AuthenticatedUser user,
             @RequestPart("file") MultipartFile file) throws IOException {
         service.uploadForPerson(user.userId(), file);
         return ResponseEntity.ok().build();
@@ -51,7 +51,7 @@ public class PhotoController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deletePersonPhoto(@CurrentUser AuthenticatedUser user) {
+    public ResponseEntity<Void> deleteOwnPhoto(@CurrentUser AuthenticatedUser user) {
         service.deleteForPerson(user.userId());
         return ResponseEntity.noContent().build();
     }

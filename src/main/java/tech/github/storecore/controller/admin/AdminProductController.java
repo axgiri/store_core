@@ -16,7 +16,7 @@ import tech.github.storecore.service.ProductService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/admin/products")
+@RequestMapping("/api/v1/admin/sc/products")
 @RequiredArgsConstructor
 @RequireRole({UserRole.ADMIN, UserRole.MODERATOR})
 public class AdminProductController {

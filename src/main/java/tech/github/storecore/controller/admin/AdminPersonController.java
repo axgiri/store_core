@@ -23,7 +23,7 @@ import tech.github.storecore.service.PersonService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/admin/persons")
+@RequestMapping("/api/v1/admin/sc/persons")
 @RequiredArgsConstructor
 @RequireRole({UserRole.ADMIN, UserRole.MODERATOR})
 public class AdminPersonController {
