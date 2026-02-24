@@ -7,13 +7,15 @@ CREATE TABLE IF NOT EXISTS products (
   price NUMERIC(19,2) NOT NULL,
   category VARCHAR(100) NOT NULL,
   is_available BOOLEAN NOT NULL,
-  person_id BIGINT NOT NULL
+  person_id UUID NOT NULL
 );
 
 ALTER TABLE products
   ADD CONSTRAINT fk_products_person
   FOREIGN KEY (person_id) REFERENCES persons(id)
   ON DELETE CASCADE;
+
+CREATE INDEX idx_products_person_id ON products(person_id);
 
 -- Element collections for products
 CREATE TABLE IF NOT EXISTS product_tags (

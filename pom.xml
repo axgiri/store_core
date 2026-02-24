@@ -5,45 +5,57 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
+		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>github.oldLab</groupId>
-	<artifactId>oldLab</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>oldLab</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
+	<groupId>github.store</groupId>
+	<artifactId>store-core</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>store-core</name>
+	<description>"core microservice of TechSell (axgiri.tech)"</description>
+		<url>https://github.com/axgiri/store-core</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://github.com/axgiri/store_core/blob/master/LICENSE</url>
+			<distribution>repository</distribution>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>axgiri</name>
+			<email>axgiri@proton.me</email>
+			<url>https://github.com/axgiri</url>
+		</developer>
+		<developer>
+			<id>contributor</id>
+			<name>Scheldie</name>
+			<email>piligrimovivan2@gmail.com</email>
+			<url>https://github.com/Scheldie</url>
+		</developer>
 	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>25</java.version>
+		<maven.compiler.source>25</maven.compiler.source>
+		<maven.compiler.target>25</maven.compiler.target>
+		<maven.compiler.release></maven.compiler.release>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<url>http://nexus:8081/repository/maven-public/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+			<groupId>tech.axgiri</groupId>
+			<artifactId>store-jwt-spring-boot-starter</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>io.github.resilience4j</groupId>
-			<artifactId>resilience4j-spring-boot2</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-			<version>4.3.0</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -58,18 +70,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>4.0.0-M2</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency> -->
+			<artifactId>spring-boot-starter-kafka</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -86,43 +97,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-		<dependency>
-    		<groupId>org.springframework.security.oauth</groupId>
-    		<artifactId>spring-security-oauth2</artifactId>
-    		<version>2.5.2.RELEASE</version>
-		</dependency>
-		<dependency>
-    		<groupId>com.nimbusds</groupId>
-    		<artifactId>nimbus-jose-jwt</artifactId>
-			<version>10.3.1</version>
-		</dependency>
-		<dependency>
     		<groupId>software.amazon.awssdk</groupId>
     		<artifactId>s3</artifactId>
     		<version>2.31.77</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
+			<groupId>com.fasterxml.uuid</groupId>
+			<artifactId>java-uuid-generator</artifactId>
+			<version>5.2.0</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
     		<groupId>net.coobird</groupId>
@@ -139,55 +122,55 @@
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
 		<dependency>
-  			<groupId>com.github.vladimir-bukhtoyarov</groupId>
-  			<artifactId>bucket4j-core</artifactId>
-  			<version>8.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.javafaker</groupId>
-			<artifactId>javafaker</artifactId>
-			<version>1.0.2</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
-			<version>11.11.1</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- Redis for caching userId -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot3</artifactId>
+			<version>2.3.0</version>
 		</dependency>
-		<!-- WebFlux for reactive WebClient (proxy to chat microservice) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-		<!-- WebSocket support -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.14.1</version>
 				<configuration>
+					<source>25</source>
+					<target>25</target>
+					<fork>true</fork>
+					<compilerArgs>
+						<arg>--enable-preview</arg>
+					</compilerArgs>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>--enable-preview</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<jvmArguments>--enable-preview</jvmArguments>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

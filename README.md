@@ -1,4 +1,4 @@
-# OldLab API ([axgiri.tech](https://axgiri.tech))
+# TechStore API ([axgiri.tech](https://axgiri.tech))
 
 Backend microservice for a tech marketplace platform. Handles user authentication, product management, reviews, reports, and serves as an API gateway for the chat microservice.
 
@@ -39,7 +39,7 @@ Backend microservice for a tech marketplace platform. Handles user authenticatio
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Frontend      │────▶│   OldLab API    │────▶│ Notification    │
+│   Frontend      │────▶│   TechStore API    │────▶│ Notification    │
 │   (React)       │     │   (this)        │     │ Service         │
 └─────────────────┘     └────────┬────────┘     └─────────────────┘
                                  │
@@ -169,7 +169,7 @@ Base URL: `/api/v1`
 // Response
 {
   "access_token": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh_token": "dGhpcyBpcyBhIHJlZnJl...",
+  "refresh_token": "dGcyBcyBhIHJlZnJl...",
   "person": {
     "id": 1,
     "first_name": "John",

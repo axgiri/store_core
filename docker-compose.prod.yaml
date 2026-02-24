@@ -8,7 +8,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: oldlab-authentication:${VERSION:-latest}
+    image: store-core:${VERSION:-latest}
     container_name: authentication-service-prod
     hostname: authentication-service
     ports:

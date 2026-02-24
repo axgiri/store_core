@@ -1,18 +1,14 @@
 spring:
   application:
-    name: oldLab
-  security:
-    strategy: MODE_INHERITABLETHREADLOCAL
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: your-id
-            client-secret: your-secret
-            scope: email,profile
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+    name: store-core
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    threads:
+      virtual:
+        enabled: true
+    
   datasource:
-    url: jdbc:postgresql://authentication-db:5432/authenticationdb
+    url: jdbc:postgresql://store-core-db:5432/storecoredb
     username: postgres
     password: 1
     driver-class-name: org.postgresql.Driver
@@ -28,21 +24,22 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    url: jdbc:postgresql://authentication-db:5432/authenticationdb
+    url: jdbc:postgresql://store-core-db:5432/storecoredb
     user: postgres
     password: 1
 
   kafka:
     bootstrap-servers: kafka:9092
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      enable.idempotence: true
+      max.in.flight.requests.per.connection: 5
     consumer:
-      group-id: oldlab-client-group
+      group-id: store-core-group
       auto-offset-reset: earliest
 
   elasticsearch:
-    uris: http://elasticsearch:9200
+    uris: elasticsearch:9200
 
   data:
     redis:
@@ -51,7 +48,7 @@ spring:
       timeout: 2000ms
       lettuce:
         pool:
-          max-active: 8 #bad machine, default is 8
+          max-active: 8
           max-idle: 8
           min-idle: 0
 
@@ -61,12 +58,14 @@ spring:
       max-request-size: 100MB
 
 server:
-  port: 8080
+  port: 51730
 
 logging:
   level:
     root: INFO
-    github.oldLab.oldLab: INFO
+    org:
+      apache:
+        kafka: WARN
 
 app:
   cleanup:
@@ -74,10 +73,15 @@ app:
     timezone: CET
   activation-ttl-minutes: 15
   inactive-account-ttl-days: 1
+  kafka:
+    replicas: 3
+    min-insync-replicas: 2
 
-frontend:
-  redirect:
-    url: http://localhost:5173/oauth-success
+jwt:
+  starter:
+    enabled: true
+    issuer: "axgiri@proton.me"
+    jwks-uri: "http://store-auth:51720/api/v1/.well-known/jwks.json"
 
 minio:
   url: http://minio:9000
@@ -90,81 +94,45 @@ minio:
 
 kafka:
   topic:
-    message: message-topic
     report: report-topic
     review: review-topic
-  dlt:
-    message: message-dlt
-    review: review-dlt
-    report: report-dlt
-  partition:
-    message:
-      sms: message-sms
-      email: message-email
-    review:
-      create: review-create
-      update: review-update
-      delete: review-delete
-    report:
-      create: report-create
-      update: report-update
-      delete: report-delete
+    registration: registration-topic
+    registration-compensate: registration-compensate-topic
+
 
 api:
   service:
-    notification-reports: http://notification-service:8081/api/notifications
+    notification-reports: http://notification-service:51740/api/notifications
+    store-authentication:
+      base-url: http://store-auth:51720/api/v1/users
+      validate: /is-email-available
 
 resilience4j:
   circuitbreaker:
-    instances:
+    configs:
       default:
         register-health-indicator: true
+        sliding-window-type: COUNT_BASED
         sliding-window-size: 10
         minimum-number-of-calls: 5
         permitted-number-of-calls-in-half-open-state: 3
         automatic-transition-from-open-to-half-open-enabled: true
         wait-duration-in-open-state: 5s
         failure-rate-threshold: 50
-        event-consumer-buffer-size: 10
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 80
+        record-exceptions:
+          - java.io.IOException
+          - java.net.SocketTimeoutException
+          - org.springframework.web.client.ResourceAccessException
+          - tech.github.storecore.exception.ServiceCommunicationException
+    instances:
+      store-auth:
+        base-config: default
+        sliding-window-size: 5
+        wait-duration-in-open-state: 10s
 
 max:
   photo:
     per:
       product: 5
-
-jwt:
-  secret:
-    key: 123456789qwerty123456789qwerty123456789qwerty
-    ttl: 15
-  refresh:
-    key: 123456789qwerty123456789qwerty123456789qwerty
-    ttl: 30
-
-rate:
-  limiting:
-    window:
-      size:
-        in:
-          seconds: 1
-    max:
-      requests:
-        per:
-          window: 50
-
-cors:
-  allowed-origins:
-    - http://localhost:5173 # Vite default port
-    - http://localhost:3000 # React default port
-    - https://www.site.com # Your production domain here
-    - http://www.site.com # Your production domain here
-    - https://site.com # Your production domain here
-    - http://site.com # Your production domain here
-  max-age: 3600
-
-chat:
-  service:
-    url: http://chat-service:8082
-    websocket:
-      url: ws://chat-service:8082/ws/chat
-  user-id-cache:
-    ttl-minutes: 15

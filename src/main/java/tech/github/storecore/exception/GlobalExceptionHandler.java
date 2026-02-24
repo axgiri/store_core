@@ -1,0 +1,152 @@
+package tech.github.storecore.exception;
+
+import java.time.Instant;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    record ApiError(Instant timestamp, String code, String message) {}
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiError> onUnauthorized(UnauthorizedException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "UNAUTHORIZED",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiError> onForbidden(ForbiddenException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "FORBIDDEN",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiError> onNotFound(UserNotFoundException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "USER_NOT_FOUND",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ApiError> onProductNotFound(ProductNotFoundException ex) {
+        ApiError err = new ApiError(
+                Instant.now(),
+                "PRODUCT_NOT_FOUND",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiError> onExists(UserAlreadyExistsException ex) {
+        ApiError err = new ApiError(
+                Instant.now(),
+                "USER_ALREADY_EXISTS",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> onValidation(MethodArgumentNotValidException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "VALIDATION_ERROR",
+            "invalid request data"
+        );
+        return ResponseEntity.badRequest().body(err);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> onGeneric(Exception ex) {
+        log.error("Unhandled exception", ex);
+        ApiError err = new ApiError(
+            Instant.now(),
+            "SERVER_ERROR",
+            "unexpected error"
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
+    }
+
+    @ExceptionHandler(MaxPhotosPerProductReachedException.class)
+    public ResponseEntity<ApiError> onMaxPhotosPerProductReached(MaxPhotosPerProductReachedException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "MAX_PHOTOS_PER_PRODUCT_REACHED",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(DuplicateReportException.class)
+    public ResponseEntity<ApiError> onDuplicateReport(DuplicateReportException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "DUPLICATE_REPORT",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(DuplicateReviewException.class)
+    public ResponseEntity<ApiError> onDuplicateReview(DuplicateReviewException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "DUPLICATE_REVIEW",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> onIllegalArgument(IllegalArgumentException ex) {
+        ApiError err = new ApiError(
+            Instant.now(),
+            "BAD_REQUEST",
+            ex.getMessage()
+        );
+        return ResponseEntity.badRequest().body(err);
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<ApiError> onCircuitBreakerOpen(CallNotPermittedException ex) {
+        log.warn("Circuit breaker open: {}", ex.getMessage());
+        ApiError err = new ApiError(
+            Instant.now(),
+            "SERVICE_UNAVAILABLE",
+            "Service is temporarily unavailable, please try again later"
+        );
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
+    }
+
+    @ExceptionHandler(ServiceCommunicationException.class)
+    public ResponseEntity<ApiError> onServiceCommunication(ServiceCommunicationException ex) {
+        log.error("Service communication error", ex);
+        ApiError err = new ApiError(
+            Instant.now(),
+            "SERVICE_UNAVAILABLE",
+            ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(err);
+    }
+}

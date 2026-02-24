@@ -1,23 +1,24 @@
 services:
-  authentication-service:
-    image: eclipse-temurin:21-jdk-alpine
-    container_name: authentication-service
-    hostname: authentication-service
+  store-core:
+    image: eclipse-temurin:25-jdk-alpine
+    container_name: store-core
+    hostname: store-core
     ports:
-      - "8080:8080"
+      - "51730:51730"
     volumes:
     - ./:/app
+    - ./.mvn/settings.xml:/root/.m2/settings.xml
     working_dir: /app
-    command: ./mvnw spring-boot:run
+    command: ./mvnw -s /root/.m2/settings.xml spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     depends_on:
-      - authentication-db
-      - kafka
-      - elasticsearch
-      - kibana
-      - minio
-      - redis
+      store-core-db:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_started
     networks:
-      - auth-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -26,66 +27,19 @@ services:
         max_attempts: 3
         window: 120s
   
-  authentication-db:
+  store-core-db:
     image: postgres:13-alpine
-    container_name: authentication-db
+    container_name: store-core-db
     ports:
-      - "5432:5432"
+      - "51731:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1
-      POSTGRES_DB: authenticationdb
+      POSTGRES_DB: storecoredb
     volumes:
-      - authentication_db_data:/var/lib/postgresql/data
+      - store_core_db_data:/var/lib/postgresql/data
     networks:
-      - auth-network
-    restart: on-failure:3
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-  
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ax@micro.kz
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "7313:80"
-    depends_on:
-      - authentication-db
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - auth-network
-    restart: on-failure:3
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-
-  kafka:
-    image: apache/kafka:4.0.0
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "9094:9094"
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - auth-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -95,7 +49,7 @@ services:
         window: 120s
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    image: elasticsearch:9.2.4
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -108,26 +62,12 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
-      - auth-network
-    restart: on-failure:3
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.13.4
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - '5601:5601'
-    depends_on:
-      - elasticsearch
-    networks:
-      - auth-network
+      - store-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -149,25 +89,7 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - auth-network
-    restart: on-failure:3
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-
-  redis:
-    image: redis:7-alpine
-    container_name: oldlab-redis
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    networks:
-      - auth-network
+      - store-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -177,13 +99,10 @@ services:
         window: 120s
 
 networks:
-  auth-network:
+  store-network:
     external: true
-    name: oldlab_auth-network
 
 volumes:
-  authentication_db_data:
-  pgadmin_data:
+  store_core_db_data:
   es_data:
   minio_data:
-  redis_data:

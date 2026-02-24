@@ -1,0 +1,26 @@
+package tech.github.storecore.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
+import tech.github.storecore.entity.Product;
+import tech.github.storecore.enumeration.CategoryEnum;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    Page<Product> findByPersonId(UUID personId, Pageable pageable);
+
+    List<Product> findAllByPersonId(UUID personId);
+
+    Page<Product> findByCategory(CategoryEnum category, Pageable pageable);
+
+    boolean existsByIdAndPersonId(Long id, UUID personId);
+}
