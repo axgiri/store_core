@@ -53,18 +53,17 @@ public class PersonService{
         }
 
         UUID personId = Generators.timeBasedEpochGenerator().generate();
-        personProducer.sendCreateUserEvent(personCreateRequest, personId);
 
         repository.save(
             Person.builder()
                 .id(personId)
                 .firstName(personCreateRequest.firstName())
                 .lastName(personCreateRequest.lastName())
-                .phoneNumber(personCreateRequest.phoneNumber())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build()
             );
+        personProducer.sendCreateUserEvent(personCreateRequest, personId);
         log.debug("created person with id: {}, first name: {} and last name: {}", personId, personCreateRequest.firstName(), personCreateRequest.lastName());
     }
 

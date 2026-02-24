@@ -23,7 +23,7 @@ import tech.github.storecore.service.PhotoService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/admin/photos")
+@RequestMapping("/api/v1/admin/sc/photos")
 @RequiredArgsConstructor
 @RequireRole({UserRole.ADMIN, UserRole.MODERATOR})
 public class AdminPhotoController {

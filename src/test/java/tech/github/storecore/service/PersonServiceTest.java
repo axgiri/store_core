@@ -66,7 +66,7 @@ class PersonServiceTest {
         @Test
         @DisplayName("validates email, sends event, and saves person")
         void createsSuccessfully() {
-            var req = new PersonCreateRequest("Alex", "Smith", "+1234567890", "a@t.com", "password");
+            var req = new PersonCreateRequest("AA", "BB", "a@t.com", "password");
             when(storeAuthClient.validateEmail("a@t.com")).thenReturn(true);
 
             personService.create(req);
@@ -78,7 +78,7 @@ class PersonServiceTest {
         @Test
         @DisplayName("throws UserAlreadyExistsException when email not valid")
         void throws_whenEmailTaken() {
-            var req = new PersonCreateRequest("A", "B", null, "taken@t.com", "pw");
+            var req = new PersonCreateRequest("A", "B", "taken@t.com", "pw");
             when(storeAuthClient.validateEmail("taken@t.com")).thenReturn(false);
 
             assertThatThrownBy(() -> personService.create(req))
