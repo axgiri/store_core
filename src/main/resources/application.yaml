@@ -60,6 +60,18 @@ spring:
 server:
   port: 51730
 
+management:
+  server:
+    port: 51731
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 logging:
   level:
     root: INFO
