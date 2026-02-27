@@ -56,7 +56,9 @@ public class KafkaConfig {
         var serializer = new JacksonJsonSerializer<T>(jsonMapper);
         serializer.setAddTypeInfo(false);
         var factory = new DefaultKafkaProducerFactory<>(props, new StringSerializer(), serializer);
-        return new KafkaTemplate<>(factory);
+        var template = new KafkaTemplate<>(factory);
+        template.setObservationEnabled(true);
+        return template;
     }
 
     @Bean
@@ -100,6 +102,7 @@ public class KafkaConfig {
         var factory = new ConcurrentKafkaListenerContainerFactory<String, RegistrationCompensateMessage>();
         factory.setConsumerFactory(registrationCompensateConsumerFactory);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
+        factory.getContainerProperties().setObservationEnabled(true);
         factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(1000L, 3)));
         return factory;
     }

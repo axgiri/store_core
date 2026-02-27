@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import tech.github.storecore.dto.response.ProductPhotoResponse;
 import tech.github.storecore.entity.Person;
 import tech.github.storecore.entity.Photo;
@@ -20,6 +21,7 @@ import tech.github.storecore.exception.PhotoNotFoundException;
 import tech.github.storecore.exception.ProductNotFoundException;
 import tech.github.storecore.repository.PhotoRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PhotoService {
@@ -58,6 +60,7 @@ public class PhotoService {
                         .createdAt(Instant.now())
                         .build();
         repository.save(photo);
+        log.info("Uploaded photo for person {} with key {}", personId, key);
     }
 
     public byte[] loadForPerson(UUID personId) {
