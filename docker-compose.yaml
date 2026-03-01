@@ -3,8 +3,6 @@ services:
     image: eclipse-temurin:25-jdk-alpine
     container_name: store-core
     hostname: store-core
-    ports:
-      - "51730:51730"
     volumes:
     - ./:/app
     - ./.mvn/settings.xml:/root/.m2/settings.xml
@@ -28,7 +26,7 @@ services:
         window: 120s
   
   store-core-db:
-    image: postgres:13-alpine
+    image: postgres:18-alpine
     container_name: store-core-db
     ports:
       - "51731:5432"
@@ -40,6 +38,11 @@ services:
       - store_core_db_data:/var/lib/postgresql/data
     networks:
       - store-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d storecoredb -h localhost || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -97,6 +100,17 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+
+  store-core-db-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.19.0
+    container_name: store-core-db-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:1@store-core-db:5432/storecoredb?sslmode=disable"
+    depends_on:
+      store-core-db:
+        condition: service_healthy
+    networks:
+      - store-network
 
 networks:
   store-network:
