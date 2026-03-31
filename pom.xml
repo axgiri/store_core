@@ -39,6 +39,7 @@
 		<maven.compiler.source>25</maven.compiler.source>
 		<maven.compiler.target>25</maven.compiler.target>
 		<maven.compiler.release></maven.compiler.release>
+		<SONAR_HOST_URL>http://127.0.0.1:9000</SONAR_HOST_URL>
 	</properties>
 
 	<repositories>
@@ -182,7 +183,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<argLine>--enable-preview</argLine>
+					<argLine>@{argLine} --enable-preview</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -198,7 +199,41 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.14</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.projectKey>store_core</sonar.projectKey>
+				<sonar.projectName>store_core</sonar.projectName>
+				<sonar.sources>src/main/java</sonar.sources>
+				<sonar.tests>src/test/java</sonar.tests>
+				<sonar.language>java</sonar.language>
+				<sonar.host.url>${SONAR_HOST_URL}</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>

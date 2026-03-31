@@ -76,3 +76,11 @@ If store_core is unavailable, the marketplace can still authenticate users, but 
 - https://github.com/axgiri/store_core
 - https://github.com/axgiri/store_chat
 - https://github.com/Scheldie/Notification_Reports
+
+## SonarQube
+
+Run static analysis with the Maven Sonar goal:
+
+```bash
+./mvnw -Psonar verify sonar:sonar -Dsonar.token=token
+```

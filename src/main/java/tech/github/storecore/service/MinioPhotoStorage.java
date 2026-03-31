@@ -53,7 +53,7 @@ public class MinioPhotoStorage {
         try {
             delete(objectKey, bucket);
             return true;
-        } catch (NoSuchKeyException e) {
+        } catch (NoSuchKeyException _) {
             log.debug("Object '{}' already deleted or doesn't exist in bucket '{}'", objectKey, bucket);
             return true;
         } catch (Exception e) {
