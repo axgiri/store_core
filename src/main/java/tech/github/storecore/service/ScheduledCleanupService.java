@@ -19,6 +19,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Object;
+import tech.github.storecore.entity.Photo;
 import tech.github.storecore.repository.PhotoRepository;
 import tech.github.storecore.repository.ProductRepository;
 import tech.github.storecore.search.ProductDocument;
@@ -65,7 +66,7 @@ public class ScheduledCleanupService {
         
         Set<String> dbObjectKeys = new HashSet<>(photoRepository.findAll().stream()
                 .filter(photo -> bucket.equals(photo.getBucket()))
-                .map(photo -> photo.getObjectKey())
+                .map(Photo::getObjectKey)
                 .toList());
         
         log.debug("Found {} files in DB for bucket '{}'", dbObjectKeys.size(), bucket);
@@ -92,7 +93,7 @@ public class ScheduledCleanupService {
                         }
                     }
                 }
-                continuationToken = response.isTruncated() ? response.nextContinuationToken() : null;
+                continuationToken = Boolean.TRUE.equals(response.isTruncated()) ? response.nextContinuationToken() : null;
             } while (continuationToken != null);
             
         } catch (Exception e) {
@@ -135,16 +136,9 @@ public class ScheduledCleanupService {
                 page = productSearchRepository.findAll(PageRequest.of(pageNumber, pageSize));
                 for (ProductDocument document : page.getContent()) {
                     Long productId = document.getId();
-                    
+
                     if (!productRepository.existsById(productId)) {
-                        try {
-                            productSearchRepository.deleteById(productId);
-                            deletedCount++;
-                            log.debug("Deleted orphaned Elasticsearch document: productId={}", productId);
-                        } catch (Exception e) {
-                            log.warn("Failed to delete Elasticsearch document for product {}: {}", 
-                                    productId, e.getMessage());
-                        }
+                        deletedCount = getDeletedCount(productId, deletedCount);
                     }
                 }
                 
@@ -157,5 +151,17 @@ public class ScheduledCleanupService {
         } catch (Exception e) {
             log.error("Error during Elasticsearch cleanup: {}", e.getMessage(), e);
         }
+    }
+
+    private int getDeletedCount(Long productId, int deletedCount) {
+        try {
+            productSearchRepository.deleteById(productId);
+            deletedCount++;
+            log.debug("Deleted orphaned Elasticsearch document: productId={}", productId);
+        } catch (Exception e) {
+            log.warn("Failed to delete Elasticsearch document for product {}: {}",
+                    productId, e.getMessage());
+        }
+        return deletedCount;
     }
 }
