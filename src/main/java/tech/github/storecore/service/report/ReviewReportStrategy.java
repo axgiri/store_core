@@ -12,6 +12,7 @@ import tech.github.storecore.dto.request.ReportRequest;
 import tech.github.storecore.enumeration.ReportTypeEnum;
 import tech.github.storecore.exception.DuplicateReportException;
 import tech.github.storecore.exception.ReviewNotFoundException;
+import tech.github.storecore.exception.ServiceCommunicationException;
 import tech.github.storecore.exception.UserNotFoundException;
 import tech.github.storecore.service.PersonService;
 
@@ -53,7 +54,7 @@ public class ReviewReportStrategy implements ReportStrategy {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Validation interrupted", e);
+            throw new ServiceCommunicationException("Validation interrupted", e);
         }
     }
 }

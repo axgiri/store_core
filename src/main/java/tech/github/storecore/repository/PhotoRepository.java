@@ -31,5 +31,5 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Optional<Photo> findByProductIdAndObjectKey(Long productId, String objectKey);
 
-    Optional<Photo> findByProductIdAndId(Long productId, Long Id);
+    Optional<Photo> findByProductIdAndId(Long productId, Long id);
 }
