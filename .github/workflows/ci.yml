@@ -48,4 +48,9 @@ jobs:
         run: mvn verify
 
       - name: SonarCloud
-        run: mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        run: >
+          mvn -B
+          org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356:sonar
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.organization=f0754731-11ca-43b4-8a6d-be5ad9ccc7a5
+          -Dsonar.projectKey=github.store:store-core
