@@ -42,6 +42,7 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.organization>f0754731-11ca-43b4-8a6d-be5ad9ccc7a5</sonar.organization>
+		<sonar.projectKey>pk-8eee68de-02d9-40d5-918c-252679469297</sonar.projectKey>
 	</properties>
 
 	<repositories>
