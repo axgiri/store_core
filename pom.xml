@@ -38,14 +38,17 @@
 		<java.version>25</java.version>
 		<maven.compiler.source>25</maven.compiler.source>
 		<maven.compiler.target>25</maven.compiler.target>
-		<maven.compiler.release></maven.compiler.release>
-		<SONAR_HOST_URL>http://127.0.0.1:9000</SONAR_HOST_URL>
+		<maven.compiler.release>25</maven.compiler.release>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.organization>f0754731-11ca-43b4-8a6d-be5ad9ccc7a5</sonar.organization>
+		<sonar.projectKey>pk-8eee68de-02d9-40d5-918c-252679469297</sonar.projectKey>
 	</properties>
 
 	<repositories>
 		<repository>
-			<id>nexus</id>
-			<url>http://nexus:8081/repository/maven-public/</url>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/axgiri/store-jwt-spring-boot-starter</url>
 		</repository>
 	</repositories>
 
@@ -54,9 +57,9 @@
 		<dependency>
 			<groupId>tech.axgiri</groupId>
 			<artifactId>store-jwt-spring-boot-starter</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -221,19 +224,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>sonar</id>
-			<properties>
-				<sonar.projectKey>store_core</sonar.projectKey>
-				<sonar.projectName>store_core</sonar.projectName>
-				<sonar.sources>src/main/java</sonar.sources>
-				<sonar.tests>src/test/java</sonar.tests>
-				<sonar.language>java</sonar.language>
-				<sonar.host.url>${SONAR_HOST_URL}</sonar.host.url>
-			</properties>
-		</profile>
-	</profiles>
-
 </project>
