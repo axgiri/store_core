@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.task.TaskExecutor;
 
 import tech.github.storecore.client.StoreAuthClient;
 import tech.github.storecore.dto.request.PersonCreateRequest;
@@ -28,22 +27,14 @@ import tech.github.storecore.entity.Person;
 import tech.github.storecore.exception.UserAlreadyExistsException;
 import tech.github.storecore.exception.UserNotFoundException;
 import tech.github.storecore.repository.PersonRepository;
-import tech.github.storecore.repository.PhotoRepository;
-import tech.github.storecore.repository.ProductRepository;
-import tech.github.storecore.search.ProductSearchRepository;
 import tech.github.storecore.service.saga.PersonProducer;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
     @Mock private PersonRepository repository;
-    @Mock private PhotoRepository photoRepository;
-    @Mock private ProductRepository productRepository;
-    @Mock private ProductSearchRepository productSearchRepository;
-    @Mock private MinioPhotoStorage photoStorage;
     @Mock private StoreAuthClient storeAuthClient;
     @Mock private PersonProducer personProducer;
-    @Mock private TaskExecutor taskExecutor;
 
     @InjectMocks
     private PersonService personService;
@@ -148,9 +139,10 @@ class PersonServiceTest {
         @DisplayName("throws UserNotFoundException when person doesn't exist")
         void throws_whenNotFound() {
             var id = UUID.randomUUID();
+            var person = new PersonRequest();
             when(repository.existsById(id)).thenReturn(false);
 
-            assertThatThrownBy(() -> personService.update(id, new PersonRequest()))
+            assertThatThrownBy(() -> personService.update(id, person))
                     .isInstanceOf(UserNotFoundException.class);
         }
     }

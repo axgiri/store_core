@@ -33,7 +33,6 @@ class PhotoServiceTest {
 
     @Mock private PhotoRepository repository;
     @Mock private PersonService personService;
-    @Mock private ProductService productService;
     @Mock private MinioPhotoStorage storage;
     @Mock private ImageProcessingService imageProcessor;
 
@@ -118,9 +117,10 @@ class PhotoServiceTest {
         @Test
         @DisplayName("throws PhotoNotFoundException when no avatar")
         void throws_whenNoAvatar() {
+            var personId = UUID.randomUUID();
             when(repository.findByPersonId(any())).thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> photoService.loadForPerson(UUID.randomUUID()))
+            assertThatThrownBy(() -> photoService.loadForPerson(personId))
                     .isInstanceOf(PhotoNotFoundException.class);
         }
     }
