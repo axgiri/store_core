@@ -69,10 +69,11 @@ class ReportServiceTest {
         @Test
         @DisplayName("throws for unsupported report type")
         void throws_whenUnsupportedType() {
+            var reporterId = UUID.randomUUID();
             var service = createService(ReportTypeEnum.USER);
             var request = reportRequest(ReportTypeEnum.REVIEW);
 
-            assertThatThrownBy(() -> service.createReport(UUID.randomUUID(), request))
+            assertThatThrownBy(() -> service.createReport(reporterId, request))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Unsupported");
         }

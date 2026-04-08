@@ -174,9 +174,10 @@ class ProductServiceTest {
         @Test
         @DisplayName("throws when product does not exist")
         void throws_whenNotFound() {
+            var request = new ProductRequest();
             when(repository.findById(999L)).thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> productService.update(999L, new ProductRequest()))
+            assertThatThrownBy(() -> productService.update(999L, request))
                     .isInstanceOf(ProductNotFoundException.class);
         }
     }
