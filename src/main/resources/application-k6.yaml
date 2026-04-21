@@ -1,0 +1,117 @@
+spring:
+  application:
+    name: store-core
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    threads:
+      virtual:
+        enabled: true
+    
+  datasource:
+    url: jdbc:postgresql://store-core-db-k6:5432/storecoredb
+    username: postgres
+    password: 1
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    url: jdbc:postgresql://store-core-db-k6:5432/storecoredb
+    user: postgres
+    password: 1
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      acks: all
+      enable.idempotence: true
+      max.in.flight.requests.per.connection: 5
+    consumer:
+      group-id: store-core-group
+      auto-offset-reset: earliest
+
+  elasticsearch:
+    uris: elasticsearch-k6:9200
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+server:
+  port: 51730
+
+logging:
+  level:
+    root: INFO
+    org:
+      apache:
+        kafka: WARN
+
+app:
+  cleanup:
+    cron: 0 0 0 * * ?
+    timezone: CET
+  activation-ttl-minutes: 15
+  inactive-account-ttl-days: 1
+  kafka:
+    replicas: 3
+    min-insync-replicas: 2
+
+jwt:
+  starter:
+    enabled: true
+    issuer: "k6@axgiri.tech"
+    jwks-uri: "http://store-auth:51720/api/v1/.well-known/jwks.json"
+
+minio:
+  url: http://minio-k6:9000
+  access-key: 123456789qwerty123456789qwerty123456789qwerty
+  secret-key: 123456789qwerty123456789qwerty123456789qwerty
+  bucket:
+    default: default-bucket
+    persons: persons-bucket
+    products: products-bucket
+
+kafka:
+  topic:
+    report: report-topic
+    review: review-topic
+    registration: registration-topic
+    registration-compensate: registration-compensate-topic
+
+api:
+  service:
+    notification-reports: http://notification-service:51740/api/notifications
+    store-authentication:
+      base-url: http://store-auth:51720/api/v1/users
+      validate: /is-email-available
+
+max:
+  photo:
+    per:
+      product: 5
+      
+management:
+  tracing:
+    sampling:
+      probability: 0.0

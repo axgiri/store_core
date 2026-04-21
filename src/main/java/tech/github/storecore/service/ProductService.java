@@ -31,7 +31,7 @@ public class ProductService {
 
     @Transactional
     public ProductResponse create(ProductRequest request, UUID personId) {
-        Person personReference = personService.getReferenceById(personId);
+        Person personReference = personService.getReferenceByIdIfExists(personId);
         Product saved = repository.save(request.toEntity(personReference));
         productSearchRepository.save(ProductDocumentRequest.fromEntity(saved));
         return ProductResponse.fromEntity(saved);
