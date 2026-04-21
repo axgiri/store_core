@@ -85,3 +85,67 @@ Run static analysis with the Maven Sonar goal:
 ```bash
 ./mvnw -Psonar verify sonar:sonar -Dsonar.token=token
 ```
+
+## k6 Load Testing Guide
+
+This service has a ready-to-run k6 setup in `k6/`.
+
+### Prerequisites
+
+- Docker and Docker Compose
+- GNU make
+- k6 CLI installed locally
+- `store_core/.env` with:
+	- `GITHUB_PACKAGES_USER`
+	- `GITHUB_PACKAGES_TOKEN`
+
+### Quick Run
+
+Run the full flow (up, readiness checks, test, cleanup):
+
+```bash
+make -f k6/main.mk run
+```
+
+### Step-by-Step Run
+
+Use this flow when debugging or tuning:
+
+```bash
+make -f k6/main.mk up
+make -f k6/main.mk wait-schema
+make -f k6/main.mk wait-app
+make -f k6/main.mk run-test
+make -f k6/main.mk down
+```
+
+Notes:
+
+- `up` automatically prepares `store_auth` test dependencies via `k6/auth.mk`.
+- Short `curl: (56) Recv failure: Connection reset by peer` lines can appear during warm-up.
+- `.envK6` for this module is in `store_core/k6/helpers/.envK6`.
+
+### k6 Tuning Knobs
+
+Common variables in `store_core/k6/helpers/.envK6`:
+
+- `K6_VUS_PER_SCENARIO`
+- `K6_DEFAULT_DURATION`
+- `K6_ENABLE_PRODUCTS_CRUD_SCENARIO`
+- `K6_ENABLE_PRODUCT_PHOTOS_SCENARIO`
+- `PERSONS_ME_ALLOW_404`
+
+### Capacity Template (VM: 4 vCPU, 4GB DDR4)
+
+Fill this section after your benchmark run. Replace every `X` with your measured value.
+
+| Metric | Value |
+| --- | --- |
+| VM profile | 4 vCPU / 4GB DDR4 |
+| Test duration | 5m |
+| Virtual users | 4000 |
+| Total requests | 2546389 |
+| Throughput (req/s) | 8465.629507/s |
+| p95 latency (ms) | 411.67ms |
+| p90 latency (ms) | 301.75ms |
+| Error rate (%) | 0 |
