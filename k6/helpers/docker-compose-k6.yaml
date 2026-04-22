@@ -1,23 +1,27 @@
 services:
-  store-core:
+  store-core-k6:
     image: eclipse-temurin:25-jdk-alpine
-    container_name: store-core
+    container_name: store-core-k6
     hostname: store-core
+    ports:
+      - "52730:51730"
     volumes:
-      - ./:/app
+      - ../../:/app
     environment:
       GITHUB_PACKAGES_USER: ${GITHUB_PACKAGES_USER:?set GITHUB_PACKAGES_USER in .env}
       GITHUB_PACKAGES_TOKEN: ${GITHUB_PACKAGES_TOKEN:?set GITHUB_PACKAGES_TOKEN in .env}
+      SPRING_PROFILES_ACTIVE: k6
     working_dir: /app
     command: ./mvnw -s /app/.mvn/settings-docker.xml spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     depends_on:
-      store-core-db:
+      store-core-db-k6:
         condition: service_started
-      elasticsearch:
+      elasticsearch-k6:
         condition: service_healthy
-      minio:
+      minio-k6:
         condition: service_started
     networks:
+      - store-core-k6-network
       - store-network
     restart: on-failure:3
     deploy:
@@ -26,10 +30,10 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
-  
-  store-core-db:
+
+  store-core-db-k6:
     image: postgres:18-alpine
-    container_name: store-core-db
+    container_name: store-core-db-k6
     ports:
       - "51731:5432"
     environment:
@@ -39,7 +43,7 @@ services:
     volumes:
       - store_core_db_data:/var/lib/postgresql/data
     networks:
-      - store-network
+      - store-core-k6-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d storecoredb -h localhost || exit 1"]
       interval: 10s
@@ -53,9 +57,9 @@ services:
         max_attempts: 3
         window: 120s
 
-  elasticsearch:
+  elasticsearch-k6:
     image: elasticsearch:9.2.4
-    container_name: elasticsearch
+    container_name: elasticsearch-k6
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -64,13 +68,10 @@ services:
       - xpack.watcher.enabled=false
       - xpack.graph.enabled=false
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ports:
-      - '9200:9200'
-      - '9300:9300'
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
-      - store-network
+      - store-core-k6-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 30s
@@ -78,15 +79,18 @@ services:
       retries: 5
     restart: on-failure:3
     deploy:
+      resources:
+        limits:
+          memory: 512m
       restart_policy:
         condition: on-failure
         delay: 5s
         max_attempts: 3
         window: 120s
 
-  minio:
+  minio-k6:
     image: minio/minio:RELEASE.2025-07-23T15-54-02Z
-    container_name: minio
+    container_name: minio-k6
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: "123456789qwerty123456789qwerty123456789qwerty"
@@ -97,7 +101,7 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - store-network
+      - store-core-k6-network
     restart: on-failure:3
     deploy:
       restart_policy:
@@ -106,20 +110,12 @@ services:
         max_attempts: 3
         window: 120s
 
-  store-core-db-exporter:
-    image: prometheuscommunity/postgres-exporter:v0.19.0
-    container_name: store-core-db-exporter
-    environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:1@store-core-db:5432/storecoredb?sslmode=disable"
-    depends_on:
-      store-core-db:
-        condition: service_healthy
-    networks:
-      - store-network
-
 networks:
-  store-network:
-    external: true
+    store-core-k6-network:
+        driver: bridge
+    store-network:
+      external: true
+        
 
 volumes:
   store_core_db_data:

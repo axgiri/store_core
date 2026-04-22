@@ -1,0 +1,21 @@
+CORE_BASE_URL=http://localhost:52730
+AUTH_BASE_URL=http://localhost:52720
+
+AUTH_PASSWORD=password
+AUTH_USERS_COUNT=50
+AUTH_USER_EMAIL_TEMPLATE=k6_user_%d@axgiri.tech
+
+# Set to true if your auth users do not yet have person rows in store_core.
+PERSONS_ME_ALLOW_404=true
+
+# Default load profile for each enabled scenario.
+K6_VUS_PER_SCENARIO=6
+K6_DEFAULT_DURATION=45s
+
+# Optional scenario toggles.
+K6_ENABLE_PRODUCTS_CRUD_SCENARIO=true
+K6_ENABLE_PRODUCT_PHOTOS_SCENARIO=true
+
+# Product discovery tuning.
+PRODUCTS_PAGE_SIZE=20
+PRODUCTS_SEARCH_QUERY=k6

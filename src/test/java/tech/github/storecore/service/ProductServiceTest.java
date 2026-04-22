@@ -77,7 +77,6 @@ class ProductServiceTest {
             request.setCategory(CategoryEnum.LAPTOPS);
 
             var savedProduct = testProduct(person);
-            when(personService.getReferenceById(person.getId())).thenReturn(person);
             when(repository.save(any(Product.class))).thenReturn(savedProduct);
 
             ProductResponse response = productService.create(request, person.getId());
