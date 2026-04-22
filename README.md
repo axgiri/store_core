@@ -137,15 +137,13 @@ Common variables in `store_core/k6/helpers/.envK6`:
 
 ### Capacity Template (VM: 4 vCPU, 4GB DDR4)
 
-Fill this section after your benchmark run. Replace every `X` with your measured value.
-
-| Metric | Value |
-| --- | --- |
-| VM profile | 4 vCPU / 4GB DDR4 |
-| Test duration | 5m |
-| Virtual users | 4000 |
-| Total requests | 2546389 |
-| Throughput (req/s) | 8465.629507/s |
-| p95 latency (ms) | 411.67ms |
-| p90 latency (ms) | 301.75ms |
-| Error rate (%) | 0 |
+| Metric             | Value             |
+|--------------------|-------------------|
+| VM profile         | 4 vCPU / 4GB DDR4 |
+| Test duration      | 5m                |
+| Virtual users      | 4000              |
+| Total requests     | 2546389           |
+| Throughput (req/s) | 8465.6            |
+| p95 latency (ms)   | 411.67            |
+| p90 latency (ms)   | 301.75            |
+| Error rate (%)     | 0                 |
